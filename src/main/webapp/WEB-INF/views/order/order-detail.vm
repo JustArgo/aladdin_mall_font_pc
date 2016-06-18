@@ -1,0 +1,165 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>订单详情</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="${link.contextPath}/js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="${link.contextPath}/css/mall.css" type="text/css" />
+</head>
+<!-- 取消地址的链接 -->
+<body>
+#parse("./common/header.vm") 
+	<div id="container">
+    <div class="header">
+        <a href="${link.contextPath}/order/order-index" class="header-back btn">
+			<img class="img1" src="${link.contextPath}/images/classfiy/back_n.png">
+			<img class="img2" src="${link.contextPath}/images/classfiy/back_p.png">
+		</a>
+        <span>订单详情</span>
+    </div>
+	<div class="order-address">
+		<div class="order-left">
+			<div class="order-left-top">
+				<table class="order-tb">
+					<tr>
+						<td style="width:55px;text-align:right;padding-right:5px;">收货人:</td>
+						<td><span>$!{recName}</span><span style="position:absolute;right:30px;color:#666">$!{recMobile}</span></td>
+					</tr>
+					<tr style="vertical-align:top;">
+						<td style="width:55px;text-align:right;padding-right:5px;">收货地址:</td>
+						<td style="text-align:left:color:#cecece;color:#666">$!{address}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+	<div class="order-info">
+		<div class="info-title">
+			<p>总订单号：<span>$!{orderCode}</span></p>
+		</div>
+		<div class="info-content">
+		#foreach($childOrder in $childOrderVo)
+			
+			
+				<p>订单号：<span>$!{childOrder.orderCode}</span></p>
+				<p>供应商：<span>$!childOrder.supName</span></p>
+				<div>
+					#foreach($childOrderProduct in $childOrder.childOrdreProductVo)
+						<div class="info-bottom" data-id="${childOrderProduct.productID}">
+							<div class="info-bottom-img imgLiquidNotFill">
+								<a href="#"><img src="$qiniu.getDownloadUrl($childOrderProduct.skuImg)" /></a>
+							</div>
+								<p class="bottom-1">$childOrderProduct.productName</p>
+								<p class="bottom-2">
+									#foreach($skuStr in ${childOrderProduct.skuStrs})
+										<span>$!skuStr</span>&nbsp;
+									#end
+								</p>
+								<p class="bottom-3"><span style="color:#F389AA;font-size:14px;">￥$number.format("#0.00",$math.div($childOrderProduct.skuPrice,100))</span><span class="number">x$childOrderProduct.buyNum</span></p>
+						</div>
+						<br/>
+					#end
+				</div>
+				<br/>
+			
+			
+		#end
+		</div>
+	</div>
+	<div class="order-note">
+		<div class="note-title">备注</div>
+			<div class="note-text">
+				$!{notes}
+			</div>
+			<div class="order-freight">
+				<p class="freight-1"><span>运费</span><span>￥$number.format("#0.00",$math.div($pFee,100))</span></p>
+				<p class="freight-1"><span>实付款(含运费)</span><span>￥$!number.format("#0.00",$math.div($pSum,100))</span></p>
+			</div>
+			<div class="order-btn">
+			<a href="https://eco-api.meiqia.com/dist/standalone.html?eid=7466" class="btn2">
+				<img class="img1 bg1" src="${link.contextPath}/images/img/service_n.png" />
+				<img class="img2 bg2" src="${link.contextPath}/images/img/service_p.png" />
+				联系客服
+			</a>
+		</div>
+	</div>
+	<div class="show-order">
+		<table class="show-order-tb">
+			<tr>
+				<td>订单编号：</td>
+				<td>$!{orderCode}</td>
+			</tr>
+			<tr>
+				<td>支付方式：</td>
+				<td>$!{payChannel}</td>
+			</tr>
+			<tr>
+				<td>支付单号：</td>
+				<td>$!{payNum}</td>
+			</tr>
+			#if($logistics)
+				<tr>
+					<td>物流公司：</td>
+					<td>$!{logistics}</td>
+				</tr>
+				<tr>
+					<td>物流订号：</td>
+					<td>$!{logisticsNum}</td>
+				</tr>
+			#end
+			<tr>
+				<td>下单时间：</td>
+				<td>$date.format("yyyy-MM-dd HH:mm:ss",$!{createTime})</td>
+			</tr>
+			<tr>
+				<td>付款时间：</td>
+				<td>$date.format("yyyy-MM-dd HH:mm:ss",$!{payTime})</td>
+			</tr>
+			#if($logistics)
+			<tr>
+				<td>发货时间：</td>
+				<td>$date.format("yyyy-MM-dd HH:mm:ss",$!{sendTime})</td>
+			</tr>
+			#end
+			#if($invoiceName)
+			<tr>
+				<td>发票抬头：</td>
+				<td>$!{invoiceName}</td>
+			</tr>
+			#end
+		</table>
+	</div>
+</div>
+</body>
+<script>
+    $(function(){
+    	
+		$(".btn").click(function(){
+			if($(this).find(".img1").is(":visible")){
+				$(this).find(".img1").hide();
+				$(this).find(".img2").show();
+			}else{
+				$(this).find(".img1").show();
+				$(this).find(".img2").hide();
+			}
+		});
+		$(".btn2").click(function(){
+			if($(this).find(".img1").is(":visible")){
+				$(this).find(".img1").hide();
+				$(this).find(".img2").show();
+				$(this).removeClass("bg1").addClass("bg2");
+			}else{
+				$(this).find(".img1").show();
+				$(this).find(".img2").hide();
+				$(this).removeClass("bg2").addClass("bg1");
+			}
+		});
+		$(".info-bottom").click(function(){
+			var productID = $(this).data("id");
+			location.href="${link.contextPath}/product/product_detail?productID="+productID;
+		});
+	});
+</script>
+#parse("./common/img_adjust.vm")
+</html>

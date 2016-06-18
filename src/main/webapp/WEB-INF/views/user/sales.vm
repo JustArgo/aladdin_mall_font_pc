@@ -1,0 +1,87 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>我的销售</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="$link.getContextPath()/js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="$link.getContextPath()/css/my-sale.css" type="text/css" />
+<script>
+$(function(){
+	$(".btn").click(function(){
+		if($(this).find(".img1").is(":visible")){
+			$(this).find(".img1").hide();
+			$(this).find(".img2").show();
+		}else{
+			$(this).find(".img1").show();
+			$(this).find(".img2").hide();
+		}
+	});
+	
+	$('#container').css('height',$(document).height()+20);
+	
+	$(window).scroll(function(){
+		var scrollTop = $(this).scrollTop();
+	　　  var scrollHeight = $(document).height();
+	　　  var windowHeight = $(this).height();
+	　　  if(scrollTop + windowHeight == scrollHeight){
+		  	scrollData.nextPage();
+		}
+	});
+	
+	var scrollData={
+		currentPage:0,
+		target:$('#main'),
+		pageSize:15,
+		append:function(str){
+			this.target.append(str);
+		},
+		nextPage:function(){
+			this.currentPage++;
+			$.ajax({ 
+				url: '$link.getContextPath()/user/sales/query',
+				data:{page:this.currentPage,pageSize:this.pageSize},
+				type:"post",
+				success: function(data){
+					var htmlStr='';
+					for(var i=0;i<data.length;i++){
+						htmlStr+='<div class="sale-list">\
+									<div class="sale-head">\
+										<div class="head-img">\
+											<img src="'+data[i].headImage+'" />\
+										</div>'+
+										data[i].nickName+'\
+									</div>\
+									<div class="sale-1">\
+										<p style="font-size:14px;color:#232323;">订单金额：<span style="color:#E81959">￥'+data[i].orderSum/100+'</span></p>\
+										<p>佣金：<span>￥'+data[i].remainReward/100+'</span></p>\
+									</div>\
+									<div class="sale-2">\
+										<p>'+data[i].completeTime+'</p>\
+										<p style="position:absolute;right:13px;color:#666;">交易成功</p>\
+									</div>\
+								</div>';
+					}
+					scrollData.append(htmlStr);
+				}
+			});
+		}
+	}
+	scrollData.nextPage();
+})
+</script>
+</head>
+<body>
+#parse('./common/header.vm')
+	<div id="container">
+		<div class="header">
+			<a href="$link.getContextPath()/user/index" class="header-back btn"> <img class="img1"
+				src="$link.getContextPath()/images/back_n.png"> <img class="img2"
+					src="$link.getContextPath()/images/back_p.png"></a> <span>我的销售</span>
+		</div>
+		<div class="sale-title">共$counts个佣金订单</div>
+		<div id="main" class="sale-area2"></div>
+	</div>
+</body>
+</html>
+

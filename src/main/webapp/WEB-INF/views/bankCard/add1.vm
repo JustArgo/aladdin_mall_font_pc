@@ -1,0 +1,136 @@
+﻿<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>添加银行卡</title>
+    <script type="text/javascript">
+        var rTimeArr = [];
+        rTimeArr[0] = {time : new Date()};
+        document.addEventListener("DOMContentLoaded",function(){
+            rTimeArr[1] = {time : new Date() , sTime : "0"};
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="/css/ariel-all.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/common.min.css">
+    <link rel="stylesheet" type="text/css" href="/css/new-card.min.css">
+     <link rel="stylesheet" href="${link.contextPath}/css/mall.css" type="text/css" />
+    <script type="text/javascript">
+        rTimeArr[2] = {time : new Date() , sTime : "0"};
+        if (window.JdAndroid){
+            window.JdAndroid.setPageIndex("cashierDesk_quick_newcard");
+        }
+    </script>
+<script type="text/javascript" src="/js/m_common2.1.js"></script>
+<script type="text/javascript" src="/js/m_common_header_bottom2.1.js"></script>
+<link rel="stylesheet" type="text/css" charset="utf-8" href="/css/header.css">
+<body>
+<div id="viewport">
+	<div class="header">
+        <a href="javascript:history.go(-1);" class="header-back btn">
+			<img class="img1" src="${link.contextPath}/images/back_n.png">
+			<img class="img2" src="${link.contextPath}/images/back_p.png">
+		</a>
+        <span>新建银行卡</span>
+    </div>
+    <div class="JS-page-ct page-ct page-ct-m">
+        <div class="JS-page-scorller" style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+            <ul class="card-list">
+                <li class="STEP_TITLE">
+                    <span class="INPUT_CARD_NUMBER RED_COLOR">输入银行卡号</span>
+                    <span class="INPUT_INFO">填写信息</span>
+                    <span class="BIND_AND_PAY">#if(${addType}=='pay')绑定并支付#else完成绑定#end</span>
+                </li>
+                <li class="STEP_ITEM">
+                    <div class="STEP_LINE">
+                        <div class="PERCENT" style="width: 0%;"> </div>
+                    </div>
+                    <div class="CIRCLE" style="margin-left: 0%;">
+                        <div class="RED_BALL"></div>
+                    </div>
+                </li>
+                <li class="COMM_1PX_BORDER card-list-item ">
+                    <span class="title-main">银行卡号</span>
+                    <div class="textfile card-textfile card-no">
+                        <input type="tel" maxlength="23" class="textfile-input" placeholder="请输入银行卡号">
+                        <a href="javascript:void(0);" class="close-btn textfile-reset">
+                            <span class="close-btn-cross"></span>
+                        </a>
+                    </div>
+                </li>
+            </ul>
+            <a href="javascript:void(0);" class="btn b-btn next">下一步</a>
+            <div class="COMM_FIXED_QQ_NAV_BAR"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="/js/ariel-all.min.js"></script>
+<script type="text/javascript" src="/js/pay-all.min.js"></script>
+<script type="text/javascript" src="/js/new-card.min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$(".textfile-reset").click(function(){
+			$(".textfile-input").val("");
+		});
+		$(".next").click(function(){
+			var result = validate();
+			if(result!=true){
+				mask(result);
+				setTimeout(function(){
+					removeMask();
+				},1100);
+				return;
+			}
+			
+			var accNo = $(".textfile-input").val().replace(/\s+/g,"");
+			$.ajax({
+				url:"/bankCard/exists-bankcard",
+				data:{"accNo":accNo},
+				dataType:"json",
+				success:function(ret){
+					if(ret && ret.errcode==0){
+						
+						#if(${addType}=='pay')
+						if(confirm("您已绑定该银行卡,是否接收验证码并支付")){
+							location.href="/bankCard/verify-code?orderCode=$!{orderCode}&cardId="+ret.cardId;
+						}else{
+							return;
+						}
+						#else
+							alert("您已绑定该银行卡");
+						#end
+					}else{
+						#if(${addType}=='pay')
+							location.href="/bankCard/add/2?accNo="+accNo+"&orderCode=$!{orderCode}&addType=$!{addType}";
+						#else
+							location.href="/bankCard/add/2?accNo="+accNo+"&addType=$!{addType}";
+						#end
+					}
+				}
+			});
+			
+		});
+		function validate(){
+			var accNo = $(".textfile-input").val().replace(/\s+/g,"");	
+			if(accNo.length!=16 && accNo.length!=19){
+				return "银行卡号位数不符合规范";
+			}
+			if(accNo.indexOf("62")!=0){
+				return "您输入的卡号不是银联卡";
+			}
+			return true;
+		}
+		
+		function mask(note){
+			$("#viewport").append('<div class="pop-mask"></div> <div class="pop-wrapper">    <div class="pop" style="opacity: 1;">        <div class="pop-description-wrap">            <p class="pop-description">'+note+'</p>        </div>    </div></div>');
+		}
+		function removeMask(){
+			$(".pop-mask").remove();
+			$(".pop-wrapper").remove();
+		}
+		
+	});
+</script>
+
+
+</body></html>

@@ -1,0 +1,10 @@
+<script type="text/javascript" src="$link.getContextPath()/js/imgLiquid-min.js"></script>
+<script type="text/javascript">
+	$(function(){
+		$(".imgLiquidNotFill").imgLiquid({
+	        fill: false,
+	        horizontalAlign: "center",
+	        verticalAlign: "center"
+	    });
+	})
+</script>

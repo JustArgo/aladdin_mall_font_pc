@@ -1,0 +1,190 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>个人中心</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="$link.getContextPath()/js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="$link.getContextPath()/css/common.css" type="text/css" />
+<link rel="stylesheet" href="$link.getContextPath()/css/personal-index.css" type="text/css" />
+<style>
+	#container{
+		padding-bottom:43px;
+	}
+</style>
+</head>
+<!-- title-2 文字位置修改 -->
+<body>
+#parse("./common/header.vm") 
+<div id="container">
+    <div class="header">
+        <a href="$link.getContextURL()" class="header-back btn">
+			<img class="img1" src="$link.getContextPath()/images/back_n.png">
+			<img class="img2" src="$link.getContextPath()/images/back_p.png">
+		</a>
+        <span>个人中心</span>
+    </div>
+	<div class="personal-title">
+		<div class="title-1">
+			<a href="${link.contextPath}/user/info-index">
+				<img src="#if(!$userInfo.headImage)$link.getContextPath()/images/headImg.png#else$userInfo.headImage#end" />
+			</a>
+		</div>
+		<div class="title-4" style="width:120px;heigth:25px;position:absolute;bottom:43px;left:95px;text-align:center;white-space:nowrap;color:#fff;">
+			<p style="color:#fff;">#if(!$userInfo.nickName)免费号${userInfo.luckNum}#else$userInfo.nickName#end</p>
+		</div>
+		<div class="title-2">
+			
+			<p style="color:#E81959;" onclick="location.href='$link.getContextPath()/user/wealth'">￥$number.format("#0.00",$math.div(${remainingSum},100))</p>
+			<p style="color:#666;font-size:12px;" onclick="location.href='$link.getContextPath()/user/wealth'">我的财富</p>
+		</div>
+		<div class="title-3">
+			<p style="color:#E81959;" onclick="location.href='$link.getContextPath()/user/team'">${memberCount}</p>
+			<p style="color:#666;font-size:12px;" onclick="location.href='$link.getContextPath()/user/team'">会员数</p>
+		</div>
+	</div>
+
+	<div class="personal-order personal-order_without_group">
+
+		<a href="${link.contextPath}/order/order-index" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/commodity_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/commodity_p.png" />
+			商品订单
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+
+		<!--<a href="${link.contextPath}/groupbuy/view-order" class="btn2"><div class="order-1">
+
+			<img class="img1" src="$link.getContextPath()/images/commodity_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/commodity_p.png" />
+			拼团订单
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+
+ 		<div class="order-2"> -->
+
+<!-- 			<a href="javascript:" class="btn3 bg1">拼团订单</a> -->
+<!-- 			<a href="javascript:" class="btn3 bg1">1元购订单</a> -->
+<!-- 			<a href="javascript:" class="btn3 bg1">砍价订单</a> -->
+<!-- 		</div> -->
+	</div>
+	<div class="personal-select">
+		<a href="$link.getContextPath()/user/wealth" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/treasure_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/treasure_p.png" />
+			我的财富
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+		<a href="$link.getContextPath()/user/sales" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/sell_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/sell_p.png" />
+			我的销售
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+		<a href="team" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/team_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/team_p.png" />
+			我的团队
+			<span>
+				<img src="/images/arrow.png">
+			</span>
+		</div></a>
+<!-- 		<a href="javascript:" class="btn2"><div class="order-1"> -->
+<!-- 			<img class="img1" src="$link.getContextPath()/images/shop_n.png" /> -->
+<!-- 			<img class="img2" src="$link.getContextPath()/images/shop_p.png" /> -->
+<!-- 			我的店铺 -->
+<!-- 			<span> -->
+<!-- 				<img src="$link.getContextPath()/images/arrow.png"> -->
+<!-- 			</span> -->
+<!-- 		</div></a> -->
+		<a href="$link.getContextPath()/user/generalize" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/generalize_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/generalize_p.png" />
+			我要推广
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+		<a href="$link.getContextPath()/user/collect" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/collect_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/collect_p.png" />
+			我的收藏
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+		<a href="https://eco-api.meiqia.com/dist/standalone.html?eid=7466" class="btn2"><div class="order-1">
+			<img class="img1" src="$link.getContextPath()/images/feedback_n.png" />
+			<img class="img2" src="$link.getContextPath()/images/feedback_p.png" />
+			意见反馈
+			<span>
+				<img src="$link.getContextPath()/images/arrow.png">
+			</span>
+		</div></a>
+		
+	</div>
+	
+		<style>.logo a{text-decoration:none;color:#666;}.logo img{vertical-align:top;}.logo .img2{display:none;}span.num{background-color: #E81959;color:#fff;font-family:Verdana;font-weight:normal;font-size:15px;padding:2px 2px;border-radius:15px;position:absolute;margin-top:-7px;margin-left:-10px;line-height:15px;width:15px;height:15px;}.logo{width:100%;height:45px;border:1px solid #cecece;box-shadow:0 0 5px #cecece;background-color:#fff;position:fixed;bottom:0;left:0;z-index:9999}.logo-main{width:100%;height:50px;}.logo-circle{display:block;width:60px;height:60px;border-radius:50%;position:absolute;background-color:#fff; border:1px solid #cecece;box-shadow:0 0 5px #cecece;z-index:99;top:-25px;left:40%;text-align:center;color:#b1b1b1}.logo-style{width:25%;height:30px;line-height:40px;text-align:center;float:left;}.logo-1{wdith:100%;height:50%;padding-top:5px;}.logo-2{wdith:100%;height:50%;line-height:35px;}.logo-1 img{width:35px;height:35px;}.car-1,.wealth-1{width:60%;height:50%;margin-left:20%;}.car-2,.wealth-2{width:60%;height:50%;margin-left:20%;}.car-1 img,.wealth-1 img{width:30px;height:30px;}</style>
+		<div class='logo'><div class='logo-main'><div class='logo-home logo-style'><a href='/' class='car indexbtn'><div class='car-1'><img class='img1' src='${link.contextPath}/images/img/index/home_n.png'><img class='img2' src='${link.contextPath}/images/img/index/home_p.png'></div></a><div class='car-2'><a href='/' class='car indexbtn'><span style='font-size:12px;'>首页</span></a></div></div><div class='logo-category logo-style'><a href='/productCategory/index' class='car indexbtn'><div class='car-1'><img class='img1' src='${link.contextPath}/images/img/index/category_n.png'><img class='img2' src='${link.contextPath}/images/img/index/category_p.png'></div></a><div class='car-2'><a href='/productCategory/index' class='car indexbtn'><span style='font-size:12px;'>分类</span></a></div></div><div class='logo-car logo-style'><a href='/shop_car' class='car indexbtn'><div class='car-1'><img class='img1' src='${link.contextPath}/images/img/index/shopping_cart_n.png'><img class='img2' src='${link.contextPath}/images/img/index/shopping_cart_p.png'><span class='num'>0</span></div></a><div class='car-2'><a href='/shop_car' class='car indexbtn'><span style='font-size:12px;'>购物车</span></a></div></div><div class='logo-wealth logo-style'><a href='/user/index' class='wealth indexbtn'><div class='wealth-1'><img class='img1' src='${link.contextPath}/images/img/index/treasure_p.png'><img class='img2' src='${link.contextPath}/images/img/index/treasure_p.png'></div><div class='wealth-2'><a href='/user/index' class='car indexbtn'><span style='font-size:12px;'>个人中心</span></a></div></div></div></div>
+		<script type='text/javascript'>
+			$.get('/shop_car/shopcar_count',function(ret){if(ret && ret.errcode==0){$('.num').text(ret.count);}else{$('.num').text(0);}});$('.indexbtn').click(function(){if($(this).find('.img1').is(':visible')){$(this).find('.img1').hide();$(this).find('.img2').show();}else{$(this).find('.img2').hide();$(this).find('.img1').show();}});
+			function choose(classs){
+				$("."+classs+" a").attr("href","javascript:");
+				$("."+classs+" .img1").hide();
+				$("."+classs+" .img2").show();
+				$("."+classs+" span").css("color","#E71959");
+			}
+			choose("logo-wealth");
+		</script>
+	 
+	
+</body>
+<script>
+    $(function(){
+		$(".btn").click(function(){
+			if($(this).find(".img1").is(":visible")){
+				$(this).find(".img1").hide();
+				$(this).find(".img2").show();
+			}else{
+				$(this).find(".img1").show();
+				$(this).find(".img2").hide();
+			}
+		});
+		$(".btn2").click(function(){
+			if($(this).find(".img1").is(":visible")){
+				$(this).find(".img1").hide();
+				$(this).find(".img2").show();
+				$(this).children(".order-1").css({"background-color":"#E81959","color":"#fff","width":"100%","margin-left":"0"});
+			}
+			setTimeout(function(){
+				$(".btn2").find(".img1").show();
+				$(".btn2").find(".img2").hide();
+				$(".order-1").css({"background-color":"#fff","color":"#555","width":"94%","margin-left":"3%"});
+			},1000)
+		});
+		$(".btn3").click(function(){
+			if($(this).hasClass("bg1")){
+				$(".btn3").removeClass("bg2").addClass("bg1");
+				$(this).removeClass("bg1").addClass("bg2");
+			}else{
+				$(this).removeClass("bg2").addClass("bg1");
+			}
+			setTimeout(function(){
+				$(".btn3").removeClass("bg2").addClass("bg1");
+			},1000)
+
+		});	
+		
+		
+	});
+</script>
+</html>
+ 

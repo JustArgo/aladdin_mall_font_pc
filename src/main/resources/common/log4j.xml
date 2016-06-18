@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
+<log4j:configuration xmlns:log4j='http://jakarta.apache.org/log4j/'>
+
+	<appender name="dailyINFO" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="logs/info.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d{yyyy-MM-dd HH:mm:ss} [ %t ] - [ %p ] [%c] %m%n" />
+		</layout>
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+			<param name="LevelMin" value="INFO" />
+			<param name="LevelMax" value="ERROR" />
+		</filter>
+	</appender>
+
+
+	<!-- 微信回调接口日志 -->
+	<appender name="dailyWx" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="logs/wx.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t [%c{2}] %m%n" />
+		</layout>
+	</appender>
+
+
+	<!-- 银联回调接口日志 -->
+	<appender name="dailyUnionpay" class="org.apache.log4j.DailyRollingFileAppender">
+		<param name="File" value="logs/unionpay.log" />
+		<param name="DatePattern" value="'.'yyyy-MM-dd'.log'" />
+		<layout class="org.apache.log4j.PatternLayout">
+			<param name="ConversionPattern" value="%d %t [%c{2}] %m%n" />
+		</layout>
+	</appender>
+
+
+	<appender name="asyncDailyINFO" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="0" />
+		<appender-ref ref="dailyINFO" />
+	</appender>
+
+	<!-- 微信回调接口日志 -->
+	<appender name="asyncDailyWx" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="0" />
+		<appender-ref ref="dailyWx" />
+	</appender>
+
+	<!-- 银联回调接口日志 -->
+	<appender name="asyncDailyUnionpay" class="org.apache.log4j.AsyncAppender">
+		<param name="BufferSize" value="0" />
+		<appender-ref ref="dailyUnionpay" />
+	</appender>
+
+	<!-- 微信回调接口日志 -->
+	<logger name="com.mi360.aladdin.mall.controller.WxController" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="asyncDailyWx" />
+	</logger>
+
+	<!-- 银联回调接口日志 -->
+	<logger name="com.mi360.aladdin.mall.controller.UnionPayController" additivity="false">
+		<level value="debug" />
+		<appender-ref ref="asyncDailyUnionpay" />
+	</logger>
+
+	<root>
+		<level value="INFO" />
+		<appender-ref ref="asyncDailyINFO" />
+		<!-- <appender-ref ref="asyncDailyERROR" /> -->
+	</root>
+
+</log4j:configuration>

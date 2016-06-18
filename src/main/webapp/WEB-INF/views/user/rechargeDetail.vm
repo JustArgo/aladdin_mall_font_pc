@@ -1,0 +1,88 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+	<title>充值记录</title>
+	<link rel="stylesheet" type="text/css" href="$link.getContextPath()/css/recharge.css" />
+	<script type="text/javascript" src="$link.getContextPath()/js/jquery-2.1.3.min.js"></script>
+
+	<script>
+		$(function() {
+			share_link='http://$request.serverName?iv=$session.getAttribute("principal").userId';
+			$(".btn").click(function() {
+				if ($(this).find(".img1").is(":visible")) {
+					$(this).find(".img1").hide();
+					$(this).find(".img2").show();
+				} else {
+					$(this).find(".img1").show();
+					$(this).find(".img2").hide();
+				}
+			});
+			$(".menu-btn").css({"color" : "#666"});
+			
+			$('#container').css('height',$(document).height()+20);
+			
+		});
+	</script>
+</head>
+<body>
+	#parse("./common/header.vm")
+	<div id="container">
+		<div class="header">
+			<a href="$link.getContextPath()/user/recharge?tabIdx=1" class="header-back btn"> <img class="img1"
+				src="$link.getContextPath()/images/back_n.png"> <img class="img2"
+					src="$link.getContextPath()/images/back_p.png"></a> <span>充值记录</span>
+		</div>
+		<div class="header-menu">
+			<ul>
+				<li><a href="$link.getContextPath()/user/recharge?tabIdx=0" class="menu-btn">线下充值</a></li>
+				<li><a href="$link.getContextPath()/user/recharge?tabIdx=1" class="menu-btn">充值记录</a></li>
+			</ul>
+		</div>
+		<div #if($tabIdx!=0)style= "display:none;"#else style="background-color:#fff;margin-top: 10px;box-shadow: 0 0 3px #cecece;background-color: #fff;padding-bottom: 10px;" #end>
+			<span style="display:inline-block;padding:10px 0 0 2%;">免费号$session.getAttribute("principal").luckNum</span>
+		</div>
+		<div id="tabs">
+			<div class="sale-area1" style="padding-bottom: 10px;">
+				<form id="form1" method="post" action="$link.getContextPath()/user/applyOfflineRecharge">
+					<table style="width: 100%;">
+						<tr>
+							<td class="label">免费号</td>
+							<td><input class="input" type="text" disabled="disabled" value="$!rechargeDetail.luckNum"></input></td>
+						</tr>
+						<tr>
+							<td class="label">交易单号</td>
+							<td><input class="input" type="text" disabled="disabled" value="$!rechargeDetail.externalOrderId"></input></td>
+						</tr>
+						<tr>
+							<td class="label">充值金额</td>
+							<td><input class="input" type="text" disabled="disabled" value="$number.format("#0.00",$math.div(${rechargeDetail.sum},100))"></input></td>
+						</tr>
+						<tr>
+							<td class="label">手机号码</td>
+							<td><input class="input" type="text" disabled="disabled" value="$!rechargeDetail.phone"></input></td>
+						</tr>
+						<!-- 						<tr> -->
+						<!-- 							<td class="label">交易时间</td> -->
+						<!-- 							<td><input class="input" type="datetime-local" id="externalOrderTime" name="externalOrderTime"></input></td> -->
+						<!-- 						</tr> -->
+						<tr>
+							<td class="label">备注说明</td>
+							<td>
+								<input class="input" type="text" disabled="disabled" value="$!rechargeDetail.remark"></input>
+							</td>
+						</tr>
+						<tr>
+							<td class="label" style="vertical-align:top;">审批意见</td>
+							<td>
+								<textarea rows="5" disabled="disabled" style="overflow-x:hidden;width:90%;border-radius: 5px;border: 1px solid #cecece;background-color: #f3f3f3">$!rechargeDetail.message</textarea>
+							</td>
+						</tr>
+					</table>
+			</div>
+		</div>
+	</div>
+</body>
+</html>
+

@@ -1,0 +1,151 @@
+<html><head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <meta name="format-detection" content="telephone=no">
+        <title>短信验证</title>
+        <script type="text/javascript">
+            var rTimeArr = [];
+            rTimeArr[0] = {time : new Date()};
+            document.addEventListener("DOMContentLoaded",function(){
+                rTimeArr[1] = {time : new Date() , sTime : "0"};
+            });
+        </script>
+        <link rel="stylesheet" type="text/css" href="/css/ariel-all.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/common.min.css">
+        <link rel="stylesheet" type="text/css" href="/css/verify-code.min.css">
+		<link rel="stylesheet" href="${link.contextPath}/css/mall.css" type="text/css" />
+        <script type="text/javascript">
+            rTimeArr[2] = {time : new Date() , sTime : "0"};
+            if (window.JdAndroid){
+                window.JdAndroid.setPageIndex("cashierDesk_verify_code");
+            }
+        </script>
+    <script type="text/javascript" src="/js/m_common2.1.js"></script>
+	<script type="text/javascript" src="/js/m_common_header_bottom2.1.js"></script>
+	<link rel="stylesheet" type="text/css" charset="utf-8" href="/css/header.css?v=2.1"></head>
+    <body>
+        <div id="viewport">
+            <div class="header">
+				<a href="javascript:history.go(-1);" class="header-back btn">
+					<img class="img1" src="${link.contextPath}/images/classfiy/back_n.png">
+					<img class="img2" src="${link.contextPath}/images/classfiy/back_p.png">
+				</a>
+				<span>短信验证</span>
+			</div>
+            <div class="JS-page-ct page-ct page-ct-m">
+                    <div class="VERIFY_CODE_FORM" style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px); display: block;">
+                       <span class="MOBILE_VALIDATION_TIP">为了保障您的资金安全，该笔交易需要短信确认，验证码已发送至手机：<strong>$!{phoneNo2}</strong></span> 
+                       <div class="VERIFY_CODE">
+                           <a href="javascript:void(0);" class="COUNTER_DOWN">5秒</a>
+                           <div class="VERIFY_CODE_INPUT" style="width: 1130px;">                            
+                            <input type="tel" oninput="if(value.length>6)value=value.slice(0,6)" placeholder="请输入验证码" class="textfile-input VERIFY_CODE_CONTENT" maxlength="6">
+                            <a href="javascript:void(0);" class="close-btn textfile-reset1">
+                                   <span class="close-btn-cross"></span>
+                            </a>
+                           </div>
+                           <div style="clear:both;">
+                       </div>
+                       
+                      <a href="javascript:void(0);" class="btn b-btn next VERIFY_CODE_NEXT">确认支付</a>
+                    
+                    </div>     
+
+                    <div class="COMM_FIXED_QQ_NAV_BAR"></div>
+                </div>
+        </div>
+       
+        <script type="text/javascript" src="/js/ariel-all.min.js"></script>
+        <script type="text/javascript" src="/js/pay-all.min.js"></script>
+        <script type="text/javascript" src="/js/verify-code.min.js"></script>
+		<script type="text/javascript">
+			$(function(){
+				countDown();
+				$(".VERIFY_CODE").on("click",".COUNTER_DOWN_ENABLE",function(){
+					$.ajax({
+						url:"/bankCard/send-smscode",
+						data:{"phoneNo":"$!{phoneNo}","orderCode":"$!{orderCode}","txnTime":"$!{txnTime}","txnAmt":"$!{txnAmt}","accNo":"$!{accNo}"},
+						dataType:"json",
+						success:function(ret){
+							console.log(ret);
+							if(ret && ret.errcode==0){
+								$(".COUNTER_DOWN").removeClass("COUNTER_DOWN_ENABLE");
+								countDown();
+							}else{
+								mask("获取验证码失败");
+								setTimeout(function(){
+									removeMask();
+								},1500);
+							}
+						}
+						
+					});
+					
+				});
+				
+				$(".next").click(payWithSms);
+				
+			});
+			function payWithSms(){
+					if(/[0-9a-zA-Z]{6}/.test($(".textfile-input").val())){
+						
+					}else{
+						mask("验证码格式不正确");
+						setTimeout(function(){
+							removeMask();
+						},1500);
+						return;
+					}
+					$(".next").unbind("click");
+					$.ajax({
+						url:"/bankCard/pay-with-sms",
+						type:"POST",
+						data:{"orderCode":"$!{orderCode}","txnAmt":"$!{txnAmt}", "accNo":"$!{accNo}", "smsCode":$(".textfile-input").val()},
+						dataType:"json",
+						success:function(ret){
+							console.log(ret);
+							if(ret && ret.errcode==10001){
+								mask(ret.errmsg);
+								window.setTimeout(function(){
+									removeMask();
+								},1500);
+								$(".next").bind("click",payWithSms);
+							}else{
+								location.href="/order/pay-result?orderCode=$!{orderCode}&isUnion=true";
+							}
+						},
+						error:function(){
+							mask("系统繁忙,请稍候重试");
+							setTimeout(function(){
+								removeMask();
+							},1500);
+						}
+					});
+			}
+			function countDown(){
+				$(".COUNTER_DOWN").text("5秒");
+				var interId =   window.setInterval(function(){
+									var time = parseInt($(".COUNTER_DOWN").text().replace("秒",""));
+									if(time<=1){
+										window.clearInterval(interId);
+										$(".COUNTER_DOWN").text("重新获取");
+										$(".COUNTER_DOWN").addClass("COUNTER_DOWN_ENABLE");
+									}else{
+										time = time-1;
+										$(".COUNTER_DOWN").text(time+"秒");
+									}
+									
+								},1000);
+			}
+			
+			function mask(note){
+				$("#viewport").append('<div class="pop-mask"></div> <div class="pop-wrapper">    <div class="pop" style="opacity: 1;">        <div class="pop-description-wrap">            <p class="pop-description">'+note+'</p>        </div>    </div></div>');
+			}
+			function removeMask(){
+				$(".pop-mask").remove();
+				$(".pop-wrapper").remove();
+			}
+		</script>
+	
+		
+
+</div></body></html>

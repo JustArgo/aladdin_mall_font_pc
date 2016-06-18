@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:dubbo="http://code.alibabatech.com/schema/dubbo"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+				        http://www.springframework.org/schema/beans/spring-beans.xsd
+				        http://code.alibabatech.com/schema/dubbo
+				        http://code.alibabatech.com/schema/dubbo/dubbo.xsd
+				        http://www.springframework.org/schema/context 
+						http://www.springframework.org/schema/context/spring-context-3.0.xsd 
+						http://www.springframework.org/schema/mvc 
+						http://www.springframework.org/schema/mvc/spring-mvc.xsd
+						http://www.springframework.org/schema/aop
+						http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+						http://www.springframework.org/schema/tx
+						http://www.springframework.org/schema/tx/spring-tx-3.0.xsd">
+
+	<context:property-placeholder location="classpath*:/aladdin.properties" system-properties-mode="NEVER"/>
+
+	<context:component-scan base-package="com.mi360.aladdin.mall" />
+
+	<mvc:annotation-driven />
+
+	<mvc:default-servlet-handler />
+
+	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<mvc:exclude-mapping path="/wx/**" />
+			<mvc:exclude-mapping path="/css/**" />
+			<mvc:exclude-mapping path="/js/**" />
+			<mvc:exclude-mapping path="/images/**" />
+			<mvc:exclude-mapping path="/user/logout" />
+			<mvc:exclude-mapping path="/favicon.ico" />
+			<mvc:exclude-mapping path="/order/unifiedorder_notify"/>
+			<mvc:exclude-mapping path="/unionpay/notify"/>
+			<mvc:exclude-mapping path="/*.html"/>
+			<bean id="clientInterceptor"
+				class="com.mi360.aladdin.mall.interceptor.ClientInterceptor" />
+		</mvc:interceptor>
+	</mvc:interceptors> -->
+
+	<!-- 这里要用velocity的Resolver -->
+	
+	<bean id="home" class="org.springframework.web.servlet.view.InternalResourceView"> 
+	   <property name="url" value="/page/home.html"/>
+	</bean>
+	
+	<bean id="beanNameViewResolver" class="org.springframework.web.servlet.view.BeanNameViewResolver">
+	 <property name="order" value="0"></property>
+	</bean>
+	
+	<bean
+		class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		<property name="order" value="1"/> 
+		<property name="cache" value="true" />
+		<property name="suffix" value=".vm" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+		<property name="viewClass"
+			value="com.mi360.aladdin.mall.util.VelocityToolbox20View" />
+		<property name="toolboxConfigLocation" value="/WEB-INF/toolbox.xml" />
+	</bean>
+
+	<!-- 配置velocity引擎 -->
+	<bean id="velocityConfigurer"
+		class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		<property name="resourceLoaderPath" value="/WEB-INF/views/" /><!-- 
+			模板存放的路径 -->
+		<property name="configLocation" value="classpath:velocity.properties" />
+	</bean>
+</beans>

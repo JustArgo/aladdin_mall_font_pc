@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>搜索</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="${link.contextPath}/js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="${link.contextPath}/css/index.css" type="text/css" />
+</head>
+<body>
+#parse("./common/header.vm") 
+<div id="container">
+    <div class="header">
+		<a href="${link.contextPath}/">
+			<div class="header-0">
+				<div class="back">
+					<div class="back-1">
+						<img class="img1" src="${link.contextPath}/images/classfiy/back_n.png" />
+						<img class="img2" src="${link.contextPath}/images/classfiy/back_p.png" />
+					</div>
+				</div>
+			</div>
+		</a>
+		<input type="hidden" name="searchID" value="" />
+		<form id="searchForm" action="${link.contextPath}/product/search?startIndex=0&pageSize=8" method="POST">
+		<div class="header-2">	
+			<input type="text" class="search-text" placeholder="输入关键字" name="keyWord" onfocus="this.style.imeMode='active'" value="$!{keyWord}"/>
+		</div>
+		</form>
+		<a href="javascript:" class="btn"><div class="header-3">
+			<img class="img1" src="${link.contextPath}/images/classfiy/search_n.png" />
+			<img class="img2" src="${link.contextPath}/images/classfiy/search_p.png" />
+		</div></a>
+    </div>
+	<div class="search-main">
+		 <div class="search-content">
+		 	
+		 	<div class="search-history">
+				<span>历史搜索</span>
+			</div>
+		 	
+		 	#foreach($searchRecord in $searchRecordList)
+				<a href="javascript:" class="search-key">
+					<div class="search-history" data-id="$searchRecord.ID">$searchRecord.searchKey</div>
+			    </a>
+		 	#end
+		
+		</div>
+	</div>
+</div>
+</body>
+<script type="text/javascript">
+	$(function(){
+		
+		$(".btn").click(function(){
+			$("#searchForm").submit();
+		});
+		
+		$(".search-key").click(function(){
+			var searchID = $(this).find("div").data("id");
+			console.log(searchID);
+			$("input[name=searchID]").val(searchID);
+			$(".search-text").val($(this).find("div").text());
+			//alert("#"+$(this).find("div").text()+"#");
+			$("#searchForm").submit();
+		});
+		
+		$("input[name=keyWord]").focus();
+		
+	})
+</script>
+</html>
+ 

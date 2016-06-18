@@ -1,0 +1,97 @@
+<html><head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="format-detection" content="telephone=no">
+    <title>快捷支付</title>
+    <script type="text/javascript">
+        var rTimeArr = [];
+        rTimeArr[0] = {time : new Date()};
+        document.addEventListener("DOMContentLoaded",function(){
+            rTimeArr[1] = {time : new Date() , sTime : "0"};
+        });
+    </script>
+    <link rel="stylesheet" type="text/css" href="${link.contextPath}/css/ariel-all.min.css">
+    <link rel="stylesheet" type="text/css" href="${link.contextPath}/css/common.min.css">
+	<link rel="stylesheet" type="text/css" href="${link.contextPath}/css/home.min.css">
+    <link rel="stylesheet" href="${link.contextPath}/css/mall.css" type="text/css" />
+    <script type="text/javascript">
+        rTimeArr[2] = {time : new Date() , sTime : "0"};
+        if (window.JdAndroid){
+            window.JdAndroid.setPageIndex("cashierDesk_quick");
+        }
+    </script>
+<script type="text/javascript" src="${link.contextPath}/js/m_common2.1.js"></script>
+<script type="text/javascript" src="${link.contextPath}/js/m_common_header_bottom2.1.js"></script>
+<link rel="stylesheet" type="text/css" charset="utf-8" href="${link.contextPath}/css/header.css?v=2.1"></head>
+<body class="BACKGROUD_COLOR">
+<div id="viewport">
+	<div class="header">
+        <a href="${link.contextPath}/order/order-index" class="header-back btn">
+			<img class="img1" src="../images/back_n.png">
+			<img class="img2" src="../images/back_p.png">
+		</a>
+        <span>银联支付</span>
+	</div>
+    <div class="order-bar-wrap order-bar-wrap-m">
+        <div class="order-bar COMM_SIMULATION_1PX_BORDER">
+            <span class="JS-pay-tip pay-tip">订单金额</span>
+                    <span class="pay-total">
+                        <strong class="JS-pay-total"><em class="pay-total-icon inited"></em>$!number.format("#0.00",$math.div($!{pSum},100))元</strong>
+                    </span>
+        </div>
+    </div>
+	<select name="bank" class="bank-select">
+		#foreach($bankCard in $bankCardList)
+			<option value="${bankCard.id}">${bankCard.bankName}($bankCard.cardNum.substring($math.sub($bankCard.cardNum.length(),4),$bankCard.cardNum.length()))</option>			
+		#end
+		<option value="new">添加银行卡</option>
+	</select>
+    <div class="JS-page-ct page-ct page-ct-m">
+        <div class="JS-page-scorller" style="transition-timing-function: cubic-bezier(0.1, 0.57, 0.1, 1); transition-duration: 0ms; transform: translate(0px, 0px) translateZ(0px);">
+            <ul class="list pay-list default-pay-list COMM_SIMULATION_1PX_BORDER no-bottom-ul quick-pay-page" style="display: block;">
+            <li class="list-item pay-list-item default-pay-list-item quick-pay" style="display: list-item;">
+			<div class="next-wrap quick-next-wrap"><a href="javascript:void(0);" class="btn b-btn next">立即支付</a></div></li></ul>
+            <div class="COMM_FIXED_QQ_NAV_BAR"></div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" src="${link.contextPath}/js/ariel-all.min.js"></script>
+<script type="text/javascript" src="${link.contextPath}/js/pay-all.min.js"></script>
+<script type="text/javascript" src="${link.contextPath}/js/Payment.min.js"></script>
+<script type="text/javascript" src="${link.contextPath}/js/quick-pay.min.js"></script>
+
+<style>
+	.bank-select{
+		position: absolute;
+		top: 90px;
+		z-index: 55;
+		width: 100%;
+		height: 40px;
+	}
+	.bank-select option{
+		height:55px;
+		line-height:55px;
+		white-space:nowrap;
+		min-height:5em;
+	}
+</style>
+<script>
+	$(function(){
+		$(".next").click(function(){
+			var cardId = $(".bank-select").val();
+			console.log("cardId:"+cardId);
+			if($(".bank-select").val()==='new'){
+				#if(${addType}=='pay')
+					location.href="/bankCard/add/1?orderCode=${orderCode}&addType=$!{addType}";
+				#else
+					location.href="/bankCard/add/1?addType=$!{addType}";
+				#end
+			}else{
+				location.href="/bankCard/verify-code?orderCode=${orderCode}&cardId="+cardId;
+			}
+			
+		});
+	});
+</script>
+</body></html>
