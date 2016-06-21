@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>销售统计</title>
+ <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<script src="/js/jquery-2.1.3.min.js"></script>
+<link rel="stylesheet" href="/css/sales-statistics.css" type="text/css" />
+</head>
+<body>
+<div id="container">
+    <div class="header">
+        <a href="my-shop.html" class="header-back btn">
+			<img class="img1" src="/images/back_n.png">
+			<img class="img2" src="/images/back_p.png">
+		</a>
+        <span>销售统计</span>
+	</div>
+	<div class="header-menu">
+		<a href="javascript:" style="border-right:1px solid #cecece;color:#E81959" id="statistics">收入统计</a>
+		<a href="javascript:" id="orderNum" >订单量</a>
+	</div>
+	<div class="statistics-1">
+		<div class="sales-area">
+			<div class="sales-1">
+				<span>2016-02</span>
+				<span class="sales-price">￥16.00</span>
+			</div>
+			
+			#foreach($distribution in $distributionList)
+			
+			<div class="sales-2">
+				<div class="sales-img">
+					<img src="$qiniu.getDownloadUrl($distribution.skuImg)" />
+				</div>
+				<p>通过代销$!{distribution.productName}商品获得佣金</p>
+				<p><span class="time">$!date.format("yyyy-MM-dd",$!{distribution.completeTime})</span><span class="price">￥$number.format("#0.00",$!math.div(${distribution.distributionUserReward},100))</span></p>
+			</div>
+			
+			#end
+			
+			<div class="sales-2" style="border-bottom:none;">
+				<div class="sales-img">
+					<img src="/images/thumbnail3.png" />
+				</div>
+				<p>通过代销玫琳凯护肤品商品获得佣金</p>
+				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
+			</div>		
+		</div></a>
+		<div class="sales-area">
+			<div class="sales-1">
+				<span>2016-01</span>
+				<span class="sales-price">￥16.00</span>
+			</div>
+			<div class="sales-2">
+				<div class="sales-img">
+					<img src="/images/thumbnail3.png" />
+				</div>
+				<p>通过代销玫琳凯护肤品商品获得佣金</p>
+				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
+			</div>
+			<div class="sales-2" style="border-bottom:none;">
+				<div class="sales-img">
+					<img src="/images/thumbnail3.png" />
+				</div>
+				<p>通过代销玫琳凯护肤品商品获得佣金</p>
+				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
+			</div>		
+		</div>
+	</div>
+	<div class="orderNum-1" style="display:none;">
+		<div class="orderNum-area">
+			<div class="area-title">2016-02(共2单)</div>
+			<div class="order-info">
+				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
+					<div class="info-bottom">
+						<div class="titleb">供应商：阿里巴巴天猫商城</div>
+							<div class="info-bottom">
+								<div class="info-bottom-img">
+									<img src="/images/thumbnail2.png" />
+								</div>
+								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
+								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
+								<div class="bottom-4">
+									<div class="bottom-number">数量x100</div>
+									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
+										查看订单详情
+									</div></a>
+								</div>
+							</div>
+					</div>
+				</div></a>
+			</div>
+			<div class="order-info">
+				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
+					<div class="info-bottom">
+						<div class="titleb">供应商：阿里巴巴天猫商城</div>
+							<div class="info-bottom">
+								<div class="info-bottom-img">
+									<img src="/images/thumbnail2.png" />
+								</div>
+								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
+								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
+								<div class="bottom-4">
+									<div class="bottom-number">数量x100</div>
+									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
+										查看订单详情
+									</div></a>
+								</div>
+							</div>
+					</div>
+				</div></a>
+			</div>
+		</div>
+		
+		<div class="orderNum-area">
+			<div class="area-title">2016-01(共1单)</div>
+			<div class="order-info">
+				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
+					<div class="info-bottom">
+						<div class="titleb">供应商：阿里巴巴天猫商城</div>
+							<div class="info-bottom">
+								<div class="info-bottom-img">
+									<img src="/images/thumbnail2.png" />
+								</div>
+								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
+								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
+								<div class="bottom-4">
+									<div class="bottom-number">数量x100</div>
+									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
+										查看订单详情
+									</div></a>
+								</div>
+							</div>
+					</div>
+				</div></a>
+			</div>
+		</div>
+	</div>
+</div>
+</body>
+</body>
+<script>
+    $(function(){
+		$(".btn").click(function(){
+			if($(this).find(".img1").is(":visible")){
+				$(this).find(".img1").hide();
+				$(this).find(".img2").show();
+			}else{
+				$(this).find(".img1").show();
+				$(this).find(".img2").hide();
+			}
+		});
+		$(".btn-select").click(function(){
+			if($(this).find(".bg1")){
+				$(".bottom-number-right").removeClass("bg2").addClass("bg1");
+				$(this).find(".bottom-number-right").removeClass("bg1").addClass("bg2");
+			}
+			setTimeout(function(){
+				$(".bottom-number-right").removeClass("bg2").addClass("bg1");
+			},1000)
+		});
+		$("#statistics").click(function(){
+			$("#orderNum").css({"color":"#666"});
+			$(this).css({"color":"#E81959"});
+			$(".orderNum-1").hide();
+			$(".statistics-1").show();
+		})
+		$("#orderNum").click(function(){
+			$("#statistics").css({"color":"#666"});
+			$(this).css({"color":"#E81959"});
+			$(".statistics-1").hide();
+			$(".orderNum-1").show();
+		})
+	});
+</script>
+</html>
+ 
