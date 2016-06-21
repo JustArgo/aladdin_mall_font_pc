@@ -3,11 +3,11 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.mi360.aladdin</groupId>
-	<artifactId>aladdin_mall_front</artifactId>
+	<artifactId>aladdin_mall_front_pc</artifactId>
 	<version>0.2.0-SNAPSHOT</version>
 	<packaging>war</packaging> 
 
-	<name>aladdin_mall_front</name>
+	<name>aladdin_mall_front_pc</name>
 	<url>http://maven.apache.org</url>
 
 	<properties>
