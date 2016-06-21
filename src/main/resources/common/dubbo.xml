@@ -101,6 +101,17 @@
 	<dubbo:reference id="mqService" interface="com.mi360.aladdin.mq.service.MqService"/>
 	
 	<dubbo:reference id="unionPayService" interface="com.mi360.aladdin.unionpay.service.UnionpayService"/>
+	
+	
+	
+	
+	<dubbo:reference id="pcUserService" interface="com.mi360.aladdin.user.service.PcUserService"/>
+	<dubbo:reference id="pcAccountService" interface="com.mi360.aladdin.account.service.PcAccountService"/>
+	<dubbo:reference id="pcVerticalDistributionService" interface="com.mi360.aladdin.vertical.distribution.service.PcVerticalDistributionService"/>
+	<dubbo:reference id="pcVerticalSettlementService" interface="com.mi360.aladdin.vertical.settlement.service.PcVerticalSettlementService"/>
+	<dubbo:reference id="emailVerifyService" interface="com.mi360.aladdin.message.email.service.EmailVerifyService"/>
+	<dubbo:reference id="smsCodeVerifyService" interface="com.mi360.aladdin.message.sms.service.SmsCodeVerifyService"/>
+	
 	 
 	 
 </beans>	
