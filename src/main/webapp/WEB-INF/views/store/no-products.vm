@@ -1,0 +1,257 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>商品管理--无</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="link.html">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="shop-center.html">店铺中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="shop-view.html">店铺浏览</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="shop-setting.html" class="active">店铺设置</a>
+                                </li>
+                                <li>
+                                    <a href="product-management.html">商品管理</a>
+                                </li>
+                                <li>
+                                    <a href="order-management.html">订单管理</a>
+                                </li>
+                                <li>
+                                    <a href="statistical-income.html">统计管理</a>
+                                </li>
+                                <li>
+                                    <a href="magic.html">魔法页面</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content">
+                            <div class="center-box">
+                                <div class="message">
+                                    <p>
+                                        <a href="javascript:;">
+                                            <img src="/images/brand/brand.png" />
+                                        </a>
+                                    </p>    
+                                    <p>
+                                        掌柜的还没有添加商品哦！快去添加吧~
+                                    </p>
+                                    <p>
+                                        <button type="submit" class="btn btn-openStore">查看货源推荐 ></button>
+                                    </p>   
+                                    <p>
+                                        <a type="submit" class="btn btn-openStore" href="/">查看商场商品 ></a>
+                                    </p>    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

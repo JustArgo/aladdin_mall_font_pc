@@ -121,7 +121,29 @@ public class StoreController {
 					
 		}
 		
-		return "store/index";
+		return "store/no-products";
+		
+	}
+	
+	/**
+	 * 点击店铺设置
+	 */
+	@RequestMapping("/setting")
+	public String setting(String requestId, Model model){
+		
+		Principal principal = WebUtil.getCurrentPrincipal();
+		String mqId = principal.getMqId();
+		
+		Map<String,Object> storeMap = storeService.getStore(requestId, mqId);
+		logger.info("storeMap:"+storeMap);
+		if((Integer)storeMap.get("errcode")==0){
+			Map<String,Object> store = (Map<String, Object>) storeMap.get("result");
+			model.addAttribute("logoPath",store.get("logoPath"));
+			model.addAttribute("title",store.get("title"));
+			model.addAttribute("abstraction",store.get("abstraction"));
+		}
+		
+		return "store/store-setting";
 		
 	}
 	
@@ -134,7 +156,7 @@ public class StoreController {
 		Principal principal = WebUtil.getCurrentPrincipal();
 		String mqId = principal.getMqId();
 		
-		Map<String,Object> map = storeService.updateStoreInfo(requestId, mqId, title, logoPath, abstraction);
+		Map<String,Object> map = storeService.updateStoreInfo(requestId, mqId, title, abstraction, logoPath);
 		logger.info("map:"+map);
 		if((Integer)map.get("errcode")==0){
 			Integer storeId = (Integer)map.get("result");
@@ -228,13 +250,13 @@ public class StoreController {
 		logger.info("returnGoodsMap:"+returnGoodsMap);
 		
 		
-		model.addAttribute("allOrder"+allOrderMap.get("result"));
+		model.addAttribute("allOrder",allOrderMap.get("result"));
 		
-		model.addAttribute("noPayOrder"+noPayOrderMap.get("result"));
-		model.addAttribute("noSendOrder"+noSendOrderMap.get("result"));
-		model.addAttribute("waitForComment"+waitForCommentMap.get("result"));
-		model.addAttribute("returnMoney"+returnMoneyMap.get("result"));
-		model.addAttribute("returnGoods"+returnGoodsMap.get("result"));
+		model.addAttribute("noPayOrder",noPayOrderMap.get("result"));
+		model.addAttribute("noSendOrder",noSendOrderMap.get("result"));
+		model.addAttribute("waitForComment",waitForCommentMap.get("result"));
+		model.addAttribute("returnMoney",returnMoneyMap.get("result"));
+		model.addAttribute("returnGoods",returnGoodsMap.get("result"));
 		
 		return "store/order-index";
 		

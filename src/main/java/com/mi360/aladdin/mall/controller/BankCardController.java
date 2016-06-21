@@ -34,7 +34,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
  */
 @Controller
 @RequestMapping("/bankCard")
-public class BankCardController extends BaseWxController {
+public class BankCardController {
 	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
 	private UnionpayService unionpayService;
