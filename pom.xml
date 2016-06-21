@@ -5,7 +5,7 @@
 	<groupId>com.mi360.aladdin</groupId>
 	<artifactId>aladdin_mall_front_pc</artifactId>
 	<version>0.2.0-SNAPSHOT</version>
-	<packaging>war</packaging> 
+	<packaging>war</packaging>
 
 	<name>aladdin_mall_front_pc</name>
 	<url>http://maven.apache.org</url>
@@ -16,13 +16,13 @@
 	</properties>
 
 	<dependencies>
-	
+
 		<dependency>
 			<groupId>com.mi360.aladdin</groupId>
 			<artifactId>aladdin_base</artifactId>
 			<version>0.2.0-SNAPSHOT</version>
 		</dependency>
-	
+
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -76,12 +76,12 @@
 			<artifactId>velocity-tools</artifactId>
 			<version>2.0</version>
 		</dependency>
- 	<dependency>
-		<groupId>javax.servlet</groupId>
-		<artifactId>javax.servlet-api</artifactId>
-		<version>3.1.0</version>
-		<scope>provided</scope>
-	</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
 		<dependency>
 			<groupId>javax.servlet.jsp</groupId>
 			<artifactId>jsp-api</artifactId>
@@ -148,46 +148,46 @@
 			<artifactId>qiniu-java-sdk</artifactId>
 			<version>7.0.8</version>
 		</dependency>
-		
+
 		<!-- dom4j -->
 		<dependency>
 			<groupId>dom4j</groupId>
 			<artifactId>dom4j</artifactId>
 			<version>1.6.1</version>
 		</dependency>
-		
+
 		<!-- 支付宝sdk -->
 		<dependency>
-		    <groupId>net.sinofool</groupId>
-		    <artifactId>alipay-java-sdk</artifactId>
-		    <version>1.2.1</version>
+			<groupId>net.sinofool</groupId>
+			<artifactId>alipay-java-sdk</artifactId>
+			<version>1.2.1</version>
 		</dependency>
-		
+
 		<!-- http://mvnrepository.com/artifact/me.hao0/alipay-api -->
 		<dependency>
-		    <groupId>me.hao0</groupId>
-		    <artifactId>alipay-api</artifactId>
-		    <version>1.0.9</version>
+			<groupId>me.hao0</groupId>
+			<artifactId>alipay-api</artifactId>
+			<version>1.0.9</version>
 		</dependency>
-		
+
 		<!-- http://mvnrepository.com/artifact/me.hao0/alipay-core -->
 		<dependency>
-		    <groupId>me.hao0</groupId>
-		    <artifactId>alipay-core</artifactId>
-		    <version>1.0.9</version>
+			<groupId>me.hao0</groupId>
+			<artifactId>alipay-core</artifactId>
+			<version>1.0.9</version>
 		</dependency>
-		
+
 		<!-- http://mvnrepository.com/artifact/com.pentahohub.nexus/alipay-sdk-java -->
 		<dependency>
-		    <groupId>com.pentahohub.nexus</groupId>
-		    <artifactId>alipay-sdk-java</artifactId>
-		    <version>20150820220052</version>
+			<groupId>com.pentahohub.nexus</groupId>
+			<artifactId>alipay-sdk-java</artifactId>
+			<version>20150820220052</version>
 		</dependency>
-				
-				
+
+
 
 	</dependencies>
-	
+
 	<build>
 		<resources>
 			<resource>
@@ -207,8 +207,19 @@
 				<directory>src/main/resources/${config.dir}</directory>
 			</resource>
 		</resources>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>2.1</version>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
+			</plugin>
+		</plugins>
 	</build>
-	
+
 	<profiles>
 		<profile>
 			<id>dev</id>
@@ -237,7 +248,6 @@
 				<config.dir>uat</config.dir>
 			</properties>
 		</profile>
-		
 	</profiles>
-	
+
 </project>
