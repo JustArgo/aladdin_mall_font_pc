@@ -250,5 +250,12 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		$(function(){
+			$(".btn-openStore").click(function(){
+				location.href="/store/open";
+			});
+		});
+	</script>
 </body>
 </html>

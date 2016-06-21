@@ -156,6 +156,7 @@
                             </div>
                             <div class="list-page">
                                 <ul class="order-list">
+									$foreach($childOrder in $noPayOrder)
                                     <li>
                                         <div class="detail">
                                             <div class="pull-left">
@@ -178,6 +179,7 @@
                                             </div>
                                         </div>
                                     </li>
+									#end
                                     <li>
                                         <div class="detail">
                                             <div class="pull-left">
@@ -337,7 +339,7 @@
                             </li>
                         </ul>
                         <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
-                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site${noPayOrder}</P>
                         <ul>
                             <li>
                                 <a href="javascript:;">
@@ -365,5 +367,13 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		$(function(){
+			$(".title a").click(function(){
+				$(".title a").removeClass("active");
+				$(this).addClass("active");
+			});
+		});
+	</script>
 </body>
 </html>
