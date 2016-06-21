@@ -9,16 +9,16 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <!-- css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
     <!-- js -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/theme.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
     <!--[if lt IE 9]>
-    <script src="js/html5shiv-printshiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
     <title>店铺设置</title>
@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
@@ -83,7 +83,7 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
                         </div>
                     </div>
@@ -147,21 +147,23 @@
                     </div>
                     <div class="col-md-10">
                         <div class="content">
-                            <form class="store-form">
+                            <form class="store-form" action="/store/update" method="post">
                                 <div class="form-group introduce">
                                     <label class="control-label">店铺logo：</label>
+                                    <img src="$!{logoPath}"/>
                                     <a href="javascript:;" class="upload">
                                         <i class="icon-upload"></i>
                                         <input type="file" class="image" />
                                     </a>
+                                    <input type="hidden" name="logoPath" value="http://img0.imgtn.bdimg.com/it/u=3516738686,3340143944&fm=21&gp=0.jpg"/>
                                 </div>
                                 <div class="form-group">
                                     <label class="control-label">店铺名称：</label>
-                                    <input type="text" class="form-control" placeholder="店铺25635454656456" />
+                                    <input type="text" class="form-control" name="title" placeholder="店铺25635454656456" value="$!{title}"/>
                                 </div>
                                 <div class="form-group introduce">
                                     <label class="control-label">店铺简介：</label>
-                                    <textarea class="form-control" placeholder="本小店做服装..."></textarea> 
+                                    <textarea class="form-control" name="abstraction" placeholder="本小店做服装..." >$!{abstraction}</textarea> 
                                 </div>
                                 <button type="submit" class="btn btn-save">保存</button>
                             </form>
@@ -229,22 +231,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>

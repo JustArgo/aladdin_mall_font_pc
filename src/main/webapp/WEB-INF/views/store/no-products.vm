@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -20,7 +21,7 @@
     <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>店铺设置</title>
+    <title>商品管理--无</title>
 </head>
 <body>
     <!-- header -->
@@ -67,7 +68,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
@@ -82,7 +83,7 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
                         </div>
                     </div>
@@ -146,26 +147,25 @@
                     </div>
                     <div class="col-md-10">
                         <div class="content">
-                            <form class="store-form">
-                                <div class="form-group introduce">
-                                    <label class="control-label">店铺logo：</label>
-                                    <img src="${logoPath}"/>
-                                    <a href="javascript:;" class="upload">
-                                        <i class="icon-upload"></i>
-                                        <input type="file" class="image" />
-                                    </a>
+                            <div class="center-box">
+                                <div class="message">
+                                    <p>
+                                        <a href="javascript:;">
+                                            <img src="/images/brand/brand.png" />
+                                        </a>
+                                    </p>    
+                                    <p>
+                                        掌柜的还没有添加商品哦！快去添加吧~
+                                    </p>
+                                    <p>
+                                        <button type="submit" class="btn btn-openStore">查看货源推荐 ></button>
+                                    </p>   
+                                    <p>
+                                        <a type="submit" class="btn btn-openStore" href="/">查看商场商品 ></a>
+                                    </p>    
                                 </div>
-                                <div class="form-group">
-                                    <label class="control-label">店铺名称：</label>
-                                    <input type="text" class="form-control" placeholder="店铺25635454656456" value="${title}"/>
-                                </div>
-                                <div class="form-group introduce">
-                                    <label class="control-label">店铺简介：</label>
-                                    <textarea class="form-control" placeholder="本小店做服装..." value="${abstraction}"></textarea> 
-                                </div>
-                                <button type="submit" class="btn btn-save">保存</button>
-                            </form>
-                        </div>    
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -229,22 +229,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>
@@ -254,4 +254,4 @@
         </div>
     </footer>
 </body>
-</html>    
+</html>
