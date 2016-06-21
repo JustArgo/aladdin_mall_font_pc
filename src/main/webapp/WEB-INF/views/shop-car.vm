@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>购物车</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="link.html">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="javascript:;">
+                                <img src="images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- cartbar -->
+    <section class="cartbar">
+        <div class="cart">
+            <div class="container">
+                <div class="row">
+                    <div class="head">
+                        <p>
+                            <span>全部商品</span>
+                            <span class="number">3</span>购物车最多可以添加99个商品
+                        </p>
+                    </div>
+					<form id="shopcarForm" action="${link.contextPath}/order/previewOrder" method="post">
+					<input type="hidden" name="fromShopCar" value="true"/>
+                    <table class="table table-bordered table-hover table-responsive">
+                        <thead>
+                            <th class="text-left">
+                                <label>
+                                    <input class="chooseAll" type="checkbox" />
+                                    <span class="selectAll">全选</span>
+                                </label>
+                            </th>
+                            <th>商品</th>
+                            <th>单价(元)</th>
+                            <th>数量</th>
+                            <th>小计(元)</th>
+                            <th>操作</th>
+                        </thead>
+                        <tbody>
+                        
+                        	#foreach($m in $supplierProducts)
+                            <tr class="supplier">
+                                <td colspan="6" class="text-left">供应商：$m.supName</td>
+                            </tr>
+                            
+                            #foreach($shopCarProducts in $m.shopCarProducts)
+	                       
+                            <tr class="info-bottom" data-id="$shopCarProducts.skuID" data-productid="$shopCarProducts.productID" data-stock="$shopCarProducts.skuStock" data-limit="$shopCarProducts.limitCount">
+								<td>
+									<input type="hidden" name="skuIds" value="${shopCarProducts.skuID}"/>
+									<input type="hidden" name="buyNums" value="${shopCarProducts.skuQuality}"/>
+									<input type="hidden" name="skuPrices" value="${shopCarProducts.skuPrice}"/>
+                                    <input class="skuItem" type="checkbox" />
+                                </td>
+                                <td class="text-left">
+                                    <a href="javascript:;" class="fl">
+                                        <img src="$qiniu.getDownloadUrl(${shopCarProducts.imgPath})" />
+                                    </a>
+                                    <div class="fr">
+                                        <p>
+                                            <a href="javascript:;">$!{shopCarProducts.productName}</a>
+                                        </p>
+                                        <p>
+							                <!-- 如果没有skuStr 需要加个空格占一行 -->
+											#if($shopCarProducts.skuStrs.isEmpty())<span>&nbsp;</span>#end
+											#foreach($skuStr in $shopCarProducts.skuStrs)<span>$skuStr</span>&nbsp;#end
+                                        </p>
+                                    </div>
+                                </td>
+                                <td class="product_price">¥$number.format("#0.00",$math.div($shopCarProducts.skuPrice,100))</td>
+                                <td>
+                                    <a href="javascript:;" class="sub jq-subToCart">-</a>
+                                    <input type="text" class="num" value="$shopCarProducts.skuQuality" />
+                                    <a href="javascript:;" class="add jq-addToCart">+</a>
+                                </td>
+                                <td class="amount_price">￥$number.format("#0.00",$math.mul($number.format("#0.00",$math.div($shopCarProducts.skuPrice,100)),$shopCarProducts.skuQuality))</td>
+                                <td>
+                                    <a href="javascript:;" class="collect">移入收藏夹</a>
+                                    <a href="javascript:;" class="delete-sku">删除</a>
+                                    <a href="javascript:;" class="sucess" style="display:none;">
+                                        <i class="glyphicon glyphicon-ok"></i>成功移入收藏夹！
+                                    </a>
+                                </td>
+                            </tr>
+                            #end
+                         #end
+                            
+                            
+                            
+                            
+                            
+                           
+                            
+                            
+                            <tr class="end-tr">
+                                <td colspan="6">
+                                    <div class="pull-left">
+                                        <label>
+                                            <input class="chooseAll" type="checkbox" />
+                                            <span class="selectAll">全选</span>
+                                        </label>
+                                        <a href="javascript:;" class="deleteBatch">删除所选商品</a>
+                                        <div style="display:inline-block;position:relative;">
+											<a href="javascript:;" class="collectAll">移入收藏夹</a>
+											<a href="javascript:;" class="sucessAll" style="display:none;color:#7dbf58;">
+												<i class="glyphicon glyphicon-ok"></i>成功移入收藏夹！
+											</a>
+										</div>
+                                    </div>
+                                    <div class="pull-right">
+                                        <p>
+                                            已选择<span class="totalNum">0</span>件商品
+                                        </p>
+                                        <p>
+                                            总计（不含运费）：<span class="totalPrice">¥0.00</span>
+                                        </p>
+                                        <a href="javascript:;" class="bill">结算</a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+					</form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+    <script type="text/javascript">
+		
+		//初始化全部商品的数量
+		$(".number").text($(".info-bottom").length);
+		
+		var pattern = /\d+(\.\d+)?/;
+    	
+    	function getNum(text){
+    		var numStr = pattern.exec(text)[0];
+    		return Number(parseFloat(numStr).toFixed(2));
+    	}
+		
+	    $(".chooseAll").click(function(){
+			
+			console.log("checked:"+$(this).prop("checked"));
+		
+			if($(this).prop("checked")==false){
+				$(".chooseAll").prop("checked",false);
+				var num = $("skuItem").length;
+				console.log("halleo"+$(".skuItem:checked").length);
+				$(".skuItem").prop("checked",false);
+				/**
+				var addPrice = 0;
+				$(".option-img1").hide();
+				$(".option-img2").show();
+				//改变结算 的数量
+				$(".placeOrder").text("结算("+$(".info-bottom").length+")");
+				//改变合计的金额
+				$(".info-bottom").each(function(index,item){
+					var price  = getNum($(this).find(".product_price").text());
+					var buyNum = parseInt($(this).find(".number-2").text());
+					addPrice += price*buyNum;
+				});
+				$(".car-footer-3").text("合计：￥"+addPrice.toFixed(2));
+				*/
+				
+				$(".totalPrice").text("￥"+(0).toFixed(2));
+				
+				//改变已选择商品的个数
+				$(".totalNum").text(0);
+				
+				
+			}else{
+				$(".chooseAll").prop("checked",true);
+				$(".skuItem").prop("checked",true);
+				/*
+				$(".option-img1").show();
+				$(".option-img2").hide();
+				//改变结算 的数量
+				$(".car-footer div:eq(2)").find('a:eq(0)').text("结算(0)");
+				//改变合计的金额
+				$(".car-footer-3").text("合计：￥0.00");
+				*/
+				var totalPrice = 0;
+				$(".info-bottom").each(function(){
+					var amount_price = getNum($(this).find(".amount_price").text().substring(1));	
+					totalPrice += amount_price;
+				});
+				$(".totalPrice").text("￥"+(totalPrice).toFixed(2));
+				
+				//改变已选择商品的个数
+				$(".totalNum").text($(".number").text());
+				
+			}
+			
+		});
+		
+		$(".add").click(function(){
+			
+				var info_bottom = $(this).closest(".info-bottom");
+				
+				var limitCount = $(this).parent().parent().closest(".info-bottom").data("limit");
+				var productID = $(this).parent().parent().closest(".info-bottom").data("productid");
+				var skuStock =  $(this).closest(".info-bottom").data("stock");
+				
+				console.log(limitCount+" "+productID+" "+skuStock);
+				
+				var curCount = 0;
+				$(".info-bottom").each(function(){
+					if($(this).data("productid")==productID){
+						//curCount += parseInt($(this).find("td input .num").val());
+						curCount = parseInt($(this).find("td:eq(3)").find(".num").val());
+					}
+				});
+				if(curCount==limitCount){
+					event.stopPropagation();
+					return;
+				}
+				if(curCount==skuStock){
+					event.stopPropagation();
+					return;
+				}
+		
+				
+				var num = info_bottom.find("td:eq(3)").find(".num").val();
+				
+				//改变减号的颜色
+				if(num==1){
+					$(".sub").css("color","black");
+				}
+				
+				num++;
+				
+				//改变输入框中的数量
+				info_bottom.find("td:eq(3)").find(".num").val(num);
+				
+				//改变小计
+				var buyNum = parseInt(num);
+				var skuPrice = getNum(info_bottom.find(".product_price").text().substring(1));
+				
+				info_bottom.find(".amount_price").text("￥"+getNum(buyNum*skuPrice).toFixed(2));
+				
+				console.log(buyNum);
+				console.log(skuPrice);
+				
+				//改变总价  选中才会 改变
+				if(info_bottom.find(".skuItem").prop("checked")==true){
+					var price = getNum(info_bottom.find(".product_price").text());
+					var oldTotalPrice = getNum($(".totalPrice").text());
+					console.log(price+" "+oldTotalPrice);
+					$(".totalPrice").text("￥"+(price+oldTotalPrice).toFixed(2));
+				}
+				
+					
+				//改变input的内容
+				$(this).closest(".info-bottom").find("input[name=buyNums]").val(num);
+				
+				event.stopPropagation();
+		
+		});
+		
+		
+		$(".sub").click(function(){
+				var info_bottom = $(this).closest(".info-bottom");
+				
+				var num = info_bottom.find("td:eq(3)").find(".num").val();
+				if(num==1){
+					return;
+				}
+				if(num==2){
+					$(this).css("color","gray");
+				}
+				
+				num--;
+				info_bottom.find("td:eq(3)").find(".num").val(num);
+				
+				
+				var skuPrice = getNum(info_bottom.find(".product_price").text().substring(1));
+				var buyNum = num;
+				
+				//改变小计
+				info_bottom.find(".amount_price").text("￥"+getNum(buyNum*skuPrice).toFixed(2));
+		
+				//改变总价  选中才会 改变
+				if(info_bottom.find(".skuItem").prop("checked")==true){
+					var price = getNum(info_bottom.find(".product_price").text());
+					var oldTotalPrice = getNum($(".totalPrice").text());
+					console.log(price+" "+oldTotalPrice);
+					$(".totalPrice").text("￥"+(oldTotalPrice-price).toFixed(2));
+				}
+				
+				//改变input的内容
+				$(this).closest(".info-bottom").find("input[name=buyNums]").val(num);
+				
+				event.stopPropagation();
+			
+		});
+		
+		$(".skuItem").click(function(){
+			
+			 var info_bottom = $(this).closest(".info-bottom");
+			 
+			 var amount_price = getNum(info_bottom.find(".amount_price").text().substring(1));
+			 
+		
+			 var checked = $(this).prop("checked");
+			 var totalNum = parseInt($(".totalNum").text());
+			 
+			 if(checked==true){
+				
+				//改变已选中商品的个数
+				$(".totalNum").text(totalNum+1);
+			 
+				var oldTotalPrice = getNum($(".totalPrice").text());
+				var newTotalPrice = oldTotalPrice+amount_price;
+				$(".totalPrice").text("￥"+(newTotalPrice).toFixed(2));
+			 }else{
+				
+				//改变已选中商品的个数
+				$(".totalNum").text(totalNum-1);
+				
+				var oldTotalPrice = getNum($(".totalPrice").text());
+				var newTotalPrice = oldTotalPrice-amount_price;
+				$(".totalPrice").text("￥"+(newTotalPrice).toFixed(2));
+			 }
+		});
+		
+		//单个删除sku
+		$(".delete-sku").click(function(){
+			var info_bottom = $(this).closest(".info-bottom");
+			var checked = info_bottom.find(".skuItem").prop("checked");
+			
+			console.log("checked:"+checked);
+			
+			if(confirm("确定删除该商品?")){
+				console.log("删除");
+					var skuId = info_bottom.find("input[name=skuIds]").val();
+					console.log("skuId:"+skuId);
+					
+					$.ajax({
+						url:'/shop_car/remove_shopcar_product',
+						type:'POST',
+						dataType:'JSON',
+						data:{"skuIDs":[skuId]},
+						traditional:true,
+						success:function(ret){
+							console.log(ret);
+							
+							if(ret.errcode==0){
+								var amount_price  = getNum(info_bottom.find(".amount_price").text().substring(1));
+								
+								//改变全部商品
+								var number = parseInt($(".number").text());
+								$(".number").text(number-1);
+								
+								//如果已选择 则要改变 右下角的已选中商品  和 价格
+								if(checked){
+									var totalNum = parseInt($(".totalNum").text());
+									$(".totalNum").text(totalNum-1);
+									
+									var totalPrice = getNum($(".totalPrice").text().substring(1));
+									$(".totalPrice").text("￥"+(totalPrice-amount_price).toFixed(2));
+								}
+								
+								/*
+								var originalPrice = getNum($(".car-footer-3").text());
+								var newTotalPrice = (originalPrice - price*buyNum).toFixed(2);
+								$(".car-footer-3").text("合计：￥"+newTotalPrice);
+								
+								//改变结算数量
+								var originalNum = $(".placeOrder").text().replace("结算","").replace("(","").replace(")","");
+								var newConclusion = parseInt(originalNum)-1;
+								$(".placeOrder").text("结算("+newConclusion+")"); 
+								
+								var shop_num = parseInt($(".shop_num").text().replace("购物车","").replace("(","").replace(")",""))-1;
+								$(".shop_num").text("购物车("+shop_num+")");
+								
+								//清除该item
+								info_bottom.remove();
+								
+								if(carContent.find(".info-bottom").length==0){
+									carContent.remove();
+								}*/
+								
+								info_bottom.remove();
+								
+								$(".supplier").each(function(){
+								
+									var next_tr = $(this).next("tr");
+									console.log("next_tr:"+next_tr);
+									if(next_tr.hasClass("supplier")||next_tr.hasClass("end-tr")){
+										$(this).remove();
+									}
+								});
+								
+								
+							}else{
+								alert("删除失败，请重新尝试");
+							}
+							
+						}
+					});
+				
+			}
+			
+			
+		});
+		
+		$(".deleteBatch").click(function(){
+			var length = $(".skuItem:checked").length;
+			if(length==0){
+				alert("请选择要删除的商品");
+				return;
+			}
+			
+			var skuIds = [];
+			var count = 0;
+			$(".skuItem:checked").each(function(){
+				var info_bottom = $(this).closest(".info-bottom");
+				skuIds.push(info_bottom.find("input[name=skuIds]").val());
+				
+				count+=1;
+			});
+			
+			console.log(count);
+			
+			
+			
+			
+			$.ajax({
+				url:"/shop_car/remove_shopcar_product",
+				data:{"skuIDs":skuIds},
+				dataType:'JSON',
+				traditional:true,
+				success:function(ret){
+					
+					//已选择 0件
+					$(".totalNum").text(0);
+					//总计 0
+					$(".totalPrice").text("￥0.00");
+					
+					//总共剩余多少件
+					var number = parseInt($(".number").text());
+					$(".number").text(number-count);
+					
+					$(".skuItem:checked").each(function(){
+						var info_bottom = $(this).closest(".info-bottom");
+						info_bottom.remove();
+					});
+					
+					$(".supplier").each(function(){
+						var next_tr = $(this).next("tr");
+						console.log("next_tr:"+next_tr);
+						if(next_tr.hasClass("supplier")||next_tr.hasClass("end-tr")){
+							$(this).remove();
+						}
+					});
+					
+					
+					
+				}
+			});
+			
+			
+		});
+		
+		$(".collect").click(function(){
+			var info_bottom = $(this).closest(".info-bottom");
+			var productid = info_bottom.data("productid");
+			$.ajax({
+				url:"/product/collect",
+				data:{"productID":productid,"collect":1},
+				dataType:"json",
+				success:function(ret){
+					console.log(ret);
+					info_bottom.find(".sucess").fadeIn();
+					setTimeout(function(){
+						info_bottom.find(".sucess").fadeOut();
+					},1000);
+				}
+			})
+		});
+		
+		$(".collectAll").click(function(){
+			var length = $(".skuItem:checked").length;
+			if(length==0){
+				alert("请选择要收藏的商品");
+				return;
+			}
+			var productIds = [];
+			$(".skuItem:checked").each(function(){
+				var info_bottom = $(this).closest(".info-bottom");
+				var productid = info_bottom.data("productid");
+				if($.inArray(productid,productIds)==-1){
+					productIds.push(productid);
+				}
+			});
+			for(var i=0;i<productIds.length;i++){
+				$.ajax({
+					url:"/product/collect",
+					data:{"productID":productIds[i],"collect":1},
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+					}
+				});
+			}
+			$(".sucessAll").fadeIn();
+			setTimeout(function(){
+				$(".sucessAll").fadeOut();
+			},1000);
+		});
+		
+		//点击结算
+		$(".bill").click(function(){
+			
+			var choosedNum = $(".skuItem:checked").length;
+			if(choosedNum==0){
+				alert("您还未选择要购买的商品");
+			}else{
+			
+				
+				$(".info-bottom").each(function(index,item){
+					if($(this).find(".skuItem").prop("checked")==false){
+						$(this).remove();
+					}
+				});
+				
+				/*
+				$.ajax({
+					url:"${link.contextPath}/product/check-limit",
+					type:"POST",
+					data:$("#shopcarForm").serialize(),
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+						if(ret && ret.errcode==0){
+							
+						}else if(ret && ret.errcode && ret.errcode!=0){
+							
+						}else{
+						
+						}
+					}
+				});*/
+				
+				//修改 等清理完了再 提交表单
+				$("#shopcarForm").submit();
+			}
+			
+		});
+		
+    </script>
+</body>
+</html>
