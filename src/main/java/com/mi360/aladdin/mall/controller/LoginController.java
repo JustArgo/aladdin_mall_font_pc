@@ -59,7 +59,7 @@ public class LoginController {
 		return false;
 	}
 	
-	@RequestMapping(value = "page")
+	@RequestMapping(value = "/page")
 	public String page(String requestId) {
 		return "login";
 	}
