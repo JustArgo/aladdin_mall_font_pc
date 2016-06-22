@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <!-- js -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv-printshiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>阿拉丁--注册</title>
+    <script>
+    $(function(){
+    	$('#chgImg').click(function(){
+    		var timestamp=(new Date()).valueOf();
+    		$('#captchaImg').attr('src','/common/captcha?timestamp='+timestamp);     
+    	})
+    	$('#chgImg').click();
+    	
+    	
+    	/*表单验证对象*/
+		var formValidate={
+			username:{
+				target:$("#username"),
+				required:true,
+				reg:/(^1\d{10}$)|(^.*@.*\..*)/,
+				tip:$('#usernameTip'),
+				tipWord:'输入手机号/邮箱格式错误'
+			},
+			password:{
+				target:$("#password"),
+				required:true,
+				reg:/^[\w\d]{5,20}$/,
+				tip:$('#passwordTip'),
+				validator:function(){
+					var v=formValidate.rePassword.target.val();
+					if(v!=""){
+						formValidate.validate(formValidate.rePassword);
+					}
+					return true;
+				},
+				tipWord:'密码长度只能在5-20个字符之间'
+			},
+			rePassword:{
+				target:$("#rePassword"),
+				required:true,
+				validator:function(){
+					var v=formValidate.password.target.val();
+					var v2=this.target.val();
+					if(v!=v2){
+						return false;
+					}
+					return true;
+				},
+				tip:$('#rePasswordTip'),
+				tipWord:'两次输入密码不一致'
+			},
+			captcha:{
+				target:$("#captcha"),
+				required:true,
+				tip:$('#captchaTip'),
+				tipWord:'验证码输入错误'
+			},
+			init:function(){
+				this.username.target.blur(function(){
+					formValidate.validate(formValidate.username);
+				})
+				this.password.target.blur(function(){
+					formValidate.validate(formValidate.password);
+				})
+				this.rePassword.target.blur(function(){
+					formValidate.validate(formValidate.rePassword);
+				})
+				this.captcha.target.blur(function(){
+					formValidate.validate(formValidate.captcha);
+				})
+				this.username.target.focus(function(){
+					formValidate.username.tip.css('display','none');
+				})
+				this.password.target.focus(function(){
+					formValidate.password.tip.css('display','none');
+				})
+				this.rePassword.target.focus(function(){
+					formValidate.rePassword.tip.css('display','none');
+				})
+				this.captcha.target.focus(function(){
+					formValidate.captcha.tip.css('display','none');
+				})
+			},
+			validate:function(o){//通用验证
+				var v=o.target.val();
+				if(o.required){
+					if(v==""){//非空
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				if(v!=""){
+					if(o.reg!=undefined){//格式
+						if(!o.reg.test(v)){
+							o.tip.html(o.tipWord);
+							o.tip.css('display','inline');
+							return false;
+						}
+					}
+				}
+				if(o.validator!=undefined){//自定义验证
+					if(!o.validator()){
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				o.tip.css('display','none');
+				return true;
+			},
+			validateAll:function(){
+				if(this.validate(this.username)&this.validate(this.password)&this.validate(this.rePassword)&this.validate(this.captcha)){
+					return true;
+				}
+				return false;
+			}
+		}
+		formValidate.init();
+		
+		
+		
+		var submitAble=true;
+    	$('#submit').click(function(){
+    		if(submitAble){
+    			submitAble=false;
+    			if(formValidate.validateAll()){
+    				if(!$('#readed')[0].checked){
+    					alert('请阅读并同意《用户注册协议》');
+    					submitAble=true;
+    					return;
+    				}
+    				var username=$('#username').val();
+    				var password=$('#password').val();
+    				var captcha=$('#captcha').val();
+    				$.ajax({ 
+        				url: '/register/submit',
+        				data:{captcha:captcha,username:username,password:password},
+        				type:"post",
+        				success: function(data){
+        					if('captcha_error'==data){
+        						$('#chgImg').click();
+        						$('#captchaTip').css('display','inline');
+        					}else if('username_password_error'==data){
+        						$('#chgImg').click();
+        						$('#tipWord').html('账户名与密码不匹配，请重新输入！');
+        						$('#tip').css('display','block');
+        					}else if('username_exists'==data){
+        						$('#chgImg').click();
+        						$('#usernameTip').html('用户名已存在！');
+        						$('#usernameTip').css('display','inline');
+        					}else if('success'){
+        						location.href="${link.contextPath}/index.html"
+        					}
+        				},
+        				complete:function(){
+        					submitAble=true;
+        				}
+        			});
+    			}else{
+    				submitAble=true;
+    			}
+    		}
+    	})
+    })
+    </script>
+</head>
+<body>
+    <header class="header new-header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="link.html">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="images/logo/logo.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- contentbar -->
+    <div class="content-bar">
+        <div class="content">
+            <div class="container">
+                <div class="form-box">
+                    <form>
+                        <h2>新用户注册</h2>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span>*</span>用户名：
+                            </label>
+                            <input type="text" id="username" class="form-control" placeholder="手机号/邮箱地址" />
+                            <span class="error" id="usernameTip" style="display:none;">输入手机号/邮箱格式错误</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span>*</span>密码：
+                            </label>
+                            <input type="password" id="password" class="form-control" placeholder="设置登录密码" />
+                            <span class="error" id="passwordTip" style="display:none;">密码长度只能在5-20个字符之间</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span>*</span>确认密码：
+                            </label>
+                            <input type="password" id="rePassword" class="form-control" placeholder="确认密码" />
+                            <span class="error" id="rePasswordTip" style="display:none;">两次输入密码不一致</span>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label">
+                                <span>*</span>验证码：
+                            </label>
+                            <input type="text" id="captcha" class="form-control code" placeholder="验证码" />
+                            <a href="javascript:;" class="code">
+                                <img id="captchaImg" style="width:90px;height:32px;" >
+                            <a/>
+                            <a href="javascript:;" class="update" id="chgImg">换一张</a>
+                            <span class="error" style="padding-left:37px;display:none;" id="captchaTip" >验证码输入错误</span>
+                        </div>
+                        <div class="checkbox">
+                          <label>
+                            <input type="checkbox" id="readed">
+                            我已同意并阅读<a href="javascript:;">《用户注册协议》</a>
+                          </label>
+                        </div>
+                        <button type="button" id="submit" class="btn btn-register">立即注册</button>
+                        <p  class="accout">
+                            已有账号？<a href="/login">马上登录</a>
+                        </p>
+                    </div>
+                </form>   
+            </div>
+        </div>
+    </div>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

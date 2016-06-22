@@ -30,17 +30,16 @@ public class LoginController {
 	private PcUserService userService;
 
 	/**
-	 * 登陆验证
+	 * 提交
 	 * 
 	 * @param password
 	 *            密码
 	 * @param username
 	 *            用户名
 	 */
-	@RequestMapping(value = "/authentication")
+	@RequestMapping(value = "/submit")
 	@ResponseBody
-	public String authentication(String requestId, HttpServletRequest request, String captcha,
-			String password, String username) {
+	public String authentication(String requestId, String captcha, String password, String username) {
 		boolean captchaPassed = CaptchaUtil.validate(captcha);
 		if (!captchaPassed) {
 			return "captcha_error";
@@ -68,8 +67,11 @@ public class LoginController {
 		return "username_password_error";
 	}
 
-	@RequestMapping(value = "/page")
-	public String page(String requestId) {
+	/**
+	 * 页面
+	 */
+	@RequestMapping()
+	public String index(String requestId) {
 		return "login";
 	}
 }
