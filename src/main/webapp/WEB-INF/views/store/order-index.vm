@@ -127,13 +127,13 @@
                                     <a href="shop-view.html">店铺浏览</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="shop-setting.html">店铺设置</a>
+                                    <a href="/store/setting">店铺设置</a>
                                 </li>
                                 <li>
                                     <a href="product-management.html">商品管理</a>
                                 </li>
                                 <li>
-                                    <a href="order-management.html" class="active">订单管理</a>
+                                    <a href="/store/order" class="active">订单管理</a>
                                 </li>
                                 <li>
                                     <a href="statistical-income.html">统计管理</a>
@@ -147,127 +147,172 @@
                     <div class="col-md-10">
                         <div class="content">
                             <div class="title">
-                                <a href="javascript:;" class="active">全部</a>
-                                <a href="javascript:;">待付款</a>
-                                <a href="javascript:;">待发货</a>
-                                <a href="javascript:;">待评价</a>
-                                <a href="javascript:;">退款</a>
-                                <a href="javascript:;">退货</a>
+                                <a href="javascript:;" class="active all">全部</a>
+                                <a href="javascript:;" class="dfk">待付款</a>
+                                <a href="javascript:;" class="dfh">待发货</a>
+                                <a href="javascript:;" class="dpl">待评价</a>
+                                <a href="javascript:;" class="tk">退款</a>
+                                <a href="javascript:;" class="th">退货</a>
                             </div>
                             <div class="list-page">
                                 <ul class="order-list">
-									$foreach($childOrder in $noPayOrder)
-                                    <li>
-                                        <div class="detail">
-                                            <div class="pull-left">
-                                                <a href="javascript:;" class="img">
-                                                    <img src="/images/shoe/shoe.png" />
-                                                </a>
-                                                <div class="prod">
-                                                    <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                    <p>
-                                                        <span>价格 ¥1</span>
-                                                        <span>数量 x100</span>
-                                                    </p>
-                                                    <p class="color">颜色：墨蓝</p>
-                                                    <p class="size">尺寸：XL</p>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right status">
-                                                <span>待付款</span>
-                                                <button class="btn btn-search">查看订单详情</button>
-                                            </div>
-                                        </div>
-                                    </li>
-									#end
-                                    <li>
-                                        <div class="detail">
-                                            <div class="pull-left">
-                                                <a href="javascript:;" class="img">
-                                                    <img src="/images/shoe/shoe.png" />
-                                                </a>
-                                                <div class="prod">
-                                                    <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                    <p>
-                                                        <span>价格 ¥1</span>
-                                                        <span>数量 x100</span>
-                                                    </p>
-                                                    <p class="color">颜色：墨蓝</p>
-                                                    <p class="size">尺寸：XL</p>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right status">
-                                                <span>待发货</span>
-                                                <button class="btn btn-search">查看订单详情</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="detail">
-                                            <div class="pull-left">
-                                                <a href="javascript:;" class="img">
-                                                    <img src="/images/shoe/shoe.png" />
-                                                </a>
-                                                <div class="prod">
-                                                    <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                    <p>
-                                                        <span>价格 ¥1</span>
-                                                        <span>数量 x100</span>
-                                                    </p>
-                                                    <p class="color">颜色：墨蓝</p>
-                                                    <p class="size">尺寸：XL</p>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right status">
-                                                <span>待发货</span>
-                                                <button class="btn btn-search">查看订单详情</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="detail">
-                                            <div class="pull-left">
-                                                <a href="javascript:;" class="img">
-                                                    <img src="/images/shoe/shoe.png" />
-                                                </a>
-                                                <div class="prod">
-                                                    <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                    <p>
-                                                        <span>价格 ¥1</span>
-                                                        <span>数量 x100</span>
-                                                    </p>
-                                                    <p class="color">颜色：墨蓝</p>
-                                                    <p class="size">尺寸：XL</p>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right status">
-                                                <span>待评价</span>
-                                                <button class="btn btn-search">查看订单详情</button>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="detail">
-                                            <div class="pull-left">
-                                                <a href="javascript:;" class="img">
-                                                    <img src="/images/shoe/shoe.png" />
-                                                </a>
-                                                <div class="prod">
-                                                    <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                    <p>
-                                                        <span>价格 ¥1</span>
-                                                        <span>数量 x100</span>
-                                                    </p>
-                                                    <p class="color">颜色：墨蓝</p>
-                                                    <p class="size">尺寸：XL</p>
-                                                </div>
-                                            </div>
-                                            <div class="pull-right status">
-                                                <span>退货中</span>
-                                                <button class="btn btn-search">查看订单详情</button>
-                                            </div>
-                                        </div>
-                                    </li>
+									<div class="order-info-all">
+										<li>
+											<div class="detail">
+												#foreach($orderProduct in $childOrder.orderProductList)
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+													</a>
+													<div class="prod">
+														<p>$orderProduct.productName</p>
+														<p>
+															<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+															<span>数量 x${orderProduct.buyNum}</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												#end
+												<div class="pull-right status">
+													<span>全部</span>
+													<a class="btn btn-search" href="/order/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+												</div>
+											</div>
+										</li>
+									</div>
+									<div class="order-info-dfk">
+										#foreach($childOrder in $noPayOrder)
+										<li>
+											<div class="detail">
+												#foreach($orderProduct in $childOrder.orderProductList)
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+													</a>
+													<div class="prod">
+														<p>$orderProduct.productName</p>
+														<p>
+															<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+															<span>数量 x${orderProduct.buyNum}</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												#end
+												<div class="pull-right status">
+													<span>待付款</span>
+													<a class="btn btn-search" href="/order/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+												</div>
+											</div>
+										</li>
+										#end
+									</div>
+									
+									
+									<div class="order-info-dfh">
+										<li>
+											<div class="detail">
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="/images/shoe/shoe.png" />
+													</a>
+													<div class="prod">
+														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
+														<p>
+															<span>价格 ¥1</span>
+															<span>数量 x100</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												<div class="pull-right status">
+													<span>待发货</span>
+													<button class="btn btn-search">查看订单详情</button>
+												</div>
+											</div>
+										</li>
+									</div>
+									
+									
+									<div class="order-info-dpl">
+									
+										<li>
+											<div class="detail">
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="/images/shoe/shoe.png" />
+													</a>
+													<div class="prod">
+														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
+														<p>
+															<span>价格 ¥1</span>
+															<span>数量 x100</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												<div class="pull-right status">
+													<span>待评价</span>
+													<button class="btn btn-search">查看订单详情</button>
+												</div>
+											</div>
+										</li>
+										
+									</div>
+									
+									<div class="order-info-tk">
+										<li>
+											<div class="detail">
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="/images/shoe/shoe.png" />
+													</a>
+													<div class="prod">
+														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
+														<p>
+															<span>价格 ¥1</span>
+															<span>数量 x100</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												<div class="pull-right status">
+													<span>退款</span>
+													<button class="btn btn-search">查看订单详情</button>
+												</div>
+											</div>
+										</li>
+									</div>
+									<div class="order-info-th">
+										<li>
+											<div class="detail">
+												<div class="pull-left">
+													<a href="javascript:;" class="img">
+														<img src="/images/shoe/shoe.png" />
+													</a>
+													<div class="prod">
+														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
+														<p>
+															<span>价格 ¥1</span>
+															<span>数量 x100</span>
+														</p>
+														<p class="color">颜色：墨蓝</p>
+														<p class="size">尺寸：XL</p>
+													</div>
+												</div>
+												<div class="pull-right status">
+													<span>退货中</span>
+													<button class="btn btn-search">查看订单详情</button>
+												</div>
+											</div>
+										</li>
+									</div>
                                 </ul>
                             </div>
                         </div>
@@ -373,6 +418,47 @@
 				$(".title a").removeClass("active");
 				$(this).addClass("active");
 			});
+			
+			var curTab = "all";
+			
+			$(".all").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-all").show();
+				curTab = "menu-all";
+			});
+			$(".dfk").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-dfk").show();
+				curTab = "menu-1";
+			});
+			$(".dfh").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-dfh").show();
+				curTab = "menu-2";
+			});
+			$(".dpl").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-dpl").show();
+				curTab = "menu-3";
+			});
+			$(".tk").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-tk").show();
+				curTab = "menu-4";
+			});
+			$(".th").click(function(){
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-th").show();
+				curTab = "menu-5";
+			});
+			
+			
 		});
 	</script>
 </body>
