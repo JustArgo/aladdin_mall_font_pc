@@ -61,4 +61,15 @@ public class WebUtil extends HttpServlet {
 		return request.getSession();
 	}
 	
+	/**
+	 * 获取当前request
+	 * 
+	 * @return
+	 */
+	public static HttpServletRequest getRequest() {
+		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
+		HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
+		return request;
+	}
+	
 }

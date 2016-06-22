@@ -1,6 +1,733 @@
+<!DOCTYPE html>
 <html>
-	<!-- 用于阿里巴巴SLB检测 不可删除 -->
-	<body>
-		success
-	</body>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/reset.css" />
+    <link rel="stylesheet" href="css/theme.css" />
+    <!-- js -->
+    <script src="js/jquery.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+    <script src="js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="js/html5shiv-printshiv.js"></script>
+    <script src="js/respond.min.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>阿拉丁--商品列表</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="link.html">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2 has-subcategory">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- banner -->
+    <section class="banner-bar">
+        <div class="banner">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul class="category-list">
+                            <li>
+                                <a href="javascript:;">美妆</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">鞋包</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">服饰</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">食品</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">居家</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">母婴</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">数码</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">饰品</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">其他</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">品牌馆</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-8">
+                        <div id="banner-carousel" class="carousel slide" data-ride="carousel">
+                            <!-- Indicators -->
+                            <ol class="carousel-indicators">
+                                <li data-target="#banner-carousel" data-slide-to="0" class="active"></li>
+                                <li data-target="#banner-carousel" data-slide-to="1"></li>
+                                <li data-target="#banner-carousel" data-slide-to="2"></li>
+                            </ol>
+                            <!-- Wrapper for slides -->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="item active">
+                                  <img src="images/banner/banner-01.png"/>
+                                </div>
+                                <div class="item">
+                                  <img src="images/banner/banner-01.png" />
+                                </div>
+                                <div class="item">
+                                  <img src="images/banner/banner-01.png" />
+                                </div>
+                            </div>
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#banner-carousel" role="button" data-slide="prev">
+                                <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                            </a>
+                            <a class="right carousel-control" href="#banner-carousel" role="button" data-slide="next">
+                                <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                         <ul class="side-area">
+                            <li>
+                                <a href="javascript:;" class="pull-left">
+                                    <img src="images/side/side-01.png" />
+                                </a>
+                                <div class="name pull-right">
+                                    <p>免费开店</p>
+                                    <p>该分类下的主商城会</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="name pull-left">
+                                    <p>一元购</p>
+                                    <p>该分类下的主商城会</p>
+                                </div>
+                                <a href="javascript:;" class="pull-right">
+                                    <img src="images/side/side-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;" class="pull-left">
+                                    <img src="images/side/side-02.png" />
+                                </a>
+                                <div class="name pull-right">
+                                    <p>团购</p>
+                                    <p>该分类下的主商城会</p>
+                                </div>
+                            </li>
+                            <li>
+                                <div class="name pull-left">
+                                    <p>砍价</p>
+                                    <p>该分类下的主商城会</p>
+                                </div>
+                                <a href="javascript:;" class="pull-right">
+                                    <img src="images/side/side-03.png" />
+                                </a>
+                            </li>
+                         </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>服饰</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/clothing/clothing-01.png" />
+                            </a>
+                        </p>
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/clothing/clothing-02.png" />
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-03.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-05.png" />
+                        </a>
+                        <div class="item">
+                            <p>Eight Guys</p>
+                            <p>
+                                <a href="javascript:;">双口带字母印花长袖衬衫</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-06.png" />
+                        </a>
+                         <div class="item">
+                            <p>COKEIN</p>
+                            <p>
+                                <a href="javascript:;">格子纯棉长袖衬衫</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-07.png" />
+                        </a>
+                         <div class="item">
+                            <p>意树</p>
+                            <p>
+                                <a href="javascript:;">中国风修身立领复古棉麻衬衫</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul class="sub-category">
+                            <li>
+                                <a href="javascript:;">T恤</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">衬衫</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">卫衣</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">POLO</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">西装</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">夹克</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">高能暗黑</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">军事迷彩</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">街头原宿</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">英伦学院</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-04.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-08.png" />
+                        </a>
+                         <div class="item">
+                            <p>Stussy</p>
+                            <p>
+                                <a href="javascript:;">logo印花条纹T恤</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-09.png" />
+                        </a>
+                         <div class="item">
+                            <p>GAWS DIGI</p>
+                            <p>
+                                <a href="javascript:;">满版海浪图案印花短袖T恤</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/clothing/clothing-10.png" />
+                        </a>
+                         <div class="item">
+                            <p>ERICD</p>
+                            <p>
+                                <a href="javascript:;">渐变吊染印花T恤</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>鞋履</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/shoe/shoe-01.png" />
+                            </a>
+                        </p>
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/shoe/shoe-02.png" />
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-03.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-05.png" />
+                        </a>
+                        <div class="item">
+                            <p>converse</p>
+                            <p>
+                                <a href="javascript:;">Chuck Tavior All Star ll</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-06.png" />
+                        </a>
+                        <div class="item">
+                            <p>New Balance</p>
+                            <p>
+                                <a href="javascript:;">574原色复古跑鞋</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-07.png" />
+                        </a>
+                        <div class="item">
+                            <p>LACOSTE</p>
+                            <p>
+                                <a href="javascript:;">SAULIEU CHUNKY 休闲鞋</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul class="sub-category">
+                            <li>
+                                <a href="javascript:;">休闲鞋</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">复古跑鞋</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">时装鞋</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">靴子</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">板鞋</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">帆布鞋</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Reebok</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Nike</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">PUMA</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">VANS</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">New Balance</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">converse</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-04.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-08.png" />
+                        </a>
+                        <div class="item">
+                            <p>Outdo Zenith</p>
+                            <p>
+                                <a href="javascript:;">反毛皮拼色雕花皮鞋</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-09.png" />
+                        </a>
+                        <div class="item">
+                            <p>COLE HAAN</p>
+                            <p>
+                                <a href="javascript:;">男式拼色雕花牛皮时装鞋</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/shoe/shoe-10.png" />
+                        </a>
+                        <div class="item">
+                            <p>KKtP</p>
+                            <p>
+                                <a href="javascript:;">VELCRO DRESS SHOES</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="category">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>配饰</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/jewelry/jewelry-01.png" />
+                            </a>
+                        </p>
+                        <p>
+                            <a href="javascritp:;">
+                                <img src="images/jewelry/jewelry-02.png" />
+                            </a>
+                        </p>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-03.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-05.png" />
+                        </a>
+                        <div class="item">
+                            <p>soundbyte</p>
+                            <p>
+                                <a href="javascript:;">几何版图印花双肩包</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-06.png" />
+                        </a>
+                        <div class="item">
+                            <p>YIZISTORE</p>
+                            <p>
+                                <a href="javascript:;">印花双肩包-墨绿色橄榄球</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-07.png" />
+                        </a>
+                        <div class="item">
+                            <p>VANS</p>
+                            <p>
+                                <a href="javascript:;">DOREN ll BACKPACK</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-2">
+                        <ul class="sub-category">
+                            <li>
+                                <a href="javascript:;">双肩包</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">单肩包</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">帽子</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">太阳镜/眼睛</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">首饰</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">配饰</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">数码3C</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">手表</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">Pineal Body</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">GAWS CAP</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">InterFool</a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">黑头</a>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-04.png" />
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-08.png" />
+                        </a>
+                        <div class="item">
+                            <p>LINSHI TASKS</p>
+                            <p>
+                                <a href="javascript:;">针扣皮腰带</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-09.png" />
+                        </a>
+                        <div class="item">
+                            <p>OMTO</p>
+                            <p>
+                                <a href="javascript:;">个性单围皮手链</a>
+                            </p>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="javascritp:;">
+                            <img src="images/jewelry/jewelry-10.png" />
+                        </a>
+                        <div class="item">
+                            <p>朴坊Simplemill</p>
+                            <p>
+                                <a href="javascript:;">朴坊鸭子铃铛匙扣</a>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
 </html>

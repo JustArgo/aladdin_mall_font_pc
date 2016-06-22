@@ -1,6 +1,9 @@
 package com.mi360.aladdin.mall.controller;
 
+import java.util.HashMap;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.mall.Principal;
+import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
@@ -35,14 +39,19 @@ public class LoginController {
 	 */
 	@RequestMapping(value = "/authentication")
 	@ResponseBody
-	public boolean authentication(String requestId, String password, String username) {
+	public String authentication(String requestId, HttpServletRequest request, String captcha,
+			String password, String username) {
+		boolean captchaPassed = CaptchaUtil.validate(captcha);
+		if (!captchaPassed) {
+			return "captcha_error";
+		}
 		MapData serviceData = null;
 		if (username.matches("^1\\d{10}$")) {
 			serviceData = MapUtil.newInstance(userService.loginAuthentication(requestId, password, username, null));
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.loginAuthentication(requestId, password, null, username));
 		} else {
-			return false;
+			return "username_password_error";
 		}
 		if (serviceData.getErrcode() == 0) {
 			String mqId = serviceData.getString("result");
@@ -53,12 +62,12 @@ public class LoginController {
 				int luckNum = resultData.getInteger("luckNum");
 				Principal principal = new Principal(userId, mqId, null, luckNum);
 				WebUtil.login(principal);
-				return true;
+				return "success";
 			}
 		}
-		return false;
+		return "username_password_error";
 	}
-	
+
 	@RequestMapping(value = "/page")
 	public String page(String requestId) {
 		return "login";

@@ -8,19 +8,29 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <!-- css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
     <!-- js -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/theme.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
     <!--[if lt IE 9]>
-    <script src="js/html5shiv-printshiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
     <title>阿拉丁--登录</title>
+    <script>
+    $(function(){
+    	$('#chgImg').click(function(){
+    		var timestamp=(new Date()).valueOf();
+    		$('#captchaImg').attr('src','/common/captcha?timestamp='+timestamp);     
+    	})
+    	
+    	$('#chgImg').click();
+    })
+    </script>
 </head>
 <body>
     <!-- header -->
@@ -32,7 +42,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                     </div>
@@ -49,7 +59,7 @@
                     <div class="form-box">
                         <form class="form">
                             <h2>登录</h2>
-                            <div class="form-group error">
+                            <div class="form-group error" style="display:none;">
                                 <i class=""></i>
                                 <span>账户名与密码不匹配，请重新输入！</span>
                             </div>
@@ -63,16 +73,16 @@
                                 <input type="text" class="form-control pull-left" />
                                 <div class="pull-right">
                                     <a href="javascript:;">
-                                        <img src="images/validate.png" />
+                                        <img style="width:108px;height:40px;" id="captchaImg"/>
                                     </a>
-                                    <a href="javascript:;">换一张</a>
+                                    <a href="javascript:;" id="chgImg">换一张</a>
                                 </div>
                             </div>
                             <div class="form-group">
                                 <a href="forget-password.html" class="forget fl">忘记密码？</a>
                                 <a href="register.html" class="register fr">免费注册</a>
                             </div>
-                            <button type="submit" class="btn btn-login">登录</button>
+                            <button type="button" class="btn btn-login">登录</button>
                             
                         </form>
                         <div class="weichat">
@@ -143,22 +153,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>
