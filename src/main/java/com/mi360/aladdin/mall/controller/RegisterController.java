@@ -7,7 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
+import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -24,11 +26,26 @@ public class RegisterController {
 	@Autowired
 	private PcUserService userService;
 
+	/**
+	 * 页面
+	 */
 	@RequestMapping()
 	public String index(String requestId) {
 		return "register";
 	}
 
+	/**
+	 * 提交
+	 * 
+	 * @param iv
+	 *            邀请码
+	 * @param captcha
+	 *            验证码
+	 * @param password
+	 *            密码
+	 * @param username
+	 *            用户名
+	 */
 	@RequestMapping("/submit")
 	@ResponseBody
 	public String submit(String requestId, String iv, String captcha, String password, String username) {
@@ -49,7 +66,16 @@ public class RegisterController {
 				} catch (Exception e) {
 				}
 			}
-			userService.createPc(requestId, ivInt, password, username, null);
+			MapData serviceData2 = MapUtil
+					.newInstance(userService.createPc(requestId, ivInt, password, username, null));
+			if (serviceData2.getErrcode() != 0) {
+				return "error";
+			}
+			Integer luckNum = serviceData2.getInteger("luckNum");
+			String mqId = serviceData2.getString("mqId");
+			Integer userId = serviceData2.getInteger("iv");
+			Principal principal = new Principal(userId, mqId, null, luckNum);
+			WebUtil.login(principal);
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
 			if (serviceData.getBoolean("result")) {
@@ -62,7 +88,16 @@ public class RegisterController {
 				} catch (Exception e) {
 				}
 			}
-			userService.createPc(requestId, ivInt, password, null, username);
+			MapData serviceData2 = MapUtil
+					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
+			if (serviceData2.getErrcode() != 0) {
+				return "error";
+			}
+			Integer luckNum = serviceData2.getInteger("luckNum");
+			String mqId = serviceData2.getString("mqId");
+			Integer userId = serviceData2.getInteger("iv");
+			Principal principal = new Principal(userId, mqId, null, luckNum);
+			WebUtil.login(principal);
 		} else {
 			return "username_error";
 		}
