@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.message.email.service.EmailVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -68,7 +69,8 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, username, null));
-			if (serviceData2.getErrcode() != 0) {
+			int errcode = serviceData2.getErrcode();
+			if (errcode != 0) {
 				return "error";
 			}
 			Integer luckNum = serviceData2.getInteger("luckNum");
@@ -76,6 +78,7 @@ public class RegisterController {
 			Integer userId = serviceData2.getInteger("iv");
 			Principal principal = new Principal(userId, mqId, null, luckNum);
 			WebUtil.login(principal);
+			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
 			if (serviceData.getBoolean("result")) {
@@ -90,7 +93,8 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
-			if (serviceData2.getErrcode() != 0) {
+			int errcode = serviceData2.getErrcode();
+			if (errcode != 0 || errcode != 0) {
 				return "error";
 			}
 			Integer luckNum = serviceData2.getInteger("luckNum");
@@ -98,9 +102,19 @@ public class RegisterController {
 			Integer userId = serviceData2.getInteger("iv");
 			Principal principal = new Principal(userId, mqId, null, luckNum);
 			WebUtil.login(principal);
+			return "success_email";
 		} else {
 			return "username_error";
 		}
-		return "success";
+	}
+
+	@RequestMapping("/success/phone")
+	public String successPhone(String requestId) {
+		return "success-phone";
+	}
+
+	@RequestMapping("/success/email")
+	public String successEmail(String requestId) {
+		return "success-phone";
 	}
 }

@@ -167,8 +167,10 @@
         						$('#chgImg').click();
         						$('#usernameTip').html('用户名已存在！');
         						$('#usernameTip').css('display','inline');
-        					}else if('success'){
-        						location.href="${link.contextPath}/index.html"
+        					}else if('success_phone'){
+        						location.href="${link.contextPath}/register/success/phone"
+        					}else if('success_email'){
+        						location.href="${link.contextPath}/register/success/email"
         					}
         				},
         				complete:function(){
