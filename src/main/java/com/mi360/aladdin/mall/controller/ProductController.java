@@ -162,7 +162,7 @@ public class ProductController extends BaseWxController {
 		model.addAttribute("attrItems", attrItems);
 		model.addAttribute("productID", productID);
 		model.addAttribute("productStock", skuStock);
-		return "productdetail";
+		return "product/product-detail";
 	}
 
 	@RequestMapping("querySku")
