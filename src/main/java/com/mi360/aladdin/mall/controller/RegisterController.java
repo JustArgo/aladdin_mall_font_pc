@@ -120,6 +120,6 @@ public class RegisterController {
 
 	@RequestMapping("/success/email")
 	public String successEmail(String requestId) {
-		return "register/success-phone";
+		return "register/success-email";
 	}
 }
