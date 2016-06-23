@@ -9,6 +9,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.mi360.aladdin.mall.Principal;
+import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * Web工具
@@ -42,11 +43,11 @@ public class WebUtil extends HttpServlet {
 	 * 
 	 * @return
 	 */
-	public static void login(Principal principal) {
+	public static void login(SessionUserAuthInfo sessionUserAuthInfo) {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
 		if (requestAttributes != null) {
 			HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-			request.getSession().setAttribute(Principal.ATTRIBUTE_KEY, principal);
+			request.getSession().setAttribute("loginUser", sessionUserAuthInfo);
 		}
 	}
 

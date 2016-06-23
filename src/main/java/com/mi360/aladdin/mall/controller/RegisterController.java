@@ -1,6 +1,5 @@
 package com.mi360.aladdin.mall.controller;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,10 +9,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
-import com.mi360.aladdin.message.email.service.EmailVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
+import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 注册
@@ -32,7 +31,7 @@ public class RegisterController {
 	 */
 	@RequestMapping()
 	public String index(String requestId) {
-		return "register";
+		return "register/register";
 	}
 
 	/**
@@ -76,8 +75,11 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			Principal principal = new Principal(userId, mqId, null, luckNum);
-			WebUtil.login(principal);
+			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			sessionUserAuthInfo.setUserId(userId);
+			sessionUserAuthInfo.setMqId(mqId);
+			sessionUserAuthInfo.setLuckNum(luckNum);
+			WebUtil.login(sessionUserAuthInfo);
 			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
@@ -100,8 +102,11 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			Principal principal = new Principal(userId, mqId, null, luckNum);
-			WebUtil.login(principal);
+			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			sessionUserAuthInfo.setUserId(userId);
+			sessionUserAuthInfo.setMqId(mqId);
+			sessionUserAuthInfo.setLuckNum(luckNum);
+			WebUtil.login(sessionUserAuthInfo);
 			return "success_email";
 		} else {
 			return "username_error";
@@ -110,11 +115,11 @@ public class RegisterController {
 
 	@RequestMapping("/success/phone")
 	public String successPhone(String requestId) {
-		return "success-phone";
+		return "register/success-phone";
 	}
 
 	@RequestMapping("/success/email")
 	public String successEmail(String requestId) {
-		return "success-phone";
+		return "register/success-phone";
 	}
 }

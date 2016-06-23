@@ -18,6 +18,7 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.mi360.aladdin.interaction.wx.service.WxInteractionService;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 客户端过滤器
@@ -42,8 +43,13 @@ public class ClientInterceptor extends HandlerInterceptorAdapter {
 		Principal principal = WebUtil.getCurrentPrincipal();
 		if (principal == null) {
 			
-			principal = new Principal(342, "d9afefcc54ec4a2ca6ca099e8cbd2413", "oiUxPwfWK32w9VlqU0sm1F0SIUuk", 100000342);
-			WebUtil.login(principal);
+			
+			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			sessionUserAuthInfo.setUserId(342);
+			sessionUserAuthInfo.setMqId("d9afefcc54ec4a2ca6ca099e8cbd2413");
+			sessionUserAuthInfo.setLuckNum(100000342);
+			
+			WebUtil.login(sessionUserAuthInfo);
 
 			
 /*

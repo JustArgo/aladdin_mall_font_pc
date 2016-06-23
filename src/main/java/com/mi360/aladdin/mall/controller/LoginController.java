@@ -16,6 +16,7 @@ import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
+import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 首页控制器
@@ -59,8 +60,11 @@ public class LoginController {
 				MapData resultData = serviceData2.getResult();
 				int userId = resultData.getInteger("id");
 				int luckNum = resultData.getInteger("luckNum");
-				Principal principal = new Principal(userId, mqId, null, luckNum);
-				WebUtil.login(principal);
+				SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+				sessionUserAuthInfo.setUserId(userId);
+				sessionUserAuthInfo.setMqId(mqId);
+				sessionUserAuthInfo.setLuckNum(luckNum);
+				WebUtil.login(sessionUserAuthInfo);
 				return "success";
 			}
 		}
