@@ -251,6 +251,9 @@
 			<properties>
 				<config.dir>dev</config.dir>
 			</properties>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
 		</profile>
 		<profile>
 			<id>pro</id>
@@ -263,9 +266,6 @@
 			<properties>
 				<config.dir>test</config.dir>
 			</properties>
-			<activation>
-				<activeByDefault>true</activeByDefault>
-			</activation>
 		</profile>
 		<profile>
 			<id>uat</id>
