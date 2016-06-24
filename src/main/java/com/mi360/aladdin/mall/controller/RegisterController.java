@@ -128,17 +128,17 @@ public class RegisterController {
 	 *            校验码
 	 */
 	@RequestMapping("/confirm/email/{code}")
-	public String confirmEmail(String requestId, @PathVariable String code) throws Exception {
+	public String confirmEmail(String requestId, @PathVariable String code) {
 		MapData serviceData = MapUtil.newInstance(emailVerifyService.verify(requestId, code, "REG"));
 		logger.info(serviceData.dataString());
 		if (serviceData.getErrcode() != 0) {
-			throw serviceData.getException();
+			return "404.html";
 		}
 		boolean passed = serviceData.getBoolean("result");
 		if (passed) {
 			return "register/confirm/success-email";
 		} else {
-			throw serviceData.getException();
+			return "404.html";
 		}
 	}
 
