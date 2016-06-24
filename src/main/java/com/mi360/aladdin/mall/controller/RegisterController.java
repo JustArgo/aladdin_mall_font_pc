@@ -1,14 +1,15 @@
 package com.mi360.aladdin.mall.controller;
 
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.message.email.service.EmailVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -23,8 +24,11 @@ import com.radiadesign.catalina.session.SessionUserAuthInfo;
 @Controller
 @RequestMapping(value = "/register")
 public class RegisterController {
+	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
 	private PcUserService userService;
+	@Autowired
+	private EmailVerifyService emailVerifyService;
 
 	/**
 	 * 页面
@@ -56,6 +60,7 @@ public class RegisterController {
 		MapData serviceData = null;
 		if (username.matches("^1\\d{10}$")) {
 			serviceData = MapUtil.newInstance(userService.existPhone(requestId, username));
+			logger.info(serviceData.dataString());
 			if (serviceData.getBoolean("result")) {
 				return "username_exists";
 			}
@@ -68,6 +73,7 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, username, null));
+			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
 			if (errcode != 0) {
 				return "error";
@@ -75,7 +81,7 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
 			sessionUserAuthInfo.setUserId(userId);
 			sessionUserAuthInfo.setMqId(mqId);
 			sessionUserAuthInfo.setLuckNum(luckNum);
@@ -83,6 +89,7 @@ public class RegisterController {
 			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
+			logger.info(serviceData.dataString());
 			if (serviceData.getBoolean("result")) {
 				return "username_exists";
 			}
@@ -95,6 +102,7 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
+			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
 			if (errcode != 0 || errcode != 0) {
 				return "error";
@@ -102,7 +110,7 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
 			sessionUserAuthInfo.setUserId(userId);
 			sessionUserAuthInfo.setMqId(mqId);
 			sessionUserAuthInfo.setLuckNum(luckNum);
@@ -113,11 +121,38 @@ public class RegisterController {
 		}
 	}
 
+	/**
+	 * 确认 - 邮箱
+	 * 
+	 * @param code
+	 *            校验码
+	 */
+	@RequestMapping("/confirm/email/{code}")
+	public String confirmEmail(String requestId, @PathVariable String code) {
+		MapData serviceData = MapUtil.newInstance(emailVerifyService.verify(requestId, code, "REG"));
+		logger.info(serviceData.dataString());
+		if (serviceData.getErrcode() != 0) {
+			return "404.html";
+		}
+		boolean passed = serviceData.getBoolean("result");
+		if (passed) {
+			return "register/confirm/success-email";
+		} else {
+			return "404.html";
+		}
+	}
+
+	/**
+	 * 成功 - 手机
+	 */
 	@RequestMapping("/success/phone")
 	public String successPhone(String requestId) {
 		return "register/success-phone";
 	}
 
+	/**
+	 * 成功 - 邮箱
+	 */
 	@RequestMapping("/success/email")
 	public String successEmail(String requestId) {
 		return "register/success-email";

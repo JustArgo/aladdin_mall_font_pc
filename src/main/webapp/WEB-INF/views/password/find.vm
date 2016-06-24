@@ -8,19 +8,19 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <!-- css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
     <!-- js -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/theme.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
     <!--[if lt IE 9]>
-    <script src="js/html5shiv-printshiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>阿拉丁--注册</title>
+    <title>阿拉丁--找回密码</title>
     <script>
     $(function(){
     	$('#chgImg').click(function(){
@@ -28,7 +28,6 @@
     		$('#captchaImg').attr('src','/common/captcha?timestamp='+timestamp);     
     	})
     	$('#chgImg').click();
-    	
     	
     	/*表单验证对象*/
 		var formValidate={
@@ -38,34 +37,6 @@
 				reg:/(^1\d{10}$)|(^.*@.*\..*)/,
 				tip:$('#usernameTip'),
 				tipWord:'输入手机号/邮箱格式错误'
-			},
-			password:{
-				target:$("#password"),
-				required:true,
-				reg:/^[\w\d]{5,20}$/,
-				tip:$('#passwordTip'),
-				validator:function(){
-					var v=formValidate.rePassword.target.val();
-					if(v!=""){
-						formValidate.validate(formValidate.rePassword);
-					}
-					return true;
-				},
-				tipWord:'密码长度只能在5-20个字符之间'
-			},
-			rePassword:{
-				target:$("#rePassword"),
-				required:true,
-				validator:function(){
-					var v=formValidate.password.target.val();
-					var v2=this.target.val();
-					if(v!=v2){
-						return false;
-					}
-					return true;
-				},
-				tip:$('#rePasswordTip'),
-				tipWord:'两次输入密码不一致'
 			},
 			captcha:{
 				target:$("#captcha"),
@@ -77,23 +48,11 @@
 				this.username.target.blur(function(){
 					formValidate.validate(formValidate.username);
 				})
-				this.password.target.blur(function(){
-					formValidate.validate(formValidate.password);
-				})
-				this.rePassword.target.blur(function(){
-					formValidate.validate(formValidate.rePassword);
-				})
 				this.captcha.target.blur(function(){
 					formValidate.validate(formValidate.captcha);
 				})
 				this.username.target.focus(function(){
 					formValidate.username.tip.css('display','none');
-				})
-				this.password.target.focus(function(){
-					formValidate.password.tip.css('display','none');
-				})
-				this.rePassword.target.focus(function(){
-					formValidate.rePassword.tip.css('display','none');
 				})
 				this.captcha.target.focus(function(){
 					formValidate.captcha.tip.css('display','none');
@@ -104,7 +63,7 @@
 				if(o.required){
 					if(v==""){//非空
 						o.tip.html(o.tipWord);
-						o.tip.css('display','inline');
+						o.tip.css('display','block');
 						return false;
 					}
 				}
@@ -112,7 +71,7 @@
 					if(o.reg!=undefined){//格式
 						if(!o.reg.test(v)){
 							o.tip.html(o.tipWord);
-							o.tip.css('display','inline');
+							o.tip.css('display','block');
 							return false;
 						}
 					}
@@ -120,7 +79,7 @@
 				if(o.validator!=undefined){//自定义验证
 					if(!o.validator()){
 						o.tip.html(o.tipWord);
-						o.tip.css('display','inline');
+						o.tip.css('display','block');
 						return false;
 					}
 				}
@@ -128,7 +87,7 @@
 				return true;
 			},
 			validateAll:function(){
-				if(this.validate(this.username)&this.validate(this.password)&this.validate(this.rePassword)&this.validate(this.captcha)){
+				if(this.validate(this.username)&this.validate(this.captcha)){
 					return true;
 				}
 				return false;
@@ -143,36 +102,28 @@
     		if(submitAble){
     			submitAble=false;
     			if(formValidate.validateAll()){
-    				if(!$('#readed')[0].checked){
-    					alert('请阅读并同意《用户注册协议》');
-    					submitAble=true;
-    					return;
-    				}
     				var username=$('#username').val();
-    				var password=$('#password').val();
     				var captcha=$('#captcha').val();
     				$.ajax({ 
-        				url: '/register/submit',
-        				data:{captcha:captcha,username:username,password:password},
+        				url: '/password/find/check',
+        				data:{captcha:captcha,username:username},
         				type:"post",
         				success: function(data){
         					if('captcha_error'==data){
         						$('#chgImg').click();
         						$('#captchaTip').css('display','inline');
         						submitAble=true;
-        					}else if('username_exists'==data){
+        					}else if('username_not_exists'==data){
         						$('#chgImg').click();
-        						$('#usernameTip').html('用户名已存在！');
-        						$('#usernameTip').css('display','inline');
+        						$('#usernameTip').html('您输入的账户名不存在，请重新输入');
+        						$('#usernameTip').css('display','block');
         						submitAble=true;
-        					}else if('success_phone'==data){
-        						location.href="${link.contextPath}/register/success/phone"
-        					}else if('success_email'==data){
-        						location.href="${link.contextPath}/register/success/email"
         					}else if('error'==data){
         						$('#chgImg').click();
             					alert('系统繁忙，请稍后再试');
             					submitAble=true;
+        					}else{
+        						location.href=data;
         					}
         				},
         				error:function(){
@@ -186,6 +137,9 @@
     			}
     		}
     	})
+		
+		
+    	
     })
     </script>
 </head>
@@ -233,8 +187,12 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
+                        </div>
+                        <div class="pull-right">
+                            <span>已有账号？</span>
+                            <a href="" class="login">马上登录</a>
                         </div>
                     </div>
                 </div>
@@ -242,60 +200,63 @@
         </div>
     </header>
     
-    <!-- contentbar -->
-    <div class="content-bar">
+    <!-- content-bar-->
+    <section class="content-bar">
         <div class="content">
             <div class="container">
                 <div class="form-box">
                     <form>
-                        <h2>新用户注册</h2>
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span>*</span>用户名：
-                            </label>
-                            <input type="text" id="username" class="form-control" placeholder="手机号/邮箱地址" />
-                            <span class="error" id="usernameTip" style="display:none;">输入手机号/邮箱格式错误</span>
+                        <h2 class="password">找回密码</h2>
+                        <div class="row">
+                            <ul class="step-list">
+                                <li class="active">
+                                    <a href="javascript:;">
+                                        <em>1</em>
+                                        <p>填写用户名</p>
+                                     </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <em>2</em>
+                                        <p>验证身份</p>
+                                     </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <em >3</em>
+                                        <p>设置新密码</p>
+                                     </a>
+                                </li>
+                                <li class="negative">
+                                    <a href="javascript:;">
+                                        <em>
+                                            <i class="icon-check"></i>
+                                        </em>
+                                        <p class="complete">完成</p>
+                                     </a>
+                                </li>
+                            </ul>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">
-                                <span>*</span>密码：
-                            </label>
-                            <input type="password" id="password" class="form-control" placeholder="设置登录密码" />
-                            <span class="error" id="passwordTip" style="display:none;">密码长度只能在5-20个字符之间</span>
+                            <label class="control-label">用户名：</label>
+                            <input type="text" id="username" class="form-control" placeholder="邮箱/手机号" />
+                            <p class="error" id="usernameTip" style="display:none;">您输入的账户名不存在，请重新输入。</p>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">
-                                <span>*</span>确认密码：
-                            </label>
-                            <input type="password" id="rePassword" class="form-control" placeholder="确认密码" />
-                            <span class="error" id="rePasswordTip" style="display:none;">两次输入密码不一致</span>
-                        </div>
-                        <div class="form-group">
-                            <label class="control-label">
-                                <span>*</span>验证码：
-                            </label>
-                            <input type="text" id="captcha" class="form-control code" placeholder="验证码" />
+                            <label class="control-label">验证码：</label>
+                            <input type="text" id="captcha" class="form-control" placeholder="验证码" />
                             <a href="javascript:;" class="code">
-                                <img id="captchaImg" style="width:90px;height:32px;" >
-                            <a/>
-                            <a href="javascript:;" class="update" id="chgImg">换一张</a>
-                            <span class="error" style="padding-left:37px;display:none;" id="captchaTip" >验证码输入错误</span>
+                                <img  id="captchaImg" style="width:90px;height:32px;" >
+                            </a><a>
+                            </a><a href="javascript:;" class="update" id="chgImg">换一张</a>
+                            <p class="error"  id="captchaTip" style="display:none;">验证码错误</p>
                         </div>
-                        <div class="checkbox">
-                          <label>
-                            <input type="checkbox" id="readed">
-                            我已同意并阅读<a href="javascript:;">《用户注册协议》</a>
-                          </label>
-                        </div>
-                        <button type="button" id="submit" class="btn btn-register">立即注册</button>
-                        <p  class="accout">
-                            已有账号？<a href="/login">马上登录</a>
-                        </p>
+                        <button type="button" id="submit" class="btn btn-commit">提交</button>
                     </div>
                 </form>   
             </div>
         </div>
-    </div>
+    </section>
 
     <!-- footer -->
     <footer class="footer">
@@ -354,22 +315,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>

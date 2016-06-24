@@ -20,11 +20,17 @@
     <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>阿拉丁--邮件成功</title>
+    <title>阿拉丁--找回密码</title>
+    <script>
+    $(function(){
+    	$('#sms').click(function(){
+    		
+    	})
+    })
+    </script>
 </head>
 <body>
-    <!-- header -->
-    <header class="header">
+    <header class="header new-header">
         <!-- navbar -->
         <div class="navbar navbar-static-top">
             <div class="container">
@@ -71,30 +77,8 @@
                             </a>
                         </div>
                         <div class="pull-right">
-                            <a href="javascript:;">
-                                <img src="/images/code.png" />
-                            </a>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-2">
-                            <a href="javascript:;" class="category">分类导航</a>
-                        </div>
-                        <div class="col-md-10">
-                            <ul class="menu-list">
-                                <li>
-                                    <a href="index.html">首页</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">团购</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">砍价</a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">一元购</a>
-                                </li>
-                            </ul>
+                            <span>已有账号？</span>
+                            <a href="" class="login">马上登录</a>
                         </div>
                     </div>
                 </div>
@@ -102,114 +86,63 @@
         </div>
     </header>
     
-    <!-- message-bar -->
-    <section class="message-bar">
-        <div class="message">
+    <!-- content-bar-->
+    <section class="content-bar">
+        <div class="content">
             <div class="container">
-                <div class="row">
-                    <div class="info">
-                        <i class="icon-info-check"></i>
-                        <div class="detail">
-                            <p>恭喜您，注册成功！</p>
-                            <p>请登录邮箱点击链接进行账号激活！</p>
+                <div class="form-box">
+                    <form>
+                        <h2 class="password">找回密码</h2>
+                        <div class="row">
+                            <ul class="step-list">
+                                <li>
+                                    <a href="javascript:;">
+                                        <em>1</em>
+                                        <p>填写用户名</p>
+                                     </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;">
+                                        <em>2</em>
+                                        <p>验证身份</p>
+                                     </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <em >3</em>
+                                        <p>设置新密码</p>
+                                     </a>
+                                </li>
+                                <li class="negative">
+                                    <a href="javascript:;">
+                                        <em>
+                                            <i class="icon-check"></i>
+                                        </em>
+                                        <p class="complete">完成</p>
+                                     </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <div class="message-box emial" style="width:380px;text-align:center;">
+                                <div class="detail" style="text-align:left;">
+                                	<p>
+                                		<span style="width: 100px;display: inline-block;text-align: right;">昵称：</span>$nickname
+                                	</p>
+                                	<p style="margin-top:20px;">
+                                		<span style="width: 100px;display: inline-block;text-align: right;">验证手机：</span>$phone
+                                	</p>
+                                    <p style="margin-top:20px;">
+                                        <span style="width: 100px;display: inline-block;text-align: right;">验证码：</span>
+                                        <input type="text" id="username" style="width: 120px;" class="form-control" placeholder="手机校验码" />
+                                        <button type="button" id="sms" class="btn btn-simple" style="position:relative;top:-2px;">获取短信验证码</button>  
+                                    </p>     
+                                </div>
+                                <button type="button" class="btn btn-mailbox">提交</button>                   
+                            </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- category-bar -->
-    <section class="category-bar">
-        <div class="category list">
-            <div class="container">
-                <div class="row">
-                    <h1 class="title">
-                        <span>为您推荐</span>
-                    </h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png" />
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                </div>
+                </form>   
             </div>
         </div>
     </section>

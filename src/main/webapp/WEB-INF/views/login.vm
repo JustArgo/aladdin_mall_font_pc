@@ -56,17 +56,23 @@
     						$('#chgImg').click();
     						$('#tipWord').html('验证码错误！');
     						$('#tip').css('display','block');
+    						submitAble=true;
     					}else if('username_password_error'==data){
     						$('#chgImg').click();
     						$('#tipWord').html('账户名与密码不匹配，请重新输入！');
     						$('#tip').css('display','block');
+    						submitAble=true;
     					}else if('success'){
     						location.href="${link.contextPath}/index.html"
-    					}else if('error'){
+    					}else if('error'==data){
+    						$('#chgImg').click();
     						alert('系统繁忙，请稍后再试');
+    						submitAble=true;
     					}
     				},
-    				complete:function(){
+    				error:function(){
+    					$('#chgImg').click();
+    					alert('系统繁忙，请稍后再试');
     					submitAble=true;
     				}
     			});
@@ -122,8 +128,8 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <a href="forget-password.html" class="forget fl">忘记密码？</a>
-                                <a href="register.html" class="register fr">免费注册</a>
+                                <a href="/password/find" class="forget fl">忘记密码？</a>
+                                <a href="register" class="register fr">免费注册</a>
                             </div>
                             <button type="button" id="submit" class="btn btn-login">登录</button>
                             
