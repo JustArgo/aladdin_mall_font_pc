@@ -118,6 +118,12 @@ public class RegisterController {
 		}
 	}
 
+	/**
+	 * 确认-邮箱
+	 * 
+	 * @param code
+	 *            校验码
+	 */
 	@RequestMapping("/confirm/email/{code}")
 	public String confirmEmail(String requestId, @PathVariable String code) throws Exception {
 		MapData serviceData = MapUtil.newInstance(emailVerifyService.verify(requestId, code, "REG"));
@@ -127,16 +133,22 @@ public class RegisterController {
 		boolean passed = serviceData.getBoolean("result");
 		if (passed) {
 			return "register/confirm/success-email";
-		}else {
+		} else {
 			throw serviceData.getException();
 		}
 	}
 
+	/**
+	 * 成功-手机
+	 */
 	@RequestMapping("/success/phone")
 	public String successPhone(String requestId) {
 		return "register/success-phone";
 	}
 
+	/**
+	 * 成功-邮箱
+	 */
 	@RequestMapping("/success/email")
 	public String successEmail(String requestId) {
 		return "register/success-email";
