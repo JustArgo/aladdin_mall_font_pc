@@ -167,9 +167,9 @@
         						$('#chgImg').click();
         						$('#usernameTip').html('用户名已存在！');
         						$('#usernameTip').css('display','inline');
-        					}else if('success_phone'){
+        					}else if('success_phone'==data){
         						location.href="${link.contextPath}/register/success/phone"
-        					}else if('success_email'){
+        					}else if('success_email'==data){
         						location.href="${link.contextPath}/register/success/email"
         					}
         				},

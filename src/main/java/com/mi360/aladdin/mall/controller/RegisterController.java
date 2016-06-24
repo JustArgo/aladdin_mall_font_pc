@@ -1,14 +1,17 @@
 package com.mi360.aladdin.mall.controller;
 
+import javax.swing.text.StyledEditorKit.BoldAction;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.message.email.service.EmailVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -25,6 +28,8 @@ import com.radiadesign.catalina.session.SessionUserAuthInfo;
 public class RegisterController {
 	@Autowired
 	private PcUserService userService;
+	@Autowired
+	private EmailVerifyService emailVerifyService;
 
 	/**
 	 * 页面
@@ -75,7 +80,7 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
 			sessionUserAuthInfo.setUserId(userId);
 			sessionUserAuthInfo.setMqId(mqId);
 			sessionUserAuthInfo.setLuckNum(luckNum);
@@ -102,7 +107,7 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
 			sessionUserAuthInfo.setUserId(userId);
 			sessionUserAuthInfo.setMqId(mqId);
 			sessionUserAuthInfo.setLuckNum(luckNum);
@@ -110,6 +115,20 @@ public class RegisterController {
 			return "success_email";
 		} else {
 			return "username_error";
+		}
+	}
+
+	@RequestMapping("/confirm/email/{code}")
+	public String confirmEmail(String requestId, @PathVariable String code) throws Exception {
+		MapData serviceData = MapUtil.newInstance(emailVerifyService.verify(requestId, code, "REG"));
+		if (serviceData.getErrcode() != 0) {
+			throw serviceData.getException();
+		}
+		boolean passed = serviceData.getBoolean("result");
+		if (passed) {
+			return "register/confirm/success-email";
+		}else {
+			throw serviceData.getException();
 		}
 	}
 
