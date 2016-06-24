@@ -1,14 +1,12 @@
 package com.mi360.aladdin.mall.controller;
 
-import javax.swing.text.StyledEditorKit.BoldAction;
-
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.message.email.service.EmailVerifyService;
@@ -26,6 +24,7 @@ import com.radiadesign.catalina.session.SessionUserAuthInfo;
 @Controller
 @RequestMapping(value = "/register")
 public class RegisterController {
+	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
 	private PcUserService userService;
 	@Autowired
@@ -61,6 +60,7 @@ public class RegisterController {
 		MapData serviceData = null;
 		if (username.matches("^1\\d{10}$")) {
 			serviceData = MapUtil.newInstance(userService.existPhone(requestId, username));
+			logger.info(serviceData.dataString());
 			if (serviceData.getBoolean("result")) {
 				return "username_exists";
 			}
@@ -73,6 +73,7 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, username, null));
+			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
 			if (errcode != 0) {
 				return "error";
@@ -88,6 +89,7 @@ public class RegisterController {
 			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
+			logger.info(serviceData.dataString());
 			if (serviceData.getBoolean("result")) {
 				return "username_exists";
 			}
@@ -100,6 +102,7 @@ public class RegisterController {
 			}
 			MapData serviceData2 = MapUtil
 					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
+			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
 			if (errcode != 0 || errcode != 0) {
 				return "error";
@@ -119,7 +122,7 @@ public class RegisterController {
 	}
 
 	/**
-	 * 确认-邮箱
+	 * 确认 - 邮箱
 	 * 
 	 * @param code
 	 *            校验码
@@ -127,6 +130,7 @@ public class RegisterController {
 	@RequestMapping("/confirm/email/{code}")
 	public String confirmEmail(String requestId, @PathVariable String code) throws Exception {
 		MapData serviceData = MapUtil.newInstance(emailVerifyService.verify(requestId, code, "REG"));
+		logger.info(serviceData.dataString());
 		if (serviceData.getErrcode() != 0) {
 			throw serviceData.getException();
 		}
@@ -139,7 +143,7 @@ public class RegisterController {
 	}
 
 	/**
-	 * 成功-手机
+	 * 成功 - 手机
 	 */
 	@RequestMapping("/success/phone")
 	public String successPhone(String requestId) {
@@ -147,7 +151,7 @@ public class RegisterController {
 	}
 
 	/**
-	 * 成功-邮箱
+	 * 成功 - 邮箱
 	 */
 	@RequestMapping("/success/email")
 	public String successEmail(String requestId) {
