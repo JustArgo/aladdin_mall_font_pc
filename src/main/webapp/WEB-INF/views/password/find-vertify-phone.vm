@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>阿拉丁--找回密码</title>
+    <script>
+    $(function(){
+    	var smsAble=true;
+    	var countDown=function(i){
+    		smsAble=false;
+    		var content=$('#sms').html();
+    		$('#sms').html(content+'('+i+')');
+    		var interval=setInterval(function(){
+    			$('#sms').html(content+'('+i+')');
+    			if(i<0){
+    				$('#sms').html(content);
+    				clearTimeout(interval);
+    				smsAble=true;
+    			}
+    			i--;
+    		},1000);
+    	}
+    	$('#sms').click(function(){
+    		if(smsAble){
+    			smsAble=false;
+    			$.ajax({ 
+    				url: '/password/find/sms',
+    				type:"post",
+    				success: function(data){
+    					if('success'==data){
+    		    			countDown(60);
+    					}else if('error'==data){
+    						alert('系统繁忙，请稍后再试');
+    						smsAble=true;
+    					}
+    				},
+    				error:function(){
+    					alert('系统繁忙，请稍后再试');
+    					smsAble=true;
+    				}
+    			});
+    		}
+    	})
+    	if($sms_wait_second>0){
+    		countDown($sms_wait_second);
+    	}
+    	
+    	var submitAble=true;
+    	$('#submit').click(function(){
+    		if(submitAble){
+    			submitAble=false;
+    			var captcha=$('#captcha').val();
+    			if(captcha==''){
+    				alert('请输入短信验证码');
+    				submitAble=true;
+    				return;
+    			}
+    			$.ajax({ 
+    				url: '/password/find/sms/vertify',
+    				type:"post",
+    				data:{captcha:captcha},
+    				success: function(data){
+    					if('success'==data){
+    		    			location.href="/password/find/reset";
+    					}else if('captcha_error'==data){
+    						alert('验证码输入错误');
+    						submitAble=true;
+    					}
+    				},
+    				error:function(){
+    					alert('系统繁忙，请稍后再试');
+    					submitAble=true;
+    				}
+    			});
+    		}
+    	})
+    })
+    </script>
+</head>
+<body>
+    <header class="header new-header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="link.html">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <span>已有账号？</span>
+                            <a href="" class="login">马上登录</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- content-bar-->
+    <section class="content-bar">
+        <div class="content">
+            <div class="container">
+                <div class="form-box">
+                        <h2 class="password" style="color:#1a1a1a;font-size:30px;padding:30px;text-align:center;">找回密码</h2>
+                        <div class="row">
+                            <ul class="step-list">
+                                <li>
+                                    <a href="javascript:;">
+                                        <em>1</em>
+                                        <p>填写用户名</p>
+                                     </a>
+                                </li>
+                                <li class="active">
+                                    <a href="javascript:;">
+                                        <em>2</em>
+                                        <p>验证身份</p>
+                                     </a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">
+                                        <em >3</em>
+                                        <p>设置新密码</p>
+                                     </a>
+                                </li>
+                                <li class="negative">
+                                    <a href="javascript:;">
+                                        <em>
+                                            <i class="icon-check"></i>
+                                        </em>
+                                        <p class="complete">完成</p>
+                                     </a>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="row">
+                            <div class="message-box emial" style="width:380px;text-align:center;">
+                                <div class="detail" style="text-align:left;">
+                                	<p>
+                                		<span style="width: 100px;display: inline-block;text-align: right;">昵称：</span>$nickname
+                                	</p>
+                                	<p style="margin-top:20px;">
+                                		<span style="width: 100px;display: inline-block;text-align: right;">验证手机：</span>$phone
+                                	</p>
+                                	<form id="from1" action="/password/find/reset" method="post" style="display:inline;">
+                                    <p style="margin-top:20px;">
+                                        <span style="width: 100px;display: inline-block;text-align: right;">验证码：</span>
+                                        	<input type="text" name="captcha" id="captcha" style="width: 120px;" class="form-control" placeholder="手机校验码" />
+                                        <button type="button" id="sms" class="btn btn-simple" style="position:relative;top:-2px;width:150px;">获取短信验证码</button>  
+                                    </p>     
+                                    </form>		
+                                </div>
+                                <button type="button" id="submit" class="btn btn-mailbox">提交</button>                   
+                            </div>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

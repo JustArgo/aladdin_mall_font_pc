@@ -1,5 +1,7 @@
 package com.mi360.aladdin.mall.controller;
 
+import java.util.Date;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,8 +12,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.mall.util.CaptchaUtil;
-import com.mi360.aladdin.mall.util.PwdKey;
+import com.mi360.aladdin.mall.util.ExpireKey;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.message.sms.service.SmsCodeVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -28,8 +31,14 @@ public class PasswordController {
 	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
 	private PcUserService userService;
+	@Autowired
+	private SmsCodeVerifyService smsCodeVerifyService;
 	@Value("${host_name}")
 	private String hostName;
+	private static final String PASSWORD_FIND_USERNAME_KEY = "passwordFindVertify";
+	private static final String PASSWORD_FIND_SMS_WAIT_SECOND_KEY = "passwordFindSmsWaitSecondKey";
+	private static final String PASSWORD_FIND_RESET_KEY = "passwordFindResetKey";
+	private static final String PASSWORD_FIND_RESET_SUBMIT_KEY = "passwordFindResetSubmitKey";
 
 	/**
 	 * 页面
@@ -69,9 +78,10 @@ public class PasswordController {
 		if (!serviceData.getBoolean("result")) {
 			return "username_not_exists";
 		} else {
-			PwdKey pwdKey = new PwdKey(username);
-			WebUtil.getSession().setAttribute("pwdKey", pwdKey);
-			return hostName + "/password/find/vertify/" + pwdKey.getValue();
+			ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
+			expireKey.setAttribution(username);
+			WebUtil.getSession().setAttribute(PASSWORD_FIND_USERNAME_KEY, expireKey);
+			return hostName + "/password/find/vertify";
 		}
 	}
 
@@ -82,26 +92,126 @@ public class PasswordController {
 	 *            用户名
 	 * @param value
 	 *            密匙
+	 * @throws Exception
 	 */
-	@RequestMapping("/find/vertify/{value}")
-	public String vertify(String requestId, @PathVariable String value, ModelMap modelMap) {
-		logger.info(WebUtil.getSession().getId());
-		PwdKey pwdKey = (PwdKey) WebUtil.getSession().getAttribute("pwdKey");
-		if (!pwdKey.vertify(value)) {
-			return "404.html";
+	@RequestMapping("/find/vertify")
+	public String vertify(String requestId, ModelMap modelMap) throws Exception {
+		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
+		if (usernameKey == null || usernameKey.hasExpired()) {
+			throw new Exception();
+			// return "404.html";
 		}
-		String username = pwdKey.getUsername();
+		String username = (String) usernameKey.getAttribution();
 		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfoByUsername(requestId, username));
 		if (serviceData.getErrcode() != 0) {
-			return "404.html";
+			throw new Exception();
+			// return "404.html";
 		}
 		MapData result = serviceData.getResult();
 		String nickname = result.getString("nickname");
 		String phone = result.getString("phone");
 		StringBuilder sBuilder = new StringBuilder(phone);
 		phone = sBuilder.replace(3, 7, "****").toString();
-		modelMap.addAttribute("nickname", result.getString("nickname"));
+		modelMap.addAttribute("nickname", nickname);
 		modelMap.addAttribute("phone", phone);
-		return "password/find-vertify";
+		ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
+		long second = 0;
+		if (smsSecond != null && !smsSecond.hasExpired()) {
+			Date now = new Date();
+			Date expire = smsSecond.getExpire();
+			second = (expire.getTime() - now.getTime()) / 1000;
+			second = second <= 0 ? 0 : second;
+		}
+		modelMap.addAttribute("sms_wait_second", second);
+		if (username.matches("^1\\d{10}$")) {
+			return "password/find-vertify-phone";
+		} else if (username.matches("^.*@.*\\..*")) {
+			return "password/find-vertify";
+		} else {
+			throw new Exception();
+		}
+	}
+
+	@RequestMapping("/find/sms")
+	@ResponseBody
+	public String sms(String requestId) throws Exception {
+		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
+		if (usernameKey == null) {
+			throw new Exception();
+		}
+		ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
+		if (smsSecond != null && !smsSecond.hasExpired()) {
+			return "error";
+		}
+		String username = (String) usernameKey.getAttribution();
+		if (!username.matches("^1\\d{10}$")) {
+			throw new Exception();
+		} else {
+			MapData serviceData = MapUtil.newInstance(smsCodeVerifyService.send(requestId, username, "PWD"));
+			if (serviceData.getErrcode() == 0) {
+				smsSecond = new ExpireKey(60000);// 一分钟过期
+				WebUtil.getSession().setAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY, smsSecond);
+				return "success";
+			} else {
+				return "error";
+			}
+		}
+	}
+
+	@RequestMapping("/find/reset")
+	public String reset(String requestId, String captcha) throws Exception {
+		ExpireKey resetKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_RESET_KEY);
+		if (resetKey == null || resetKey.hasExpired()) {
+			throw new Exception();
+		}
+		ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
+		WebUtil.getSession().setAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY, expireKey);
+		return "password/find-reset";
+	}
+
+	@RequestMapping("/find/reset/submit")
+	public String resetSubmit(String requestId, String password) throws Exception {
+		ExpireKey resetKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY);
+		if (resetKey == null || resetKey.hasExpired()) {
+			throw new Exception();
+		}
+		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
+		if (usernameKey == null) {
+			throw new Exception();
+		}
+		String username = (String) usernameKey.getAttribution();
+		MapData serviceData = MapUtil.newInstance(userService.resetLoginPassword(requestId, username, password));
+		if (serviceData.getErrcode() != 0) {
+			throw new Exception();
+		}
+		WebUtil.getSession().removeAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY);
+		return "password/find-complete";
+	}
+
+	@RequestMapping("/find/sms/vertify")
+	@ResponseBody
+	public String smsVertify(String requestId, String captcha) throws Exception {
+		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
+		if (usernameKey == null || usernameKey.hasExpired()) {
+			throw new Exception();
+		}
+		String username = (String) usernameKey.getAttribution();
+		if (!username.matches("^1\\d{10}$")) {
+			throw new Exception();
+		} else {
+			MapData serviceData = MapUtil.newInstance(smsCodeVerifyService.verify(requestId, username, captcha, "PWD"));
+			if (serviceData.getErrcode() == 0) {
+				boolean passed = serviceData.getBoolean("result");
+				if (passed) {
+					ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
+					WebUtil.getSession().setAttribute(PASSWORD_FIND_RESET_KEY, expireKey);
+					return "success";
+				} else {
+					return "captcha_error";
+				}
+			} else {
+				throw new Exception();
+			}
+		}
 	}
 }
