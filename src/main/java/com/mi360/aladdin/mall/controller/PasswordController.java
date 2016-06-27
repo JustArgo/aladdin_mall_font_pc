@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.ExpireKey;
 import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.message.email.service.EmailVerifyService;
 import com.mi360.aladdin.message.sms.service.SmsCodeVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
@@ -33,6 +34,8 @@ public class PasswordController {
 	private PcUserService userService;
 	@Autowired
 	private SmsCodeVerifyService smsCodeVerifyService;
+	@Autowired
+	private EmailVerifyService emailVerifyService;
 	@Value("${host_name}")
 	private String hostName;
 	private static final String PASSWORD_FIND_USERNAME_KEY = "passwordFindVertify";
@@ -99,13 +102,11 @@ public class PasswordController {
 		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
 		if (usernameKey == null || usernameKey.hasExpired()) {
 			throw new Exception();
-			// return "404.html";
 		}
 		String username = (String) usernameKey.getAttribution();
 		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfoByUsername(requestId, username));
 		if (serviceData.getErrcode() != 0) {
 			throw new Exception();
-			// return "404.html";
 		}
 		MapData result = serviceData.getResult();
 		String nickname = result.getString("nickname");
@@ -126,13 +127,17 @@ public class PasswordController {
 			modelMap.addAttribute("phone", phone);
 			return "password/find-vertify-phone";
 		} else if (username.matches("^.*@.*\\..*")) {
-			String email = result.getString("email");
+			String pEmail = result.getString("email");
+			String email = pEmail;
 			StringBuilder sBuilder = new StringBuilder(email);
 			int atIdx = sBuilder.indexOf("@");
 			int dotIdx = sBuilder.indexOf(".");
 			sBuilder.replace(atIdx + 1, dotIdx, "***").replace(atIdx / 2, atIdx, "****");
 			email = sBuilder.replace(3, 7, "****").toString();
 			modelMap.addAttribute("email", email);
+			if (MapUtil.newInstance(emailVerifyService.send(requestId, pEmail, "PWD")).getErrcode() != 0) {
+				throw new Exception();
+			}
 			return "password/find-vertify-email";
 		} else {
 			throw new Exception();
