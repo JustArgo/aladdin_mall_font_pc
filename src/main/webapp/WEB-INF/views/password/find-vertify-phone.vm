@@ -172,10 +172,10 @@
                                         <p>验证身份</p>
                                      </a>
                                 </li>
-                                <li>
+                                <li class="negative">
                                     <a href="javascript:;">
                                         <em >3</em>
-                                        <p>设置新密码</p>
+                                        <p class="complete">设置新密码</p>
                                      </a>
                                 </li>
                                 <li class="negative">

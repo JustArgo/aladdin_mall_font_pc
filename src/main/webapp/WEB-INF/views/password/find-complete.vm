@@ -106,18 +106,18 @@
                                         <p>验证身份</p>
                                      </a>
                                 </li>
-                                <li class="negative">
+                                <li>
                                     <a href="javascript:;">
                                         <em >3</em>
-                                        <p class="complete">设置新密码</p>
+                                        <p>设置新密码</p>
                                      </a>
                                 </li>
-                                <li class="negative">
+                                <li class="active">
                                     <a href="javascript:;">
                                         <em>
                                             <i class="icon-check"></i>
                                         </em>
-                                        <p class="complete">完成</p>
+                                        <p style="color:#a8e585;">完成</p>
                                      </a>
                                 </li>
                             </ul>

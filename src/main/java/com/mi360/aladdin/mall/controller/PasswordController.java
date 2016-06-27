@@ -109,24 +109,31 @@ public class PasswordController {
 		}
 		MapData result = serviceData.getResult();
 		String nickname = result.getString("nickname");
-		String phone = result.getString("phone");
-		StringBuilder sBuilder = new StringBuilder(phone);
-		phone = sBuilder.replace(3, 7, "****").toString();
 		modelMap.addAttribute("nickname", nickname);
-		modelMap.addAttribute("phone", phone);
-		ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
-		long second = 0;
-		if (smsSecond != null && !smsSecond.hasExpired()) {
-			Date now = new Date();
-			Date expire = smsSecond.getExpire();
-			second = (expire.getTime() - now.getTime()) / 1000;
-			second = second <= 0 ? 0 : second;
-		}
-		modelMap.addAttribute("sms_wait_second", second);
 		if (username.matches("^1\\d{10}$")) {
+			ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
+			long second = 0;
+			if (smsSecond != null && !smsSecond.hasExpired()) {
+				Date now = new Date();
+				Date expire = smsSecond.getExpire();
+				second = (expire.getTime() - now.getTime()) / 1000;
+				second = second <= 0 ? 0 : second;
+			}
+			modelMap.addAttribute("sms_wait_second", second);
+			String phone = result.getString("phone");
+			StringBuilder sBuilder = new StringBuilder(phone);
+			phone = sBuilder.replace(3, 7, "****").toString();
+			modelMap.addAttribute("phone", phone);
 			return "password/find-vertify-phone";
 		} else if (username.matches("^.*@.*\\..*")) {
-			return "password/find-vertify";
+			String email = result.getString("email");
+			StringBuilder sBuilder = new StringBuilder(email);
+			int atIdx = sBuilder.indexOf("@");
+			int dotIdx = sBuilder.indexOf(".");
+			sBuilder.replace(atIdx + 1, dotIdx, "***").replace(atIdx / 2, atIdx, "****");
+			email = sBuilder.replace(3, 7, "****").toString();
+			modelMap.addAttribute("email", email);
+			return "password/find-vertify-email";
 		} else {
 			throw new Exception();
 		}
