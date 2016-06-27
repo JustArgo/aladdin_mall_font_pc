@@ -27,7 +27,7 @@ import com.mi360.aladdin.receadd.service.IManageReceAddService;
  */
 @Controller
 @RequestMapping("/receadd")
-public class ReceiveAddressController extends BaseWxController{
+public class ReceiveAddressController {
 	
 	private Logger logger = Logger.getLogger(this.getClass());
 	
@@ -173,19 +173,45 @@ public class ReceiveAddressController extends BaseWxController{
 		String mqID = principal.getMqId();
 
 		List<ReceiveAddress> adds = manageReceAddService.listUsableAddress(mqID,requestId);
+		List<Map<String,Object>> addressList = new ArrayList<Map<String,Object>>();
 		for(int i=0;i<adds.size();i++){
 			ReceiveAddress address = adds.get(i);
+			
+			Map<String,Object> map = new HashMap<String,Object>();
+			
 			Address provinceAdd = addressService.getAddress(address.getProvinceID(),requestId);
 			Address cityAdd =     addressService.getAddress(address.getCityID(),requestId);
 			Address districtAdd = addressService.getAddress(address.getDistrictID(), requestId);
 			String province = provinceAdd==null?"":provinceAdd.getName();
 			String city     = cityAdd==null?"":cityAdd.getName();
 			String district = districtAdd==null?"":districtAdd.getName();
+			//adds.get(i).setAddress((province==null?"":province)+(city==null?"":city)+(district==null?"":district)+(address.getAddress()==null?"":address.getAddress()));
 			
-			adds.get(i).setAddress((province==null?"":province)+(city==null?"":city)+(district==null?"":district)+(address.getAddress()==null?"":address.getAddress()));
+			map.put("id",address.getID());
+			map.put("recName", address.getRecName());
+			map.put("mobile", address.getRecMobile());
+			map.put("isDefault", address.getIsDefault());
+			map.put("provinceID", address.getProvinceID());
+			map.put("cityID", address.getCityID());
+			map.put("districtID", address.getDistrictID());
+			map.put("recMobile",address.getRecMobile().substring(0,3)+"****"+address.getRecMobile().substring(7));
+			map.put("addressPrefix", province+city+district);
+			map.put("addressSuffix",address.getAddress());
+			
+			addressList.add(map);
 			
 		}
-		model.addAttribute("adds", adds);
+		model.addAttribute("adds", addressList);
+		
+		List<Address> provinces = addressService.getSubAddress(100,requestId);
+		model.addAttribute("provinces",provinces);
+		List<Address> cities = new ArrayList<Address>();
+		List<Address> districts = new ArrayList<Address>();
+		
+		cities = addressService.getSubAddress(10,requestId);
+		districts = addressService.getSubAddress(1010,requestId);
+		model.addAttribute("cities",cities);
+		model.addAttribute("districts",districts);
 		
 		return "receadd/manage";
 	}

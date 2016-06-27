@@ -18,7 +18,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 
 @Controller
 @RequestMapping("/productCategory")
-public class ProductCategoryController  extends BaseWxController{
+public class ProductCategoryController {
 	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
 	private ProductCategoryService productCategoryService;

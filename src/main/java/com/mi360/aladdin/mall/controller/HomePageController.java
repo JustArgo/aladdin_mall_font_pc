@@ -28,7 +28,7 @@ import com.mi360.aladdin.shopcar.service.IShopCarService;
  *
  */
 @Controller
-public class HomePageController  extends BaseWxController{
+public class HomePageController {
 	
 	@Value("${home_product_page_size}")
 	private Integer home_product_page_size;

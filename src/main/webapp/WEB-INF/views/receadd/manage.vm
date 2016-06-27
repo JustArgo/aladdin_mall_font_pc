@@ -1,0 +1,710 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme2.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>收货地址</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="account-center.html">账户中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-account.html">我的账户</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="personal.html">个人信息</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="level.html">会员等级</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="address.html" class="active">收货地址</a>
+                                </li class="sub">
+                                <li class="sub">
+                                    <a href="my-card.html">我的银行卡</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-sales.html">我的销售</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="alipay-bank.html">我要提现</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="extend.html">我要推广</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="order.html">订单中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-order.html">我的订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="group-order.html">团购订单</a>
+                                </li>
+                                <li liclass="sub">
+                                    <a href="bargain-order.html" >砍价订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="once-order.html">一元购订单</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="activity.html">参与活动</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-management.html">我的团购</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-once.html">我的一元购</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="wealth.html">我的财富</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="my-team.html">我的团队</a>
+                                </li>
+                                 <li class="bold">
+                                    <a href="my-store.html">我的收藏</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content alipay-content">
+                            <div class="address">
+                                <div class="new-address">
+                                   <button type="button" class="btn-address jq-addressPopup addAddress" data-toggle="modal" data-target="#myModal" data-href="" data-class="modal-addressAdd">新增收货地址</button>
+                                   <span>您已创建了$!{adds.size()}个收货地址，最多可创建10个</span>
+                                </div>
+								#foreach($add in $adds)
+									<div class="details" data-id="$add.id" data-mobile="$add.mobile" data-provinceid="$add.provinceID" data-cityid="$add.cityID" data-districtid="$add.districtID">
+										<p>收货人：<span class="recName">$!{add.recName}</span></p>
+										<p>所在地区：<span class="addressPrefix">$!{add.addressPrefix}</span></p>
+										<p>地址：<span class="addressSuffix">$!{add.addressSuffix}</span></p>
+										<p>手机：<span class="recMobile">$!{add.recMobile}</span></p>
+										<p>收货人：$!{add.recName}</p>
+										<div class="opreation">
+											<label>
+												<input type="radio" name="address" #if(${add.isDefault}=="DEF") checked="checked" #end />
+												<span>默认为收货地址</span>
+											</label>
+											<a href="javascript:;" class="editAddress" data-toggle="modal" data-target="#myModal" data-href="" data-class="modal-addressAdd">编辑</a>
+											<a href="javascript:" data-toggle="modal" data-target="#myModal" data-href="" data-class="modal-addressDelete" data-id="$add.id" class="jq-addressPopup del_rece_add">删除</a>
+										</div>
+									</div>
+								#end
+                                
+                            </div>
+                        </div>        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- category-bar -->    
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+	
+	
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+	<script type="text/javascript">
+		$(function(){
+			
+			//点击新增收货地址的时候
+			$(".addAddress").click(function(){
+			
+				var length = $(".details").length;
+				console.log("length:"+length)
+				if(length>=10){
+					alert("您最多只能创建10个收货地址");
+					$("#myModal").modal("toggle");
+					return;
+				}
+				
+				$(".modal-content").empty().append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">添加收货地址</h4></div><div class="modal-body"><div class="address-form"><form id="addressForm"><div class="form-group"><label class="control-label">收货人：</label><input type="text" name="recName" class="form-control" /></div><div class="form-group"><label class="control-label">所在地区：</label><select name="countryID" class="form-control"><option>请选择</option><option value="100">中国</option></select><select name="provinceID" class="form-control" onchange="provinceChange(this)"><option>请选择</option>#foreach($p in $provinces) <option value="$p.id" #if($add.provinceID==$p.id)selected="selected"#end>$p.name</option> #end</select><select name="cityID" class="form-control" onchange="cityChange(this)"><option>请选择</option>#foreach($c in $cities) <option value="$c.id" #if($add.cityID==$c.id)selected="selected"#end>$c.name</option> #end</select><select name="districtID" class="form-control"><option>请选择</option>#foreach($d in $districts) <option value="$d.id" #if($add.districtID==$d.id)selected="selected"#end>$d.name</option> #end</select></div><div class="form-group"><label class="control-label">详细地址：</label><input name="address" type="text" class="form-control" /></div><div class="form-group"><label class="control-label">手机号码：</label><input type="text" name="recMobile" class="form-control" /></div><div class="checkbox"><label><input type="checkbox" class="isDefault"/><input type="hidden" name="isDefault" value="NOR"/>设为默认地址</label><span>（每次购买时会默认使用该地址）</span></div><button type="button" class="btn-save save-add">保存收货地址</button></form></div></div>');
+				
+				//加载地区
+				
+			});
+			
+			$(".editAddress").click(function(){
+				//$("#myModal").modal("show");
+				var details = $(this).closest(".details");
+				var id = details.data("id");
+				var recName = details.find(".recName").text();
+				var recMobile = details.data("mobile");
+				var address = details.find(".addressSuffix").text();
+				
+				var checked = details.find("input[name=address]").prop("checked");
+				
+				var provinceId = details.data("provinceid");
+				var cityId = details.data("cityid");
+				var districtId = details.data("districtid");
+				
+				
+				console.log(provinceId+" "+cityId+" "+districtId);
+				$(".modal-content").empty().addClass("modal-addressAdd").append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">更新收货地址</h4></div><div class="modal-body"><div class="address-form"><form id="addressForm"><input type="hidden" name="ID" value="'+id+'"/> <div class="form-group"><label class="control-label">收货人：</label><input type="text" name="recName" value="'+recName+'" class="form-control" /></div><div class="form-group"><label class="control-label">所在地区：</label><select name="countryID" class="form-control"><option>请选择</option><option value="100" selected="selected">中国</option></select><select name="provinceID" class="form-control" onchange="provinceChange(this)"><option>请选择</option>#foreach($p in $provinces) <option value="$p.id" #if($add.provinceID==$p.id)selected="selected"#end>$p.name</option> #end</select><select name="cityID" class="form-control" onchange="cityChange(this)"><option>请选择</option>#foreach($c in $cities) <option value="$c.id" #if($add.cityID==$c.id)selected="selected"#end>$c.name</option> #end</select><select name="districtID" class="form-control"><option>请选择</option>#foreach($d in $districts) <option value="$d.id" #if($add.districtID==$d.id)selected="selected"#end>$d.name</option> #end</select></div><div class="form-group"><label class="control-label">详细地址：</label><input name="address" value="'+address+'" type="text" class="form-control" /></div><div class="form-group"><label class="control-label">手机号码：</label><input type="text" name="recMobile" value="'+recMobile+'" class="form-control" /></div><div class="checkbox"><label><input type="checkbox" class="isDefault"/><input type="hidden" name="isDefault" value="NOR"/>设为默认地址</label><span>（每次购买时会默认使用该地址）</span></div><button type="button" class="btn-save update-add">更新收货地址</button></form></div></div>');
+				
+				$(".isDefault").prop("checked",checked);
+								
+				$("select[name=provinceID]").val(provinceId);
+				$.ajax({
+						
+					url:"http://$request.serverName:9090/receadd/getAddressByPid",
+					type:"POST",
+					data:{"pid":provinceId},
+					dataType:"json",
+					success:function(ret){
+						$("select[name=cityID]").empty();
+						//$(".curCity").text(ret[0].name);
+						var cityOption = "";
+						for(var i=0;i<ret.length;i++){
+							cityOption+='<option value="'+ret[i].id+'">'+ret[i].name+'</option>'
+						}
+						$("select[name=cityID]").append(cityOption);
+						$("select[name=cityID]").val(cityId);
+						//var cityId = ret[0].id;
+						$.ajax({
+							
+							url:"http://$request.serverName:9090/receadd/getAddressByPid",
+							type:"POST",
+							data:{"pid":cityId},
+							dataType:"json",
+							success:function(ret){
+								//如果该城市 没有下级地区
+								if(ret.length==0){
+									//$(".curDistrict").text("");
+									$("select[name=districtID]").attr("disabled","disabled");
+								}else{
+									$("select[name=districtID]").removeAttr("disabled","disabled");
+									$("select[name=districtID]").empty();
+									//$(".curDistrict").text(ret[0].name);
+									var districtOption = "";
+									for(var i=0;i<ret.length;i++){
+										districtOption+='<option value="'+ret[i].id+'">'+ret[i].name+'</option>'
+									}
+									$("select[name=districtID]").append(districtOption);
+									$("select[name=districtID]").val(districtId);
+								}							
+								
+							},error: function(XMLHttpRequest, textStatus, errorThrown) {
+								console.log(XMLHttpRequest.status);
+								console.log(XMLHttpRequest.readyState);
+								console.log(textStatus);
+							}
+						});
+						
+					}
+					
+				});
+				
+				
+				
+				
+				
+				
+			});
+			
+			
+			$(".del_rece_add").click(function(){
+				$(".del_rece_add").removeClass("active-delete");
+				$(this).addClass("active-delete");
+				$(".modal-content").append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button></div><div class="modal-body"><div class="message"><a href="javascritp:;" class="fl"><img src="/images/icon/info.png" /></a><div class="fr"><p class="title">您确定要删除该地址吗?</p><p><a href="javascript:;" class="sure">确定</a><a href="javascript:;" class="delete">暂不删除</a></p></div></div>    </div>');
+			});
+			
+			$("body").on("click",".sure",function(){
+				var id = $(".active-delete").data("id");
+				location.href="${link.contextPath}/receadd/del_rece_add?ID="+id;
+			});
+			
+			$("body").on("click",".delete",function(){
+				$("#myModal").modal("hide");
+			});
+			
+			
+			$("body").on("click",".save-add",function(){
+				
+				var checked = $(".isDefault").prop("checked");
+				//如果选中 默认为收货地址
+				if(checked){
+					$("input[name=isDefault]").val("DEF");
+				}else{
+					$("input[name=isDefault]").val("NOR");
+				}
+				var checkResult = checkParam();
+				if(!(checkResult===true)){
+					alert(checkResult);
+					return;
+				}
+				
+				$.ajax({
+					url:"http://$request.serverName:9090/receadd/add_rece_address",
+					type:"post",
+					data:$("#addressForm").serialize(),
+					dataType:"json",
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							location.reload();
+						}else if(ret && ret.errcode==10000){
+							alert(ret.errmsg);
+						}else{
+							alert("网络异常,请稍后重试");
+						}
+					},error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+					}
+				});
+				
+			});
+			
+			$("body").on("click",".update-add",function(){
+				
+				var checked = $(".isDefault").prop("checked");
+				//如果选中 默认为收货地址
+				if(checked){
+					$("input[name=isDefault]").val("DEF");
+				}else{
+					$("input[name=isDefault]").val("NOR");
+				}				
+				
+				var checkResult = checkParam();
+				if(!(checkResult===true)){
+					alert(checkResult);
+					return;
+				}
+				
+				$.ajax({
+					url:"http://$request.serverName:9090/receadd/update_rece_add",
+					type:"post",
+					data:$("#addressForm").serialize(),
+					dataType:"json",
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							location.reload();
+						}else if(ret && ret.errcode==10000){
+							alert(ret.errmsg);
+						}else{
+							alert("网络异常,请稍后重试");
+						}
+					},error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+					}
+				});
+			});
+			
+			//点击某个地址的设为默认收货地址的时候 
+			$("input[name=address]").click(function(){
+				var checked = $(this).prop("checked");
+				console.log("checked:"+checked);
+				
+				var details = $(this).closest(".details");
+				var id = details.data("id");
+        	 	var isDefault = "DEF";
+        	 	var this_ = $(this);
+        	 	$.ajax({
+					url:'${link.contextPath}/receadd/setUserDefaultAddress',
+					type:"POST",
+					dataType:"json",
+					data:{"id":id,"isDefault":isDefault},
+					success:function(ret){
+						console.log(ret);
+					}
+				});
+				
+				
+			});
+			
+			
+			
+		});
+		
+		function checkParam(){
+			
+			var recName = $("#addressForm").find("input[name=recName]").val();
+			
+			var countryId = $("#addressForm").find("[name=countryID]").val();
+			var provinceId = $("#addressForm").find("[name=provinceID]").val();
+			var cityId = $("#addressForm").find("[name=cityID]").val();
+			var districtId = $("#addressForm").find("[name=districtID]").val();
+			
+			var recMobile = $("#addressForm input[name=recMobile]").val();
+			
+			var address = $("#addressForm input[name=address]").val();
+			
+			if(recName.trim()==''){
+				return "收货人姓名不能为空";
+			}
+			if(countryId=='请选择'||provinceId=='请选择'||cityId=='请选择'||districtId=='请选择'){
+				return "请填写所在地区";
+			}
+			if(address.trim()==''){
+				return "详细地址不能为空";
+			}
+			
+			if(!checkTel(recMobile)){
+				return "手机号码不合规范";
+			}
+			
+			//console.log(recName+" "+countryId+" "+provinceId+" "+cityId+" "+districtId);
+			return true;
+			
+		}
+		
+		function checkTel(value){
+			var filter = /^(([0\+]\d{2,3}-)?(0\d{2,3})-)?(\d{7,8})(-(\d{3,}))?$/;
+			var isPhone = /^([0-9]{3,4}-)?[0-9]{7,8}$/;
+			var isMob=/^((\+?86)|(\(\+86\)))?(1[3-9][0-9]{9})$/;
+			if(isPhone.test(value)||filter.test(value)||isMob.test(value)){
+				return true;
+			}else{
+				return false;
+			}
+		}
+		
+		function provinceChange(select){
+			
+				var pid = $(select).val();
+
+				
+				$.ajax({
+						
+					url:"http://$request.serverName:9090/receadd/getAddressByPid",
+					type:"POST",
+					data:{"pid":pid},
+					dataType:"json",
+					success:function(ret){
+						$("select[name=cityID]").empty();
+						//$(".curCity").text(ret[0].name);
+						var cityOption = "";
+						for(var i=0;i<ret.length;i++){
+							cityOption+='<option value="'+ret[i].id+'">'+ret[i].name+'</option>'
+						}
+						$("select[name=cityID]").append(cityOption);
+						
+						var cityId = ret[0].id;
+						$.ajax({
+							
+							url:"http://$request.serverName:9090/receadd/getAddressByPid",
+							type:"POST",
+							data:{"pid":cityId},
+							dataType:"json",
+							success:function(ret){
+								//如果该城市 没有下级地区
+								if(ret.length==0){
+									//$(".curDistrict").text("");
+									$("select[name=districtID]").attr("disabled","disabled");
+								}else{
+									$("select[name=districtID]").removeAttr("disabled","disabled");
+									$("select[name=districtID]").empty();
+									//$(".curDistrict").text(ret[0].name);
+									var districtOption = "";
+									for(var i=0;i<ret.length;i++){
+										districtOption+='<option value="'+ret[i].id+'">'+ret[i].name+'</option>'
+									}
+									$("select[name=districtID]").append(districtOption);
+								}							
+								
+							},error: function(XMLHttpRequest, textStatus, errorThrown) {
+								console.log(XMLHttpRequest.status);
+								console.log(XMLHttpRequest.readyState);
+								console.log(textStatus);
+							}
+						});
+						
+					}
+					
+				});
+			
+		}
+		
+		function cityChange(select){
+		
+				var pid = $(select).val();
+				
+				$.ajax({
+					url:"http://$request.serverName:9090/receadd/getAddressByPid",
+					type:"POST",
+					data:{"pid":pid},
+					dataType:"json",
+					success:function(ret){
+						//如果该城市 没有下级地区
+						if(ret.length==0){
+							//$(".curDistrict").text("");
+							$("select[name=districtID]").attr("disabled","disabled");
+						}else{
+							$("select[name=districtID]").removeAttr("disabled","disabled");
+							$("select[name=districtID]").empty();
+							//$(".curDistrict").text(ret[0].name);
+							var districtOption = "";
+							for(var i=0;i<ret.length;i++){
+								districtOption+='<option value="'+ret[i].id+'">'+ret[i].name+'</option>'
+							}
+							$("select[name=districtID]").append(districtOption);
+						}		
+					},error: function(XMLHttpRequest, textStatus, errorThrown) {
+						console.log(XMLHttpRequest.status);
+						console.log(XMLHttpRequest.readyState);
+						console.log(textStatus);
+					}
+				});
+		}
+	</script>
+</body>
+</html>

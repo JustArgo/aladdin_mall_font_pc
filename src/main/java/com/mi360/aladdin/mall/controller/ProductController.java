@@ -50,7 +50,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 
 @Controller
 @RequestMapping("/product")
-public class ProductController extends BaseWxController {
+public class ProductController {
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	@Autowired
@@ -133,7 +133,9 @@ public class ProductController extends BaseWxController {
 		Map<String, Object> userInfo = userService.findWxUserByMqId(requestId, mqID);
 		MapData data = MapUtil.newInstance(userInfo);
 		Map<String, Object> user = (Map<String, Object>) data.getObject("result");
-		model.addAttribute("subscribe", user.get("subscribe"));
+		if(user!=null){
+			model.addAttribute("subscribe", user.get("subscribe"));
+		}
 		
 		// 查看用户是否已收藏该商品
 		int isCollect = productCollectService.isCollect(mqID, productID, requestId);
@@ -194,14 +196,22 @@ public class ProductController extends BaseWxController {
 		//评论vo列表 全部
 		List<CommentVo> commentVoListAll = commentVoService.getCommentVoList(requestId, productID, 2, 0, 4);
 		
+		if(commentVoListAll!=null && commentVoListAll.size()>0){
+			model.addAttribute("commentStatistics",commentVoListAll.get(0).getCommentStatistics());
+		}
+		
 		//评论vo列表  有图片
 		List<CommentVo> commentVoListHasImage = commentVoService.getCommentVoList(requestId, productID, 1, 0, 4);
+		
+
+		int hasImageCount = commentService.getCommentCount(requestId, productID, 1);
+		model.addAttribute("hasImageCount",hasImageCount);
 		
 		model.addAttribute("commentVoListAll",commentVoListAll);
 		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
 		
 		
-		return "product/product-detail";
+		return "product/product_detail";
 	}
 
 	@RequestMapping("querySku")

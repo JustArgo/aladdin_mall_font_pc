@@ -129,7 +129,7 @@
                         </div>
 						
 						#foreach($attrItem in $attrItems)
-                        <div class="prod-size">
+                        <div class="prod-size" data-attrid="$attrItem.attrID">
                             <p>$!attrItem.attrName：</p>
                             <p class="choosen jq-choosen">
                                 #foreach($attrValue in $attrItem.attrValues)
@@ -216,198 +216,124 @@
                                     <p>
                                         <span>描述相符</span>
                                         <span class="start-level">
-                                            <a href="javascript:;" class="start"></a>
-                                            <a href="javascript:;" class="start"></a>
-                                            <a href="javascript:;" class="start"></a>
-                                            <a href="javascript:;" class="start"></a>
-                                            <a href="javascript:;" class="start"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.descConform}>0) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.descConform}>100) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.descConform}>200) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.descConform}>300) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.descConform}>400) active #end"></a>
                                         </span>
                                     </p>
                                     <p>
                                         <span>卖家服务</span>
                                         <span class="start-level">
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start"></a>
-                                            <a href="javascript:;" class="start"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.service}>0) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.service}>100) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.service}>200) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.service}>300) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.service}>400) active #end"></a>
                                         </span>
                                     </p>
                                     <p>
                                         <span>物流速度</span>
                                         <span class="start-level">
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start active"></a>
-                                            <a href="javascript:;" class="start"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.speed}>0) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.speed}>100) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.speed}>200) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.speed}>300) active #end"></a>
+                                            <a href="javascript:;" class="start #if(${commentStatistics.speed}>400) active #end"></a>
                                         </span>
                                     </p>
                                 </div>
                             </div>
                             <div class="bottom">
                                 <label>
-                                    <input type="radio" name="name" checked="true">全部
+                                    <input type="radio" name="hasImage" class="image-all" checked="true">全部
                                 </label>
                                 <label>
-                                    <input type="radio" name="name">有图(18)
+                                    <input type="radio" name="hasImage" class="image-has" >有图($!{hasImageCount})
                                 </label>
                             </div>
                         </div>
 						<div class="content comment" style="display:none;">
 								<ul class="assessment-list">
-									<li>
-										<div class="assessment-category">
-											<div class="col-sm-3">
-												<span class="start-level">
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-												</span>
-												<p>2016-03-20</p>
-												<p>ML37MMC/黑色  42</p>
-												<p>42</p>
+									#foreach($commentVo in $commentVoListAll)
+										<li class="all-li">
+											<div class="assessment-category">
+												<div class="col-sm-3">
+													<span class="start-level">
+														#set($leftCount = $math.sub(5,$commentVo.comment.service))
+														#foreach($count in [1..$commentVo.comment.service])
+															<a href="javascript:;" class="start active"></a>
+														#end
+														#foreach($count in [1..$leftCount])
+															<a href="javascript:;" class="start"></a>
+														#end
+													</span>
+													<p>$date.format("yyyy-MM-dd",$commentVo.comment.createTime)</p>
+													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
+													<p>42</p>
+												</div>
+												<div class="col-sm-6">
+													<p>$!{commentVo.comment.commentDesc}</p>
+													<p class="photo">
+														#foreach($img in ${commentVo.comment.imgs})
+														<a href="javascript:;">
+														   <img src="$qiniu.getDownloadUrl($img)">
+														</a>
+														#end
+													</p>
+												</div>
+												<div class="col-sm-3">
+													<p>
+														<a href="javascript:;">
+															<img src="$!{commentVo.userHeadImg}">
+														</a>
+													</p>
+													<p class="name">$!{commentVo.userName}</p>
+												</div>
 											</div>
-											<div class="col-sm-6">
-												<p>红素覅会死符合身份和搜狐改hi都会发生佛改耗节hi好看还是上课开看见就看就看</p>
-												<p class="photo">
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-												</p>
+										</li>
+									#end
+									
+									#foreach($commentVo in $commentVoListHasImage)
+										<li class="hasImage-li" style="display:none;">
+											<div class="assessment-category">
+												<div class="col-sm-3">
+													<span class="start-level">
+														#set($leftCount = $math.sub(5,$commentVo.comment.service))
+														#foreach($count in [1..$commentVo.comment.service])
+															<a href="javascript:;" class="start active"></a>
+														#end
+														#foreach($count in [1..$leftCount])
+															<a href="javascript:;" class="start"></a>
+														#end
+													</span>
+													<p>$date.format("yyyy-MM-dd",$commentVo.comment.createTime)</p>
+													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
+													<p>42</p>
+												</div>
+												<div class="col-sm-6">
+													<p>$!{commentVo.comment.commentDesc}</p>
+													<p class="photo">
+														#foreach($img in ${commentVo.comment.imgs})
+														<a href="javascript:;">
+														   <img src="$qiniu.getDownloadUrl($img)">
+														</a>
+														#end
+													</p>
+												</div>
+												<div class="col-sm-3">
+													<p>
+														<a href="javascript:;">
+															<img src="$!{commentVo.userHeadImg}">
+														</a>
+													</p>
+													<p class="name">$!{commentVo.userName}</p>
+												</div>
 											</div>
-											<div class="col-sm-3">
-												<p>
-													<a href="javascript:;">
-														<img src="images/person.png">
-													</a>
-												</p>
-												<p class="name">起舞的猴子</p>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="assessment-category">
-											<div class="col-sm-3">
-												<span class="start-level">
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-												</span>
-												<p>2016-03-20</p>
-												<p>ML37MMC/黑色  42</p>
-												<p>42</p>
-											</div>
-											<div class="col-sm-6">
-												<p>红素覅会死符合身份和搜狐改hi都会发生佛改耗节hi好看还是上课开看见就看就看</p>
-												<p class="photo">
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-												</p>
-											</div>
-											<div class="col-sm-3">
-												<p>
-													<a href="javascript:;">
-														<img src="images/person.png">
-													</a>
-												</p>
-												<p class="name">起舞的猴子</p>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="assessment-category">
-											<div class="col-sm-3">
-												<span class="start-level">
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-												</span>
-												<p>2016-03-20</p>
-												<p>ML37MMC/黑色  42</p>
-												<p>42</p>
-											</div>
-											<div class="col-sm-6">
-												<p>红素覅会死符合身份和搜狐改hi都会发生佛改耗节hi好看还是上课开看见就看就看</p>
-												<p class="photo">
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-												</p>
-											</div>
-											<div class="col-sm-3">
-												<p>
-													<a href="javascript:;">
-														<img src="images/person.png">
-													</a>
-												</p>
-												<p class="name">起舞的猴子</p>
-											</div>
-										</div>
-									</li>
-									<li>
-										<div class="assessment-category">
-											<div class="col-sm-3">
-												<span class="start-level">
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start active"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-													<a href="javascript:;" class="start"></a>
-												</span>
-												<p>2016-03-20</p>
-												<p>ML37MMC/黑色  42</p>
-												<p>42</p>
-											</div>
-											<div class="col-sm-6">
-												<p>红素覅会死符合身份和搜狐改hi都会发生佛改耗节hi好看还是上课开看见就看就看</p>
-												<p class="photo">
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-													<a href="javascript:;">
-													   <img src="images/product/prod-02.png">
-													</a>
-												</p>
-											</div>
-											<div class="col-sm-3">
-												<p>
-													<a href="javascript:;">
-														<img src="images/person.png">
-													</a>
-												</p>
-												<p class="name">起舞的猴子</p>
-											</div>
-										</div>
-									</li>
+										</li>
+									#end
+									
 								</ul>
 						</div>
                         <div class="content product-detail">
@@ -517,6 +443,17 @@
 				$(".assessment").show();
 				$(".comment").show();
 			});
+			
+			$("input[name=hasImage]").click(function(){
+				if($(this).hasClass("image-all")){
+					$(".hasImage-li").hide();
+					$(".all-li").show();
+				}else{
+					$(".all-li").hide();
+					$(".hasImage-li").show();
+				}
+			});
+			
 			
 		});
 	</script>

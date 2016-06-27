@@ -8,6 +8,7 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.mi360.aladdin.comment.domain.Comment;
 import com.mi360.aladdin.comment.domain.CommentImg;
 import com.mi360.aladdin.comment.service.ICommentService;
+import com.mi360.aladdin.interaction.wx.service.WxInteractionService;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
@@ -35,9 +37,15 @@ import com.mi360.aladdin.util.MapUtil.MapData;
  */
 @Controller
 @RequestMapping("/comments")
-public class CommentController  extends BaseWxController{
+public class CommentController{
 	
 	private Logger logger = Logger.getLogger(this.getClass());
+	
+	@Value("${qiniu.domain}")
+	protected String qiNiuDomain;
+	
+	@Value("${qiniu.space}")
+	protected String qiNiuSpace;
 	
 	@Autowired
 	private IProductService productService; 
@@ -50,6 +58,9 @@ public class CommentController  extends BaseWxController{
 	
 	@Autowired
 	private IProductSkuService productSkuService;
+	
+	@Autowired
+	private WxInteractionService wxInteractionService;
 	
 	@Autowired
 	private UserService userService;

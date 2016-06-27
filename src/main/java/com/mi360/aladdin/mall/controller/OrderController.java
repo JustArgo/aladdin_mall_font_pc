@@ -73,7 +73,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 
 @Controller
 @RequestMapping("/order")
-public class OrderController extends BaseWxController {
+public class OrderController {
 
 	Logger logger = Logger.getLogger(this.getClass());
 
@@ -82,6 +82,12 @@ public class OrderController extends BaseWxController {
 	@Value("${host_name}")
 	private String hostName;
 
+	@Value("${qiniu.space}")
+	protected String qiNiuSpace;
+	
+	@Value("${qiniu.domain}")
+	protected String qiNiuDomain;
+	
 	@Autowired
 	private WxInteractionService wxInteractionService;
 
@@ -410,6 +416,30 @@ public class OrderController extends BaseWxController {
 			receiveAddress = manageReceAddService.getAddress(receaddID, requestId);
 		}
 
+		
+		//查询所有的收货地址
+		List<ReceiveAddress> allUsableAddress = manageReceAddService.listUsableAddress(mqID, requestId);
+		if(allUsableAddress!=null && allUsableAddress.size()>0){
+			for(int i=0;i<allUsableAddress.size();i++){
+				if(receiveAddress.getID().equals(allUsableAddress.get(i).getID())){
+					allUsableAddress.remove(i);
+				}
+			}
+		}
+		
+		List<Map<String,Object>> remainAddressList = new ArrayList<Map<String,Object>>();
+		if(allUsableAddress!=null && allUsableAddress.size()>0){
+			for(int i=0;i<allUsableAddress.size();i++){
+				Map<String,Object> map = new HashMap<String,Object>();
+				map.put("simpleAddress",manageReceAddService.getFullAddress(allUsableAddress.get(i), requestId).replace(allUsableAddress.get(i).getAddress(), ""));
+				map.put("address", allUsableAddress.get(i));
+				remainAddressList.add(map);
+			}
+		}
+		
+		
+		model.addAttribute("remainAddressList",remainAddressList);
+		
 		for (int i = 0; i < supplierProducts.size(); i++) {
 
 			Long supplierPostFee = 0L;
@@ -452,7 +482,8 @@ public class OrderController extends BaseWxController {
 			model.addAttribute("receaddID", receiveAddress.getID());
 			model.addAttribute("recName", receiveAddress.getRecName());
 			model.addAttribute("recMobile", receiveAddress.getRecMobile());
-			model.addAttribute("fullAddress", manageReceAddService.getFullAddress(receiveAddress, requestId));
+			model.addAttribute("addressPrefix",manageReceAddService.getFullAddress(receiveAddress, requestId).replace(receiveAddress.getAddress(), ""));
+			model.addAttribute("fullAddress", receiveAddress.getAddress());
 		}
 		model.addAttribute("totalPostFee", totalPostFee);
 		model.addAttribute("totalPrice", totalPrice + totalPostFee);
@@ -465,7 +496,9 @@ public class OrderController extends BaseWxController {
 		} else {
 			logger.info("remainingMap-->" + remainingMap);
 			Long remainingSum = (Long) remainingMap.get("result");
-
+			
+			model.addAttribute("remainingSum",remainingSum);
+			
 			if (remainingSum.compareTo(totalPrice + totalPostFee) < 0) {
 				model.addAttribute("remainNotEnough", "not enough");
 			}
@@ -1192,6 +1225,27 @@ public class OrderController extends BaseWxController {
 		model.addAttribute("noPayedOrderList", noPayedOrderList);
 		model.addAttribute("noSendOrderList", noSendOrderList);
 		model.addAttribute("childOrderList", childOrderList);
+		
+		for(int i=0;i<childOrderList.size();i++){
+			
+			if(childOrderList.get(i).get("status").equals("DFK")){
+				
+				childOrderList.get(i).put("remainTime", remainTime((Date) childOrderList.get(i).get("createTime"), requestId));
+				
+			}
+			
+		}
+		
+		
+		for(int i=0;i<noPayedOrderList.size();i++){
+			
+			
+			noPayedOrderList.get(i).put("remainTime", remainTime((Date) noPayedOrderList.get(i).get("createTime"), requestId));
+			
+			
+		}
+		
+		
 		model.addAttribute("waitForCommentList", waitForCommentList);
 		model.addAttribute("returnMoneyList", returnMoneyList);
 		model.addAttribute("returnGoodsList", returnGoodsList);

@@ -30,7 +30,7 @@ import com.mi360.aladdin.supplier.service.ISupplierService;
 
 @Controller
 @RequestMapping("/groupbuy")
-public class GroupBuyController  extends BaseWxController{
+public class GroupBuyController{
 
 	@Autowired
 	private IGroupBuyService groupBuyService;

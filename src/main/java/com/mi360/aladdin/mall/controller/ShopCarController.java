@@ -22,7 +22,7 @@ import com.mi360.aladdin.shopcar.service.IShopCarService;
 
 @Controller
 @RequestMapping("/shop_car")
-public class ShopCarController  extends BaseWxController{
+public class ShopCarController {
 
 	private Logger logger = Logger.getLogger(this.getClass());
 	
