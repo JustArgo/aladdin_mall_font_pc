@@ -40,6 +40,7 @@ import com.mi360.aladdin.entity.order.GoodsReturn;
 import com.mi360.aladdin.entity.order.MoneyReturn;
 import com.mi360.aladdin.entity.order.Order;
 import com.mi360.aladdin.entity.order.OrderPayment;
+import com.mi360.aladdin.entity.order.OrderPayment.PayChannel;
 import com.mi360.aladdin.entity.order.OrderProduct;
 import com.mi360.aladdin.interaction.wx.service.WxInteractionService;
 import com.mi360.aladdin.logistics.domain.ExpressCompany;
@@ -77,7 +78,7 @@ public class OrderController {
 
 	Logger logger = Logger.getLogger(this.getClass());
 
-	private static final int DEFAULT_PAGE_SIZE = 8;
+	private static final int DEFAULT_PAGE_SIZE = 4;
 	
 	@Value("${host_name}")
 	private String hostName;
@@ -959,6 +960,25 @@ public class OrderController {
 		model.addAttribute("refundLimit", (orderProduct.getBuyNum() * orderProduct.getSellPrice()) / 100.0);// 支付多少钱
 																											// 不退运费
 																											// 最多退款多少钱
+		
+		
+		Order order = orderService.getOrderByID(orderProduct.getOrderID(), requestId);
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
 		model.addAttribute("orderCode", o);
 		model.addAttribute("orderProductID", p);
 		return "order/return-goods";
@@ -973,6 +993,22 @@ public class OrderController {
 		model.addAttribute("refundLimit", (orderProduct.getBuyNum() * orderProduct.getSellPrice()) / 100.0);// 支付多少钱
 																											// 不退运费
 																											// 最多退款多少钱
+		
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
 		model.addAttribute("orderCode", order.getOrderCode());
 		model.addAttribute("orderProductID", p);
 		return "order/return-goods";
@@ -1017,7 +1053,25 @@ public class OrderController {
 		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
 		model.addAttribute("refundLimit", order.getOrderSum() / 100.0);// 支付多少钱
 																		// 最多退款多少钱
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
 		model.addAttribute("orderCode", orderCode);
+		
 		return "order/return-money";
 
 	}
@@ -1061,10 +1115,15 @@ public class OrderController {
 			GoodsReturn goodsReturn = orderService.applyReturnGoods(mqID, orderCode, orderProductID, refundFee, returnReason, returnDesc, imgs, requestId);
 
 			if (modify == null || modify != 1) {
-				Map<String, String> msgParam = new HashMap<String, String>();
-				msgParam.put("orderCode", goodsReturn.getOrderCode());
-				mqService.sendWxMessage(requestId, openId, null, "5713808f49538", msgParam);
-				logger.info("发送申请退货队列");
+				try{
+					Map<String, String> msgParam = new HashMap<String, String>();
+					msgParam.put("orderCode", goodsReturn.getOrderCode());
+					mqService.sendWxMessage(requestId, openId, null, "5713808f49538", msgParam);
+					logger.info("发送申请退货队列");
+				}catch(Exception e){
+					logger.info(e.getMessage(),e);
+				}
+							
 			}
 
 			logger.info("goodsReturn.returnImgs:" + goodsReturn.getReturnImgs());
@@ -1077,6 +1136,27 @@ public class OrderController {
 			} else {
 				model.addAttribute("returnReason", GoodsReturn.ReturnReason.valueOf(goodsReturn.getReturnReason()).getValue());
 			}
+			
+			Order order = orderService.getOrderByID(goodsReturn.getOrderID(), requestId);
+			model.addAttribute("recName",order.getRecName());
+			model.addAttribute("recMobile",order.getRecMobile());
+			model.addAttribute("address",order.getAddress());
+			
+			model.addAttribute("payTime",order.getPayTime());
+			model.addAttribute("orderSum",order.getOrderSum());
+			model.addAttribute("invoiceName",order.getInvoiceName());
+			
+			OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+			
+			List<Order> childOrderList = new ArrayList<Order>();
+			childOrderList.add(order);
+			model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+			model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("postFee",order.getPostFee());
+			
+			model.addAttribute("orderCode",orderCode);
+			
+			
 		} catch (RuntimeException e) {
 			logger.error(e.getMessage(), e);
 			// 返回错误页面
@@ -1098,6 +1178,22 @@ public class OrderController {
 		model.addAttribute("orderCode", goodsReturn.getOrderCode());
 		model.addAttribute("orderProductID", goodsReturn.getOrderProductID());
 		model.addAttribute("returnReasonCode", goodsReturn.getReturnReason());
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
 		if (goodsReturn.getReturnReason().equals("SJ#")) {
 			model.addAttribute("returnReason", "少件/漏发");
 		} else if (goodsReturn.getReturnReason().equals("FP#")) {
@@ -1134,29 +1230,48 @@ public class OrderController {
 		String mqID = principal.getMqId();
 		String openId = principal.getOpenId();
 
-		try {
-			MoneyReturn moneyReturn = orderService.applyReturnMoney(mqID, orderCode, refundFee, returnReason, returnDesc, requestId);
+		MoneyReturn moneyReturn = orderService.applyReturnMoney(mqID, orderCode, refundFee, returnReason, returnDesc, requestId);
 
-			if (modify == null || modify != 1) {
+		if (modify == null || modify != 1) {
+			try{
 				Map<String, String> msgParam = new HashMap<String, String>();
 				msgParam.put("orderCode", moneyReturn.getOrderCode());
 				mqService.sendWxMessage(requestId, openId, null, "57138005e04c7", msgParam);
 				logger.info("发送申请退款队列");
+			}catch(Exception e){
+				logger.info(e.getMessage(),e);
 			}
-
-			model.addAttribute("moneyReturn", moneyReturn);
-			if (moneyReturn.getReturnReason().equals("SJ#")) {
-				model.addAttribute("returnReason", "少件/漏发");
-			} else if (moneyReturn.getReturnReason().equals("FP#")) {
-				model.addAttribute("returnReason", "发票问题");
-			} else {
-				model.addAttribute("returnReason", MoneyReturn.ReturnReason.valueOf(moneyReturn.getReturnReason()).getValue());
-			}
-		} catch (RuntimeException e) {
-			// 返回错误页面
-			return "404";
 		}
 
+		model.addAttribute("moneyReturn", moneyReturn);
+		if (moneyReturn.getReturnReason().equals("SJ#")) {
+			model.addAttribute("returnReason", "少件/漏发");
+		} else if (moneyReturn.getReturnReason().equals("FP#")) {
+			model.addAttribute("returnReason", "发票问题");
+		} else {
+			model.addAttribute("returnReason", MoneyReturn.ReturnReason.valueOf(moneyReturn.getReturnReason()).getValue());
+		}
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		System.out.println("return now");
+		
 		return "order/returnR-examine";
 	}
 
@@ -1175,6 +1290,24 @@ public class OrderController {
 		Order order = orderService.getOrderByID(moneyReturn.getOrderID(), requestId);
 		model.addAttribute("orderCode", moneyReturn.getOrderCode());
 		model.addAttribute("returnReasonCode", moneyReturn.getReturnReason());
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		System.out.println("order:"+order);
+		
 		if (moneyReturn.getReturnReason().equals("SJ#")) {
 			model.addAttribute("returnReason", "少件/漏发");
 		} else if (moneyReturn.getReturnReason().equals("FP#")) {
@@ -1208,10 +1341,10 @@ public class OrderController {
 		List<Map<String, Object>> childOrderList = orderService.getOrderListByMqID(mqID, 1, 8, requestId);
 
 		// 查找出待评论的商品 默认第1页 每页8条
-		List<Map<String, Object>> waitForCommentList = orderService.selectWaitForCommentList(mqID, 1, DEFAULT_PAGE_SIZE, requestId);
+		List<Map<String, Object>> waitForCommentList = orderService.selectWaitForCommentList(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 
 		// 查找出待评论的
-		List<Map<String, Object>> returnGoodsList = orderService.selectReturnGoodsList(mqID, 1, DEFAULT_PAGE_SIZE, requestId);
+		List<Map<String, Object>> returnGoodsList = orderService.selectReturnGoodsList(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 
 		List<Map<String, Object>> noPayedOrderList = orderService.selectNoPayedOrder(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 		logger.info("noPayedOrderList:" + noPayedOrderList);
@@ -1283,6 +1416,26 @@ public class OrderController {
 			model.addAttribute("returnReason", GoodsReturn.ReturnReason.valueOf(goodsReturn.getReturnReason()).getValue());
 		}
 
+		Order order = orderService.getOrderByID(goodsReturn.getOrderID(), requestId);
+		model.addAttribute("orderCode", goodsReturn.getOrderCode());
+		model.addAttribute("returnReasonCode", goodsReturn.getReturnReason());
+		
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		
 		String status = goodsReturn.getStatus();
 
 		if ("STH".equals(status)) {
@@ -1310,7 +1463,7 @@ public class OrderController {
 		} else if ("DTK".equals(status)) {
 			return "order/returnG-dtk";
 		} else if ("TKZ".equals(status)) {
-			return "order/returnG-takeG";
+			return "order/returnG-tkz";
 		} else if ("JTK".equals(status)) {
 			return "order/returnG-jtk";
 		} else if ("FAI".equals(status)) {
@@ -1331,6 +1484,24 @@ public class OrderController {
 
 		MoneyReturn moneyReturn = orderService.getMoneyReturnByID(moneyReturnID, requestId);
 
+		Order order = orderService.getOrderByOrderCode(moneyReturn.getOrderCode(), requestId);
+		model.addAttribute("recName",order.getRecName());
+		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		List<Order> childOrderList = new ArrayList<Order>();
+		childOrderList.add(order);
+		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		
+		model.addAttribute("orderCode",order.getOrderCode());
 		model.addAttribute("moneyReturn", moneyReturn);
 		// 退款原因
 		if (moneyReturn.getReturnReason().equals("SJ#")) {
@@ -1341,8 +1512,7 @@ public class OrderController {
 			model.addAttribute("returnReason", MoneyReturn.ReturnReason.valueOf(moneyReturn.getReturnReason()).getValue());
 		}
 
-		if ("STK".equals(moneyReturn.getStatus())) {// 此处auditStatus==null
-													// 则下面必然不会==null
+		if ("STK".equals(moneyReturn.getStatus())) {// 此处auditStatus==null // 则下面必然不会==null
 			return "order/returnR-examine";
 		} else if ("NO#".equals(moneyReturn.getStatus())) {// 商家审核不通过
 			return "order/returnR-reject";
