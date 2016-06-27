@@ -23,123 +23,75 @@
     <title>阿拉丁--找回密码</title>
     <script>
     $(function(){
-    	$('#chgImg').click(function(){
-    		var timestamp=(new Date()).valueOf();
-    		$('#captchaImg').attr('src','/common/captcha?timestamp='+timestamp);     
+    	var smsAble=true;
+    	var countDown=function(i){
+    		smsAble=false;
+    		var content=$('#sms').html();
+    		$('#sms').html(content+'('+i+')');
+    		var interval=setInterval(function(){
+    			$('#sms').html(content+'('+i+')');
+    			if(i<0){
+    				$('#sms').html(content);
+    				clearTimeout(interval);
+    				smsAble=true;
+    			}
+    			i--;
+    		},1000);
+    	}
+    	$('#sms').click(function(){
+    		if(smsAble){
+    			smsAble=false;
+    			$.ajax({ 
+    				url: '/password/find/sms',
+    				type:"post",
+    				success: function(data){
+    					if('success'==data){
+    		    			countDown(60);
+    					}else if('error'==data){
+    						alert('系统繁忙，请稍后再试');
+    						smsAble=true;
+    					}
+    				},
+    				error:function(){
+    					alert('系统繁忙，请稍后再试');
+    					smsAble=true;
+    				}
+    			});
+    		}
     	})
-    	$('#chgImg').click();
+    	if($sms_wait_second>0){
+    		countDown($sms_wait_second);
+    	}
     	
-    	/*表单验证对象*/
-		var formValidate={
-			username:{
-				target:$("#username"),
-				required:true,
-				reg:/(^1\d{10}$)|(^.*@.*\..*)/,
-				tip:$('#usernameTip'),
-				tipWord:'输入手机号/邮箱格式错误'
-			},
-			captcha:{
-				target:$("#captcha"),
-				required:true,
-				tip:$('#captchaTip'),
-				tipWord:'验证码输入错误'
-			},
-			init:function(){
-				this.username.target.blur(function(){
-					formValidate.validate(formValidate.username);
-				})
-				this.captcha.target.blur(function(){
-					formValidate.validate(formValidate.captcha);
-				})
-				this.username.target.focus(function(){
-					formValidate.username.tip.css('display','none');
-				})
-				this.captcha.target.focus(function(){
-					formValidate.captcha.tip.css('display','none');
-				})
-			},
-			validate:function(o){//通用验证
-				var v=o.target.val();
-				if(o.required){
-					if(v==""){//非空
-						o.tip.html(o.tipWord);
-						o.tip.css('display','block');
-						return false;
-					}
-				}
-				if(v!=""){
-					if(o.reg!=undefined){//格式
-						if(!o.reg.test(v)){
-							o.tip.html(o.tipWord);
-							o.tip.css('display','block');
-							return false;
-						}
-					}
-				}
-				if(o.validator!=undefined){//自定义验证
-					if(!o.validator()){
-						o.tip.html(o.tipWord);
-						o.tip.css('display','block');
-						return false;
-					}
-				}
-				o.tip.css('display','none');
-				return true;
-			},
-			validateAll:function(){
-				if(this.validate(this.username)&this.validate(this.captcha)){
-					return true;
-				}
-				return false;
-			}
-		}
-		formValidate.init();
-		
-		
-		
-		var submitAble=true;
+    	var submitAble=true;
     	$('#submit').click(function(){
     		if(submitAble){
     			submitAble=false;
-    			if(formValidate.validateAll()){
-    				var username=$('#username').val();
-    				var captcha=$('#captcha').val();
-    				$.ajax({ 
-        				url: '/password/find/check',
-        				data:{captcha:captcha,username:username},
-        				type:"post",
-        				success: function(data){
-        					if('captcha_error'==data){
-        						$('#chgImg').click();
-        						$('#captchaTip').css('display','block');
-        						submitAble=true;
-        					}else if('username_not_exists'==data){
-        						$('#chgImg').click();
-        						$('#usernameTip').html('您输入的账户名不存在，请重新输入');
-        						$('#usernameTip').css('display','block');
-        						submitAble=true;
-        					}else if('error'==data){
-        						$('#chgImg').click();
-            					alert('系统繁忙，请稍后再试');
-            					submitAble=true;
-        					}else{
-        						location.href=data;
-        					}
-        				},
-        				error:function(){
-        					$('#chgImg').click();
-        					alert('系统繁忙，请稍后再试');
-        					submitAble=true;
-        				}
-        			});
-    			}else{
+    			var captcha=$('#captcha').val();
+    			if(captcha==''){
+    				alert('请输入短信验证码');
     				submitAble=true;
+    				return;
     			}
+    			$.ajax({ 
+    				url: '/password/find/sms/vertify',
+    				type:"post",
+    				data:{captcha:captcha},
+    				success: function(data){
+    					if('success'==data){
+    		    			location.href="/password/find/reset";
+    					}else if('captcha_error'==data){
+    						alert('验证码输入错误');
+    						submitAble=true;
+    					}
+    				},
+    				error:function(){
+    					alert('系统繁忙，请稍后再试');
+    					submitAble=true;
+    				}
+    			});
     		}
     	})
-		
-		
-    	
     })
     </script>
 </head>
@@ -205,20 +157,19 @@
         <div class="content">
             <div class="container">
                 <div class="form-box">
-                    <form>
-                        <h2 class="password">找回密码</h2>
+                        <h2 class="password" style="color:#1a1a1a;font-size:30px;padding:30px;text-align:center;">找回密码</h2>
                         <div class="row">
                             <ul class="step-list">
-                                <li class="active">
+                                <li>
                                     <a href="javascript:;">
                                         <em>1</em>
                                         <p>填写用户名</p>
                                      </a>
                                 </li>
-                                <li class="negative">
+                                <li class="active">
                                     <a href="javascript:;">
                                         <em>2</em>
-                                        <p class="complete">验证身份</p>
+                                        <p>验证身份</p>
                                      </a>
                                 </li>
                                 <li class="negative">
@@ -237,23 +188,27 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">用户名：</label>
-                            <input type="text" id="username" class="form-control" placeholder="邮箱/手机号" />
-                            <p class="error" id="usernameTip" style="display:none;">您输入的账户名不存在，请重新输入。</p>
+                        <div class="row">
+                            <div class="message-box emial" style="width:380px;text-align:center;">
+                                <div class="detail" style="text-align:left;">
+                                	<p>
+                                		<span style="width: 100px;display: inline-block;text-align: right;">昵称：</span>$nickname
+                                	</p>
+                                	<p style="margin-top:20px;">
+                                		<span style="width: 100px;display: inline-block;text-align: right;">验证手机：</span>$phone
+                                	</p>
+                                	<form id="from1" action="/password/find/reset" method="post" style="display:inline;">
+                                    <p style="margin-top:20px;">
+                                        <span style="width: 100px;display: inline-block;text-align: right;">验证码：</span>
+                                        	<input type="text" name="captcha" id="captcha" style="width: 120px;" class="form-control" placeholder="手机校验码" />
+                                        <button type="button" id="sms" class="btn btn-simple" style="position:relative;top:-2px;width:150px;">获取短信验证码</button>  
+                                    </p>     
+                                    </form>		
+                                </div>
+                                <button type="button" id="submit" class="btn btn-mailbox">提交</button>                   
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label class="control-label">验证码：</label>
-                            <input type="text" id="captcha" class="form-control" placeholder="验证码" />
-                            <a href="javascript:;" class="code">
-                                <img  id="captchaImg" style="width:90px;height:32px;" >
-                            </a><a>
-                            </a><a href="javascript:;" class="update" id="chgImg">换一张</a>
-                            <p class="error"  id="captchaTip" style="display:none;">验证码错误</p>
-                        </div>
-                        <button type="button" id="submit" class="btn btn-commit">提交</button>
                     </div>
-                </form>   
             </div>
         </div>
     </section>

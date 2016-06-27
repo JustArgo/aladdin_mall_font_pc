@@ -23,9 +23,94 @@
     <title>阿拉丁--找回密码</title>
     <script>
     $(function(){
-    	$('#sms').click(function(){
-    		
-    	})
+    	/*表单验证对象*/
+		var formValidate={
+			password:{
+				target:$("#password"),
+				required:true,
+				reg:/^[\w\d]{5,20}$/,
+				tip:$('#passwordTip'),
+				validator:function(){
+					var v=formValidate.rePassword.target.val();
+					if(v!=""){
+						formValidate.validate(formValidate.rePassword);
+					}
+					return true;
+				},
+				tipWord:'密码长度只能在5-20个字符之间'
+			},
+			rePassword:{
+				target:$("#rePassword"),
+				required:true,
+				validator:function(){
+					var v=formValidate.password.target.val();
+					var v2=this.target.val();
+					if(v!=v2){
+						return false;
+					}
+					return true;
+				},
+				tip:$('#rePasswordTip'),
+				tipWord:'两次输入密码不一致'
+			},
+			init:function(){
+				this.password.target.blur(function(){
+					formValidate.validate(formValidate.password);
+				})
+				this.rePassword.target.blur(function(){
+					formValidate.validate(formValidate.rePassword);
+				})
+				this.password.target.focus(function(){
+					formValidate.password.tip.css('display','none');
+				})
+				this.rePassword.target.focus(function(){
+					formValidate.rePassword.tip.css('display','none');
+				})
+			},
+			validate:function(o){//通用验证
+				var v=o.target.val();
+				if(o.required){
+					if(v==""){//非空
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				if(v!=""){
+					if(o.reg!=undefined){//格式
+						if(!o.reg.test(v)){
+							o.tip.html(o.tipWord);
+							o.tip.css('display','inline');
+							return false;
+						}
+					}
+				}
+				if(o.validator!=undefined){//自定义验证
+					if(!o.validator()){
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				o.tip.css('display','none');
+				return true;
+			},
+			validateAll:function(){
+				if(this.validate(this.password)&this.validate(this.rePassword)){
+					return true;
+				}
+				return false;
+			}
+		}
+		formValidate.init();
+		
+		var submitAble=true;
+		$('#submit').click(function(){
+			if(formValidate.validateAll()){
+				submitAble=false;
+				$('#form1').submit();
+			}
+		})
     })
     </script>
 </head>
@@ -86,13 +171,12 @@
         </div>
     </header>
     
-    <!-- content-bar-->
+    <!-- content-bar -->
     <section class="content-bar">
         <div class="content">
             <div class="container">
                 <div class="form-box">
-                    <form>
-                        <h2 class="password">找回密码</h2>
+                        <h2 class="password" style="color:#1a1a1a;font-size:30px;padding:30px;text-align:center;">找回密码</h2>
                         <div class="row">
                             <ul class="step-list">
                                 <li>
@@ -101,13 +185,13 @@
                                         <p>填写用户名</p>
                                      </a>
                                 </li>
-                                <li class="active">
+                                <li>
                                     <a href="javascript:;">
                                         <em>2</em>
                                         <p>验证身份</p>
                                      </a>
                                 </li>
-                                <li>
+                                <li class="active">
                                     <a href="javascript:;">
                                         <em >3</em>
                                         <p>设置新密码</p>
@@ -123,26 +207,20 @@
                                 </li>
                             </ul>
                         </div>
-                        <div class="row">
-                            <div class="message-box emial" style="width:380px;text-align:center;">
-                                <div class="detail" style="text-align:left;">
-                                	<p>
-                                		<span style="width: 100px;display: inline-block;text-align: right;">昵称：</span>$nickname
-                                	</p>
-                                	<p style="margin-top:20px;">
-                                		<span style="width: 100px;display: inline-block;text-align: right;">验证手机：</span>$phone
-                                	</p>
-                                    <p style="margin-top:20px;">
-                                        <span style="width: 100px;display: inline-block;text-align: right;">验证码：</span>
-                                        <input type="text" id="username" style="width: 120px;" class="form-control" placeholder="手机校验码" />
-                                        <button type="button" id="sms" class="btn btn-simple" style="position:relative;top:-2px;">获取短信验证码</button>  
-                                    </p>     
-                                </div>
-                                <button type="button" class="btn btn-mailbox">提交</button>                   
+                        <form id="form1" action="/password/find/reset/submit" method="post">
+                        	<div class="form-group">
+                        		<label class="control-label">新登录密码：</label>
+                            	<input name="password" type="password" id="password" class="form-control" placeholder="输入新密码，5-20个字符之间" />
+                            	<span class="error" id="passwordTip" style="display:none;">密码不符合规定，请重新设置</span>
                             </div>
+                        </form>
+                        <div class="form-group">
+                            <label class="control-label">确认新密码：</label>
+                            <input type="password" id="rePassword" class="form-control" placeholder="请确认新密码密码" />
+                            <span class="error" id="rePasswordTip" style="display:none;">两次输入的密码不一致，请重新输入</span>
                         </div>
+                        <button type="button" id="submit" class="btn btn-password">提交</button>
                     </div>
-                </form>   
             </div>
         </div>
     </section>
