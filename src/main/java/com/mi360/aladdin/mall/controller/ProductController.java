@@ -22,6 +22,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mi360.aladdin.comment.domain.Comment;
+import com.mi360.aladdin.comment.service.ICommentService;
+import com.mi360.aladdin.comment.service.ICommentVoService;
+import com.mi360.aladdin.comment.vo.CommentVo;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
@@ -46,7 +50,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 
 @Controller
 @RequestMapping("/product")
-public class ProductController extends BaseWxController {
+public class ProductController {
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	@Autowired
@@ -76,6 +80,12 @@ public class ProductController extends BaseWxController {
 	@Autowired
 	private IOrderService orderService;
 
+	@Autowired
+	private ICommentService commentService;
+	
+	@Autowired
+	private ICommentVoService commentVoService;
+	
 	/**
 	 * 查看商品详情
 	 * 
@@ -123,7 +133,9 @@ public class ProductController extends BaseWxController {
 		Map<String, Object> userInfo = userService.findWxUserByMqId(requestId, mqID);
 		MapData data = MapUtil.newInstance(userInfo);
 		Map<String, Object> user = (Map<String, Object>) data.getObject("result");
-		model.addAttribute("subscribe", user.get("subscribe"));
+		if(user!=null){
+			model.addAttribute("subscribe", user.get("subscribe"));
+		}
 		
 		// 查看用户是否已收藏该商品
 		int isCollect = productCollectService.isCollect(mqID, productID, requestId);
@@ -154,6 +166,23 @@ public class ProductController extends BaseWxController {
 
 			attrItems.add(attrMap);
 		}
+		
+		/*
+		 * 
+		 * 
+		 * for()  红绿蓝
+		 * 
+		 * 	
+		 
+		
+		for(int i=0;i<attrItems.size();i++){
+			for(int j=0;j<attrItems.size();j++){
+				if(i!=j){
+					(List<String[]>)attrItems.get(i).get("attrValues")[1];  //得到attrMap 
+				}
+			}
+		}*/
+		
 
 		//查询购物车 商品数量
 		Integer productCount = shopCarService.getShopCarProductsCount(mqID, requestId);
@@ -162,7 +191,27 @@ public class ProductController extends BaseWxController {
 		model.addAttribute("attrItems", attrItems);
 		model.addAttribute("productID", productID);
 		model.addAttribute("productStock", skuStock);
-		return "productdetail";
+		
+		
+		//评论vo列表 全部
+		List<CommentVo> commentVoListAll = commentVoService.getCommentVoList(requestId, productID, 2, 0, 4);
+		
+		if(commentVoListAll!=null && commentVoListAll.size()>0){
+			model.addAttribute("commentStatistics",commentVoListAll.get(0).getCommentStatistics());
+		}
+		
+		//评论vo列表  有图片
+		List<CommentVo> commentVoListHasImage = commentVoService.getCommentVoList(requestId, productID, 1, 0, 4);
+		
+
+		int hasImageCount = commentService.getCommentCount(requestId, productID, 1);
+		model.addAttribute("hasImageCount",hasImageCount);
+		
+		model.addAttribute("commentVoListAll",commentVoListAll);
+		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
+		
+		
+		return "product/product_detail";
 	}
 
 	@RequestMapping("querySku")
