@@ -32,6 +32,10 @@ body {
 }
 a:focus, a:visited, a:active {
     text-decoration: none;
+    outline: 0;
+}
+.btn:active, .btn:focus {
+	outline: 0;
 }
 input, button, textarea, select {
 	font-size: 100%;
