@@ -3897,3 +3897,12 @@ ul.service .icon {
 .footer .middle ul:last-child li {
     padding-right: 5px;
 }
+
+.btn-simple{
+	color:#323333;
+	background-color:#F7F7F7;
+}
+.btn-simple:hover{
+	color:#323333;
+	background-color:#efefef;
+}
