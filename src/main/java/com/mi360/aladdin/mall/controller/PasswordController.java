@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.alipay.api.domain.Data;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.ExpireKey;
 import com.mi360.aladdin.mall.util.WebUtil;
@@ -176,7 +177,12 @@ public class PasswordController {
 		if (resetKey == null || resetKey.hasExpired()) {
 			throw new Exception();
 		}
+		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
+		if (usernameKey == null) {
+			throw new Exception();
+		}
 		ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
+		expireKey.setAttribution(usernameKey.getAttribution());// 用户名
 		WebUtil.getSession().setAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY, expireKey);
 		return "password/find-reset";
 	}
@@ -187,11 +193,7 @@ public class PasswordController {
 		if (resetKey == null || resetKey.hasExpired()) {
 			throw new Exception();
 		}
-		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
-		if (usernameKey == null) {
-			throw new Exception();
-		}
-		String username = (String) usernameKey.getAttribution();
+		String username = (String) resetKey.getAttribution();
 		MapData serviceData = MapUtil.newInstance(userService.resetLoginPassword(requestId, username, password));
 		if (serviceData.getErrcode() != 0) {
 			throw new Exception();
@@ -204,7 +206,7 @@ public class PasswordController {
 	@ResponseBody
 	public String smsVertify(String requestId, String captcha) throws Exception {
 		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
-		if (usernameKey == null || usernameKey.hasExpired()) {
+		if (usernameKey == null) {//只是获取一下手机号码
 			throw new Exception();
 		}
 		String username = (String) usernameKey.getAttribution();
@@ -225,5 +227,18 @@ public class PasswordController {
 				throw new Exception();
 			}
 		}
+	}
+
+	@RequestMapping("/find/email/vertify/{code}")
+	public String emailVertify(String requestId, @PathVariable String code) throws Exception {
+		MapData serviceData = MapUtil.newInstance(emailVerifyService.getEmail(requestId, code, "PWD"));
+		if (serviceData.getErrcode() != 0) {
+			throw new Exception();
+		}
+		logger.info(serviceData.dataString());
+		ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
+		expireKey.setAttribution(serviceData.getString("result"));// 用户名
+		WebUtil.getSession().setAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY, expireKey);
+		return "password/find-reset";
 	}
 }
