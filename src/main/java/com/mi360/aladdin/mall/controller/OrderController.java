@@ -33,6 +33,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.AccountService;
+import com.mi360.aladdin.comment.domain.CommentStatistics;
+import com.mi360.aladdin.comment.service.ICommentService;
 import com.mi360.aladdin.data.dictionary.service.DataDictionaryService;
 import com.mi360.aladdin.data.dictionary.service.DataDictionaryService.ConfigKey;
 import com.mi360.aladdin.entity.account.BankCard;
@@ -133,6 +135,9 @@ public class OrderController {
 	
 	@Autowired
 	private UnionpayService unionPayService;
+	
+	@Autowired
+	private ICommentService commentService;
 	
 	@Autowired
 	private MqService mqService;
@@ -1670,25 +1675,16 @@ public class OrderController {
 
 			// 查看订单状态
 			if ("COM".equals(orderStatus)) {// 已完成
-				return "order/child-order-detail";
+				return "order/order-detail-com";
 			} else if ("CAN".equals(orderStatus)) {// 已取消
-
-				return "order/child-order-detail";
-
+				return "order/order-detail-can";
 			} else if ("PAY".equals(payStatus) && "NOA".equals(returnMoneyStatus) && "NOT".equals(shippingStatus)) {// 付完款
-																													// 没有申请退款
-																													// 也没有发货
-																													// (待发货)
-
-				return "order/child-order-detail";
-
+				return "order/order-detail-dfh";
 			} else if (!"NOA".equals(returnMoneyStatus)) {// 和退款相关的 都转到
-															// return-money-detail
-				logger.info("1165: ");
 				MoneyReturn moneyReturn = orderService.getNewestMoneyReturnByChildOrderCode(orderCode, requestId);
 				return "redirect:return-money-detail?moneyReturnID=" + moneyReturn.getID();
 			} else if ("PAY".equals(payStatus) && "NOA".equals(returnMoneyStatus) && "HAV".equals(shippingStatus)) {// 已发货
-
+				return "order/order-detail-yfh";
 			}
 
 		}
@@ -1728,9 +1724,96 @@ public class OrderController {
 		model.addAttribute("childOrderVo", childOrderVo);
 		model.addAttribute("orderCode", orderCode);
 
+		//如果是待付款
+		if("ING".equals(orderStatus) && "NOT".equals(payStatus)){
+			
+			// 计算剩余时间
+			String remainTime = remainTime(order.getCreateTime(), requestId);
+			if (remainTime.equals("OUT_OF_DATE")) {
+
+				// 如果orderStatus 还没有变为CAN 则变成CAN
+				if (!order.getOrderStatus().equals("CAN")) {
+					order.setOrderStatus("CAN");
+					orderService.updateOrder(order, requestId);
+					for (int i = 0; i < childOrderList.size(); i++) {
+						childOrderList.get(i).setOrderStatus("CAN");
+						orderService.updateOrder(childOrderList.get(i), requestId);
+					}
+				}
+
+				return "order/out_of_date";
+			}
+			if (!remainTime.equals("1分钟内")) {
+				remainTime = "剩" + remainTime;
+			}
+			
+			model.addAttribute("remainTime",remainTime);
+			
+			return "order/order-detail-dfk";
+		}
+		
+		
+		
 		return "order/order-detail";
 	}
 
+	/**
+	 * 查询已发货订单详情
+	 * @param requestId
+	 * @param orderCode
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/order-detail-yfh")
+	public String orderDetailYfh(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		String recName = order.getRecName();
+		String recMobile = order.getRecMobile();
+		String address = StringUtils.defaultString(order.getProvince(), "") + StringUtils.defaultString(order.getCity(), "")
+				+ StringUtils.defaultString(order.getDistrict(), "") + StringUtils.defaultString(order.getAddress(), "");
+
+		if (orderPayment != null) {
+			model.addAttribute("payChannel", OrderPayment.PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("payTime", orderPayment.getPayTime());
+		}
+		model.addAttribute("recName", recName);
+		model.addAttribute("recMobile", recMobile);
+		model.addAttribute("address", address);
+		
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		//发票抬头
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		List<OrderProduct> orderProductList = orderProductService.getOrderProductByOrderID(order.getID(), requestId);
+		List<Map<String,Object>> childOrderProductVo = new ArrayList<Map<String,Object>>(); 
+		if(orderProductList!=null && orderProductList.size()>0){
+			model.addAttribute("supName",orderProductList.get(0).getSupName());
+		}
+		for(OrderProduct op:orderProductList){
+			Map<String, Object> orderProductMap = new HashMap<String, Object>();
+			ProductSku sku = productSkuService.getSkuByID(op.getSkuID(), requestId);
+			orderProductMap.put("skuImg", QiNiuUtil.getDownloadUrl(sku.getSkuImg()));
+			orderProductMap.put("productName", op.getProductName());
+			orderProductMap.put("skuPrice", op.getSellPrice());
+			List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+			orderProductMap.put("skuStrs", skuStrs);
+			orderProductMap.put("productID", sku.getProductID());
+			orderProductMap.put("buyNum", op.getBuyNum());
+			childOrderProductVo.add(orderProductMap);
+		}
+		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		return "order/order-detail-yfh";
+		
+	}
+	
 	/**
 	 * 查看待付款订单详情
 	 */
@@ -2185,6 +2268,29 @@ public class OrderController {
 	public String evaluateIndex(String requestId, Integer orderProductID, Model model) {
 
 		model.addAttribute("orderProductID", orderProductID);
+		
+		OrderProduct orderProduct = orderProductService.getOrderProductByID(orderProductID, requestId);
+		ProductSku sku = productSkuService.getSkuByID(orderProduct.getSkuID(), requestId);
+		List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+		
+		model.addAttribute("skuImg",sku.getSkuImg());
+		model.addAttribute("productName",orderProduct.getProductName());
+		model.addAttribute("skuStrs",skuStrs);
+		model.addAttribute("skuPrice",sku.getSkuPrice());
+		model.addAttribute("buyNum",orderProduct.getBuyNum());
+		
+		CommentStatistics commentStatistics = commentService.getCommentStatisticsByProductID(requestId, orderProduct.getProductID());
+		if(commentStatistics==null){
+			commentStatistics = new CommentStatistics();
+			commentStatistics.setProductID(orderProduct.getProductID());
+			commentStatistics.setDescConform(0);
+			commentStatistics.setCount(0);
+			commentStatistics.setService(0);
+			commentStatistics.setSpeed(0);
+			commentStatistics.setStatus("OK#");
+		}
+		model.addAttribute("commentStatistics",commentStatistics);
+		
 		return "comment/evaluate";
 
 	}

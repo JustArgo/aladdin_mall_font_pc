@@ -121,10 +121,10 @@
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
-                                <p> 收货地址:$!{recNmae}  $!{address}</p>
+                                <p>收货地址: $!{recName}  $!{address}</p>
                                 <p>订单编号：$!{orderCode}</p>
                                 <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
-                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>总    计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
                                 <p>发票抬头：$!{invoiceName}</p>
                                 <p>支付方式：$!{payChannel}</p>
                             </div>

@@ -90,7 +90,7 @@
                     <ul class="refund-list">
                         <li class="active">
                             <a href="javascript:;">
-                                <p>卖家申请退款</p>
+                                <p>买家申请退货</p>
                                 <em>1</em>  
                              </a>
                         </li>
@@ -108,7 +108,7 @@
                         </li>
                         <li>
                             <a href="javascript:;">
-                                <p>退款完成</p>
+                                <p>退货完成</p>
                                 <em>4</em> 
                              </a>
                         </li>
@@ -127,44 +127,51 @@
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
-                                <p> 收货地址:Leroy  龙华新区万科金域华府一期&n bsp9栋61</p>
-                                <p>订单编号：xxxxxxxxxxxx</p>
-                                <p>成交时间：2016-5-28  16:30</p>
-                                <p>总      计：78.00元</p>
-                                <p>发票抬头：</p>
-                                <p>支付方式：支付宝/微信</p>
+                                <p> 收货地址:$!{recNmae}  $!{address}</p>
+                                <p>订单编号：$!{orderCode}</p>
+                                <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
+                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>发票抬头：$!{invoiceName}</p>
+                                <p>支付方式：$!{payChannel}</p>
                             </div>
                             <h2>退款信息</h2>
                             <div class="information">
-                                <p>退款金额  ¥78.00</p>
-                                <p>退款原因  拍错了</p>
-                                <p>退款说明  -</p>
-                                <p>退款编号  6828584568799</p>
-                                <p>申请时间  2016-03-28  19:20</p>
+                                <p>退款金额  ¥$!number.format("#0.00",$math.div($!{goodsReturn.applySum},100))</p>
+                                <p>退款原因  $!{returnReason}</p>
+                                <p>退款说明  $!{goodsReturn.returnDesc}</p>
+                                <p>退款编号  $!{goodsReturn.returnCode}</p>
+                                <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <form class="form">
+                            <form id="logisticsForm" action="/order/set-return-goods-logistics" method="post">
+								<input type="hidden" name="goodsReturnID" value="$!{goodsReturn.ID}">
                                 <div class="pass-box"> 
                                     <p class="pass">商家审核通过</p>
-                                    <p>寄回地址：深圳市龙华新区万科金域华府</p>
-                                    <p>收  货  人：Leroy</p>
-                                    <p>联系电话：18023499634</p>
+                                    <p>寄回地址：$!{fullAddress}</p>
+                                    <p>收  货  人：$!{recName}</p>
+                                    <p>联系电话：$!{recMobile}</p>
                                     <p>填写物流单号</p>
                                 </div> 
                                 <div class="form-group">
                                     <label class="control-label">物流公司</label>
-                                    <select class="form-control">
-                                        <option>请选择物流公司</option>
+                                    <select class="form-control" name="logisticsID">
+                                        <option value="0">请选择物流公司</option>
+										#foreach($expressCompany in $expressCompanyList)
+											<option value="$expressCompany.ID">$expressCompany.companyName</option>
+										#end
                                     </select>
                                     <i></i>
                                 </div>
                                 <div class="form-group ">
                                     <label class="control-label">物流单号</label>
-                                    <input type="text" class="form-control" placeholder="请填写物流单号" />
-                                </div> 
-                                <button class="btn btn-register">提交</button>   
-                            </form>
+                                    <input type="text" class="form-control" placeholder="请填写物流单号" name="logisticsNum"/>
+									<input type="hidden" name="logistics" value=""/>
+                                </div>
+							</form>
+                               
+							<button class="btn btn-register">提交</button>
+                            
                         </div>
                     </div>
                 </div>
@@ -253,5 +260,39 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		$(function(){
+			$(".btn-register").click(function(){
+				var logisticsID = $("[name=logisticsID]").val();
+				if(logisticsID==0){
+					alert("请选择物流公司");
+					return;
+				}
+				
+				#if($null.isNull(${fullAddress}) or $null.isNull(${recName}) or $null.isNull(${recMobile}))
+					alert("供应商信息不完整，无法退货");
+					return;
+				#end
+				
+				if(""==$("[name=logisticsNum]").val().trim()){
+					//请填写物流单号
+					alert("请填写物流单号");
+					return;
+				}
+				
+				var logisReg = /^[a-zA-Z0-9]+$/;
+				if(!logisReg.test($(".logisticsNum").val())){
+					alert("物流单号格式不正确");
+					return;
+				}
+				
+				$("input[name=logistics]").val($("select option:selected").text());
+			
+				$("#logisticsForm").submit();
+				
+				
+			});
+		});
+	</script>
 </body>
 </html>

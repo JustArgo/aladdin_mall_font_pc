@@ -1,100 +1,240 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>退货详情</title>
- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<script src="${link.contextPath}/js/jquery-2.1.3.min.js"></script>
-<link rel="stylesheet" href="${link.contextPath}/css/returnG-success.css" type="text/css" />
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>拒绝退款</title>
 </head>
 <body>
-#parse("./common/header.vm") 
-<div id="container">
-    <div class="header">
-        <a href="${link.contextPath}/order/order-index" class="header-back btn">
-			<img class="img1" src="${link.contextPath}/images/back_n.png">
-			<img class="img2" src="${link.contextPath}/images/back_p.png">
-		</a>
-        <span>退货详情</span>
-    </div>
-	<div class="returnG-title">
-		<div class="title1">
-			<p>退货编号：$!{goodsReturn.returnCode}</p>
-			<p>申请时间：$!date.format('yyyy-MM-dd HH:mm ',$!goodsReturn.applyTime)</p>
-		</div>
-		<div class="detail-process">
-			<ul>
-				<li class="bg1">
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:20px;">提交</div>
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:15px;">退货申请</div>
-				</li>
-				<li class="bg1">
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:20px;">商家</div>
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:15px;">审核通过</div>
-				</li>
-				<li class="bg2">
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:20px;">已收货</div>
-					<div style="width:100%;height:50%;margin:0;padding:0;line-height:15px;">拒绝退款</div>
-				</li>
-				<li class="bg1">退货成功</li>
-			</ul>
-			<div class="process-bottom">
-				<p>商家拒绝退款</p>
-				<p style="font-size:14px;">商家已确认收货，但是拒绝退款</p>
-			</div>
-		</div>
-	</div>
-	<div class="returnG-area">
-		<div class="area-list">
-			<span style="font-size:16px;color:#5e5b5c">退货详情</span><span></span>
-		</div>
-		<div class="area-list">
-			<span>申请类型</span><span>退货</span>
-		</div>
-		<div class="area-list">
-			<span>申请金额</span><span>￥$number.format("#0.00",$math.div(${goodsReturn.applySum},100.0))</span>
-		</div>
-		<div class="area-list">
-			<span>退货原因</span><span>$!{returnReason}</span>
-		</div>
-		<div class="area-list">
-			<span>退货说明</span><span>$!{goodsReturn.returnDesc}</span>
-		</div>
-		<div class="area-list">
-			<span>退货编号</span><span>$!{goodsReturn.returnCode}</span>
-		</div>
-		<div class="area-list">
-			<span>申请时间</span><span>$!date.format('yyyy-MM-dd HH:mm ',$!goodsReturn.applyTime)</span>
-		</div>
-		#if(${goodsReturn.returnImgs.size()}!=0)
-		<div class="area-list" style="width: 100%;margin-left:0;margin-bottom:15px;">
-		    <span style="margin-left: 3%;">上传图片</span>
-          	<span style="background-color: #fff;display: block;width: 100%;margin-left: 0;text-align: center;padding-bottom:15px;" class="upload-img">
-          		#foreach($returnImg in $goodsReturn.returnImgs)
-          			<img src="$qiniu.getDownloadUrl($returnImg.imgPath)" style="width:80px;height:80px;">
-          		#end
-          	</span>
-		</div>
-		#end
-	</div>
-</div>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!--  refund-bar -->   
+    <section class="refund-bar">
+        <div class="refund">
+            <div class="container">
+                <div class="row">
+                    <ul class="refund-list">
+                        <li>
+                            <a href="javascript:;">
+                                <p>买家申请退货</p>
+                                <em>1</em>  
+                             </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                               <p>商家审核通过</p>
+                               <em>2</em> 
+                             </a>
+                        </li>
+                        <li  class="active">
+                            <a href="javascript:;">
+                                <p>商家拒绝退款</p>
+                                <em>3</em> 
+                             </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <p>退货完成</p>
+                                <em>4</em> 
+                             </a>
+                        </li>
+                    </ul>
+                </div>    
+            </div>
+        </div>
+    </section>
+
+    <!-- content-bar -->
+    <section class="content-bar">
+        <div class="content return">
+            <div class="container">
+                <div class="row">
+                    <div class="return-item failed">
+                        <div class="col-md-3">
+                            <h2>订单信息</h2>
+                            <div class="information">
+                                <p>收货地址:$!{recNmae}  $!{address}</p>
+                                <p>订单编号：$!{orderCode}</p>
+                                <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
+                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>发票抬头：$!{invoiceName}</p>
+                                <p>支付方式：$!{payChannel}</p>
+                            </div>
+                            <h2>退款信息</h2>
+                            <div class="information">
+                                <p>退款金额  ¥$!number.format("#0.00",$math.div($!{goodsReturn.applySum},100))</p>
+                                <p>退款原因  $!{returnReason}</p>
+                                <p>退款说明  $!{goodsReturn.returnDesc}</p>
+                                <p>退款编号  $!{goodsReturn.returnCode}</p>
+                                <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 message">
+                            <div class="return-autid">  
+                                <h2>商家拒绝退款</h2>
+                                <p>商家已确认收货，但是拒绝退款</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 </body>
-<script>
-    $(function(){
-		$(".btn").click(function(){
-			if($(this).find(".img1").is(":visible")){
-				$(this).find(".img1").hide();
-				$(this).find(".img2").show();
-			}else{
-				$(this).find(".img1").show();
-				$(this).find(".img2").hide();
-			}
-			setTimeout(function(){
-				$(".btn").find(".img1").show();
-				$(".btn").find(".img2").hide();
-			},1000)
-		});
-	});
-</script>
 </html>

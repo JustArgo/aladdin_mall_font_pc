@@ -18,6 +18,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script src="/js/order-index.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -192,12 +193,13 @@
                     <div class="col-md-10">
                         <div class="content alipay-content">
                             <div class="title">
-                                <a href="javascript:;" class="active">所有订单</a>
-                                <a href="javascript:;">待付款</a>
-                                <a href="javascript:;">待发货</a>
-                                <a href="javascript:;">待收款</a>
-                                <a href="javascript:;">退款</a>
-                                <a href="javascript:;">退货</a>
+                                <a href="javascript:;" class="active all">所有订单</a>
+                                <a href="javascript:;" class="dfk">待付款</a>
+                                <a href="javascript:;" class="dfh">待发货</a>
+                                <a href="javascript:;" class="dsk">待收款</a>
+								<a href="javascript:;" class="dpl">待评价</a>
+                                <a href="javascript:;" class="tk">退款</a>
+                                <a href="javascript:;" class="th">退货</a>
                             </div>
                             <div class="search">
                                 <form class="search-form">
@@ -220,167 +222,775 @@
                                     </tr>
                                 </thead>
                             </table>
-                            <table class="table table-bordered table-hover table-responsive">
-                                <tbody>
-                                	#foreach($childOrder in $childOrderList)
-                                    <tr class="status">
-                                        <td colspan="6" class="text-left">
-                                            <span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
-                                            <span>订单编号：$!{childOrder.orderCode}</span>
-                                            <span>供应商：$!{childOrder.supName}</span>
-                                            <span class="time">还剩02天03小时30分可以进行付款</span>
-                                        </td>
-                                    </tr>
-                                    
-	                                    #foreach($orderProduct in $childOrder.orderProductList)
-	                                    <tr>
-	                                        <td class="text-left">
-	                                            <a href="javascript:;" class="fl">
-	                                                <img src="$qiniu.getDownloadUrl($orderProduct.skuImg)">
-	                                            </a>
-	                                            <div class="fr">
-	                                                <p>
-	                                                    <a href="javascript:;">$!{orderProduct.productName}</a>
-	                                                </p>
-	                                                <p>
-	                                                    <span>颜色：墨蓝</span>
-	                                                    <span>尺寸：XL</span>
-	                                                </p>
-	                                            </div>
-	                                        </td>
-	                                        <td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
-	                                        <td>$!{orderProduct.buyNum}</td>
-	                                        #if($velocityCount==1)
-		                                        <td rowspan="$childOrder.orderProductList.size()">
-		                                            <p>¥88.00</p>
-		                                            <p>（含运费¥0.00）</p>
-		                                        </td>
-		                                        <td rowspan="$childOrder.orderProductList.size()">待付款</td>
-		                                        <td rowspan="$childOrder.orderProductList.size()"></td>
-	                                        #end
-	                                    </tr>
-	                                    #end
-                                    
-                                    
-                                    
-                                    #end
-                                    
-                                </tbody>
-                            </table>
-                            <table class="table table-bordered table-hover table-responsive">
-                                <tbody>
-                                    <tr class="status">
-                                        <td colspan="6" class="text-left">
-                                            <span>2016-03-28</span>
-                                            <span>订单编号：12324464658674866</span>
-                                            <span>供应商：三只小猪</span>
-                                            <span class="time">还剩02天03小时30分可以进行付款</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-left">
-                                            <a href="javascript:;" class="fl">
-                                                <img src="/images/shoe/shoe.png">
-                                            </a>
-                                            <div class="fr">
-                                                <p>
-                                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款大码第三方公司的方式 墨蓝  XL</a>
-                                                </p>
-                                                <p>
-                                                    <span>颜色：墨蓝</span>
-                                                    <span>尺寸：XL</span>
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>¥88.00</td>
-                                        <td>1</td>
-                                        <td rowspan="2" class="status">
-                                            <p>¥88.00</p>
-                                            <p>（含运费¥0.00）</p>
-                                        </td>
-                                        <td rowspan="2" class="status">
-                                            待付款
-                                            <a href="javascript:;">订单详情</a>
-                                            <a href="javascript:;" data-toggle="modal" data-target="#myModal" data-href="/Aladdin/orderCancel-popup.html" data-class="modal-orderCancel" class="jq-orderCancel">取消订单</a>
-                                        </td>
-                                        <td rowspan="2" class="status">
-                                            <a href="javascript:;" class="pay-money">付款</a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-bordered table-hover table-responsive">
-                                <tbody>
-                                    <tr class="status">
-                                        <td colspan="6" class="text-left">
-                                            <span>2016-03-28</span>
-                                            <span>订单编号：12324464658674866</span>
-                                            <span>供应商：三只小猪</span>
-                                            <span class="time">还剩02天03小时30分可以进行付款</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-left">
-                                            <a href="javascript:;" class="fl">
-                                                <img src="/images/shoe/shoe.png">
-                                            </a>
-                                            <div class="fr">
-                                                <p>
-                                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款大码第三方公司的方式 墨蓝  XL</a>
-                                                </p>
-                                                <p>
-                                                    <span>颜色：墨蓝</span>
-                                                    <span>尺寸：XL</span>
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>¥88.00</td>
-                                        <td>1</td>
-                                        <td rowspan="2" class="status">
-                                            <p>¥88.00</p>
-                                            <p>（含运费¥0.00）</p>
-                                        </td>
-                                        <td rowspan="2" class="status">待付款</td>
-                                        <td rowspan="2" class="status"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                            <table class="table table-bordered table-hover table-responsive">
-                                <tbody>
-                                    <tr class="status">
-                                        <td colspan="6" class="text-left">
-                                            <span>2016-03-28</span>
-                                            <span>订单编号：12324464658674866</span>
-                                            <span>供应商：三只小猪</span>
-                                            <span class="time">还剩02天03小时30分可以进行付款</span>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="text-left">
-                                            <a href="javascript:;" class="fl">
-                                                <img src="/images/shoe/shoe.png">
-                                            </a>
-                                            <div class="fr">
-                                                <p>
-                                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款大码第三方公司的方式 墨蓝  XL</a>
-                                                </p>
-                                                <p>
-                                                    <span>颜色：墨蓝</span>
-                                                    <span>尺寸：XL</span>
-                                                </p>
-                                            </div>
-                                        </td>
-                                        <td>¥88.00</td>
-                                        <td>1</td>
-                                        <td rowspan="2" class="status">
-                                            <p>¥88.00</p>
-                                            <p>（含运费¥0.00）</p>
-                                        </td>
-                                        <td rowspan="2" class="status">待付款</td>
-                                        <td rowspan="2" class="status"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
+							
+							<div class="order-info-all">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($childOrder in $childOrderList)
+											#if($childOrder.status=='COM')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>$!{orderProduct.buyNum}</td>
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																已完成
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='CAN')
+												
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>$!{orderProduct.buyNum}</td>
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																已取消
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											
+											#end
+											#if($childOrder.status=='DFK')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.parentCode}</span>
+														
+														<span class="time">#if($childOrder.remainTime=='OUT_OF_DATE') 订单已过付款时间 #else 还剩$!{childOrder.remainTime}可以进行付款 #end</span>
+													</td>
+												</tr>
+												
+													#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>$!{orderProduct.buyNum}</td>
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																待付款
+																<a href="/order/order-detail?orderCode=$childOrder.parentCode">订单详情</a>
+																<a href="javascript:;" data-toggle="modal" data-target="#myModal" data-href="/Aladdin/orderCancel-popup.html" data-class="modal-orderCancel" class="jq-orderCancel">取消订单</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																#if($childOrder.remainTime!='OUT_OF_DATE')<a href="javascript:;" class="pay-money">付款</a>#end
+															</td>
+														#end
+													</tr>
+													#end
+											#end
+										
+											#if($childOrder.status=='DFH')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																待发货
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<a href="/order/return-money?orderCode=$childOrder.orderCode" class="pay-money">退款</a>
+															</td>
+														#end
+														
+														
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='STK')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																退款审核中
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='TKZ')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																退款中
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='TKB')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																退款审核不通过
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='TKC')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																退款成功
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='TKS')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																退款失败
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											
+											#if($childOrder.status=='TH')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																$!{orderProduct.statuStr}
+																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											#if($childOrder.status=='YFH')
+												<tr class="status">
+													<td colspan="6" class="text-left">
+														<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+														<span>订单编号：$!{childOrder.orderCode}</span>
+														<span>供应商：$!{childOrder.supName}</span>
+													</td>
+												</tr>
+												#foreach($orderProduct in $childOrder.orderProductList)
+													<tr>
+														<td class="text-left">
+															<a href="javascript:;" class="fl">
+																<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+															</a>
+															<div class="fr">
+																<p>
+																	<a href="javascript:;">$!{orderProduct.productName}</a>
+																</p>
+																<p>
+																	<span>颜色：墨蓝</span>
+																	<span>尺寸：XL</span>
+																</p>
+															</div>
+														</td>
+														
+														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														
+														<td>$!{orderProduct.buyNum}</td>
+														
+														#if($velocityCount==1)
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+																<p>（含运费¥$!{childOrder.orderSum}）</p>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																已发货
+																<a href="/order/order-detail-yfh?orderCode=$childOrder.orderCode">订单详情</a>
+															</td>
+															<td rowspan="$childOrder.orderProductList.size()" class="status">
+																<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
+															</td>
+														#end
+													</tr>
+												#end
+											#end
+											
+											
+										
+										
+										#end
+										
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="order-info-dfk">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+									
+										#foreach($childOrder in $noPayedOrderList)
+											<tr class="status">
+												<td colspan="6" class="text-left">
+													<span>$date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+													<span>订单编号：$!{childOrder.orderCode}</span>
+													
+													<span class="time">#if($childOrder.remainTime=='OUT_OF_DATE') 订单已过付款时间 #else 还剩$!{childOrder.remainTime}可以进行付款 #end</span>
+												</td>
+											</tr>
+											
+											#foreach($orderProduct in $childOrder.orderProductList)
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($orderProduct.skuImg)" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{orderProduct.productName}</a>
+															</p>
+															<p>
+																<span>颜色：墨蓝</span>
+																<span>尺寸：XL</span>
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>$!{orderProduct.buyNum}</td>
+													#if($velocityCount==1)
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+															<p>（含运费¥$!{childOrder.orderSum}）</p>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															待付款
+															<a href="/order/order-detail?orderCode=$childOrder.parentCode">订单详情</a>
+															<a href="/order/cancel?orderCode=${childOrder.orderCode}">取消订单</a>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															#if($childOrder.remainTime!='OUT_OF_DATE')<a href="javascript:;" class="pay-money">付款</a>#end
+														</td>
+													#end
+												</tr>
+											#end
+											
+										#end
+									</tbody>
+								</table>
+								
+							</div>
+							
+                            
+							<div class="order-info-dfh">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($childOrder in $noSendOrderList)
+											<tr class="status">
+												<td colspan="6" class="text-left">
+													<span>$!date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+													<span>订单编号：${childOrder.orderCode}</span>
+													<span>供应商：$!{childOrder.supName}</span>
+												</td>
+											</tr>
+											#foreach($orderProduct in $childOrder.orderProductList)
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{orderProduct.productName}</a>
+															</p>
+															<p>
+																<span>颜色：墨蓝</span>
+																<span>尺寸：XL</span>
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>$!{orderProduct.buyNum}</td>
+													#if($velocityCount==1)
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+															<p>（含运费¥$!{childOrder.orderSum}）</p>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															待发货
+															<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															<a href="/order/return-money?orderCode=$childOrder.orderCode" class="pay-money">退款</a>
+														</td>
+													#end
+												</tr>
+											#end
+											
+										#end
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="order-info-dpl">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($waitForComment in $waitForCommentList)
+											<tr class="status">
+												<td colspan="6" class="text-left">
+													<span>供应商：$!{waitForComment.supName}</span>
+												</td>
+											</tr>
+											
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($!{waitForComment.skuImg})" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{waitForComment.productName}</a>
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$math.div($!{waitForComment.sellPrice},100))</td>
+													<td>$!{waitForComment.buyNum}</td>
+													<td class="status">
+														<p>¥$number.format("#0.00",$math.mul($!math.div($!{waitForComment.sellPrice},100),$!{waitForComment.buyNum}))</p>
+													</td>
+													<td class="status">
+														待评价
+														<a href="/order/order-detail?orderID=$waitForComment.childOrderID">订单详情</a>
+													</td>
+													<td class="status">
+														<a href="/order/evaluate-index?orderProductID=$waitForComment.orderProductID" class="pay-money">评价</a>
+													</td>
+												</tr>
+											
+										#end
+									</tbody>
+								</table>
+							</div>
+							
+							<div class="order-info-tk">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($childOrder in $returnMoneyList)
+											<tr class="status">
+												<td colspan="6" class="text-left">
+													<span>$!date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+													<span>订单编号：${childOrder.orderCode}</span>
+													<span>供应商：$!{childOrder.supName}</span>
+												</td>
+											</tr>
+											#foreach($orderProduct in $childOrder.orderProductList)
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{orderProduct.productName}</a>
+															</p>
+															<p>
+																<span>颜色：墨蓝</span>
+																<span>尺寸：XL</span>
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>$!{orderProduct.buyNum}</td>
+													#if($velocityCount==1)
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
+															<p>（含运费¥$!{childOrder.orderSum}）</p>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															#if($childOrder.status=='STK')
+																退款审核中
+															#elseif($childOrder.status=='TKZ')
+																退款中
+															#elseif($childOrder.status=='TKB')
+																退款审核不通过
+															#elseif($childOrder.status=='TKC')
+																退款成功
+															#elseif($childOrder.status=='TKS')
+																退款失败
+															#end
+															<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+														</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															#if($childOrder.status=='TKB')
+																<a href="/order/return-money?orderCode=$childOrder.orderCode" class="pay-money">重新申请</a>
+															#end
+														</td>
+													#end
+												</tr>
+											#end
+											
+										#end
+									</tbody>
+								</table>
+							</div>
+							<div class="order-info-th">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($orderProduct in $returnGoodsList)
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{orderProduct.productName}</a>
+															</p>
+															<p>
+																<span>颜色：墨蓝</span>
+																<span>尺寸：XL</span>
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.sellPrice},100))</td>
+													<td>$!{orderProduct.buyNum}</td>
+													
+													<td class="status">
+														<p>¥$number.format("#0.00",$math.mul($math.div($!{orderProduct.sellPrice},100),$!{orderProduct.buyNum}))</p>
+														<p></p>
+													</td>
+													<td class="status">
+														$orderProduct.returnGoodsStr
+													</td>
+													<td class="status">
+														#if(${orderProduct.returnGoodsStatus}=='NO#'||${orderProduct.returnGoodsStatus}=='JTK')
+															<a href="/order/r2?p=$orderProduct.orderProductID" class="pay-money">重新申请</a>
+														#else
+															<a href="/order/return-goods-detail-orderproductid?orderProductID=$orderProduct.orderProductID">退货详情</a>
+														#end
+													</td>
+													
+												</tr>
+											
+											
+										#end
+									</tbody>
+								</table>
+							</div>
+							
+                           
                         </div>
                         <div class="button-group">
                             <a href="javascript:;" class="prev">上一页</a>
@@ -477,6 +1087,118 @@
                 </div>
             </div>
         </div>
+		<script type="text/javascript">
+			
+			var curTab = "all";
+			
+			$(function(){
+				
+			
+				$(".alipay-content a").click(function(){
+					$(".alipay-content a").removeClass("active");
+					$(this).addClass("active");
+				});
+				
+				$("[class^='order-info']").hide();
+				$(".order-info-all").show();
+				
+				$(".all").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-all").show();
+					curTab="all";
+				});
+				
+				//点击待付款
+				$(".dfk").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-dfk").show();
+					curTab="dfk";
+				});
+				
+				//点击待发货
+				$(".dfh").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-dfh").show();
+					curTab="dfh";
+				});
+				
+				//点击待评价
+				$(".dpl").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-dpl").show();
+					curTab="dpl";
+				});
+				
+				//点击退款
+				$(".tk").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-tk").show();
+					curTab="tk";
+				});
+				
+				//点击退货
+				$(".th").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-th").show();
+					curTab="th";
+				});
+			});
+			
+			$(".num").click(function(){
+				
+				var pageNum = $(this).text();
+				
+				var curPageNum = $(".num.active").text();
+				
+				
+				if(curPageNum!=pageNum){
+					
+					if(curTab=='all'){
+						$.ajax({
+							url:'${link.contextPath}/order/more-order',
+							type:'POST',
+							data:{"pageIndex":pageNum},
+							dataType:'json',
+							success:function(ret){
+								console.log(ret);
+								for(var i=0;i<ret.length;i++){
+									console.log("status:"+ret[i].status);
+								}
+								$(".order-info-all").empty();
+								if(ret.length!=0){
+									$(".order-info-all").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									$(".order-info-all tbody").append(getItemStr(ret[i]));
+								}
+								
+								
+							}
+						});
+					}else if(curTab=='dfk'){
+						
+					}else if(curTab=='dfh'){
+						
+					}else if(curTab=='tk'){
+						
+					}else if(curTab=='th'){
+						
+					}
+					
+				}
+				
+				
+				
+				
+				
+				
+			});
+			
+			
+			
+			
+		</script>
     </footer>
 </body>
 </html>

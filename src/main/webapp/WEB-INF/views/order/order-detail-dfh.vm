@@ -26,7 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>拒绝退货申请</title>
+    <title>等待付款订单详情</title>
 </head>
 <body>
     <!-- header -->
@@ -76,82 +76,172 @@
                                 <img src="/images/logo/logo.png">
                             </a>
                         </div>
+                        <div class="pull-right">
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </header>
     
-    <!--  refund-bar -->   
-    <section class="refund-bar">
-        <div class="refund">
+    <!-- orderbar -->
+    <section class="orderbar">
+        <div class="order">
             <div class="container">
                 <div class="row">
-                    <ul class="refund-list">
-                        <li>
-                            <a href="javascript:;">
-                                <p>买家申请退货</p>
-                                <em>1</em>  
-                             </a>
-                        </li>
-                        <li class="active">
-                            <a href="javascript:;">
-                               <p>商家审核不通过</p>
-                               <em>2</em> 
-                             </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <p>等待商家收货</p>
-                                <em>3</em> 
-                             </a>
-                        </li>
-                        <li>
-                            <a href="javascript:;">
-                                <p>退货完成</p>
-                                <em>4</em> 
-                             </a>
-                        </li>
-                    </ul>
-                </div>    
+                    <div class="branch">
+                        <span>我的阿拉丁</span><span>></span>
+                        <span>订单中心</span><span>></span>
+                        <span class="num">订单$!{orderCode}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <h3 class="title">订单状态</h3>
+                    <div class="order-status">
+                        <p>订单状态：待发货</p>
+                        <p>
+                            <a href="javascript:;" class="link">联系客服</a>
+                            <a href="javascript:;" class="return">退款</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row order-message">
+                    <div class="col-md-4">
+                        <h3 class="title">订单信息</h3>
+                        <div class="order-status">
+                            <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
+                            <p>订单编号：$!{orderCode}</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{createTime})</p>
+                            <p>发票抬头：$!{invoiceName}</p>
+                            <p>支付方式：$!{payChannel}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="title">物流信息</h3>
+                        <div class="order-status">
+                            <div class="box">
+                                <p>暂无物流信息</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- content-bar -->
-    <section class="cartbar">
-        <div class="cart content return">
+    <!-- cartbar -->
+    <section class="cartbar apply-menu">
+        <div class="cart order-status">
             <div class="container">
                 <div class="row">
-                    <div class="return-item failed">
-                        <div class="col-md-3">
-                            <h2>订单信息</h2>
-                            <div class="information">
-                                <p>收货地址:$!{recNmae}  $!{address}</p>
-                                <p>订单编号：$!{orderCode}</p>
-                                <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
-                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
-                                <p>发票抬头：$!{invoiceName}</p>
-                                <p>支付方式：$!{payChannel}</p>
-                            </div>
-                            <h2>退款信息</h2>
-                            <div class="information">
-                                <p>退款金额  ¥$!number.format("#0.00",$math.div($!{goodsReturn.applySum},100))</p>
-                                <p>退款原因  $!{returnReason}</p>
-                                <p>退款说明  $!{goodsReturn.returnDesc}</p>
-                                <p>退款编号  $!{goodsReturn.returnCode}</p>
-                                <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
-                            </div>
-                        </div>
-                        <div class="col-md-9 message">
-                            <div class="return-autid"> 
-                                <p>
-                                    <a href="/order/modify-return-goods?goodsReturnID=$!{goodsReturn.ID}" class="audit">修改退货申请</a>
-                                </p> 
-                                <h2>商家审核不通过</h2>
-                                <p>商家拒绝了您的退货申请</p>
-                            </div>
-                        </div>
+                    <table class="table order-table table-bordered table-responsive">
+                        <thead>
+                            <th>商品</th>
+                            <th>单价(元)</th>
+                            <th>数量</th>
+                            <th>实付款(元)</th>
+                            <th>状态</th>
+                            <th>运费</th>
+                        </thead>
+                    </table>    
+                    <table class="table order-table table-bordered table-responsive">
+                        <tbody>
+							#foreach($childOrder in $childOrderVo)
+								<tr class="status">
+									<td colspan="6" class="text-left">
+										<span>$!date.format("yyyy-MM-dd",$!{createTime})</span>
+										<span>订单编号：$!{childOrder.orderCode}</span>
+										<span>供应商：$!{childOrder.supName}</span>
+									</td>
+								</tr>
+								#foreach($orderProduct in $childOrder.childOrdreProductVo)
+									<tr>
+										<td class="text-left">
+											<a href="javascript:;" class="fl">
+												<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+											</a>
+											<div class="fr">
+												<p>
+													<a href="javascript:;">$!{orderProduct.productName}</a>
+												</p>
+												<p>
+													#foreach($skuStr in $orderProduct.skuStrs)
+														<span>$skuStr</span>
+													#end
+												</p>
+											</div>
+										</td>
+										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
+										<td>$!{orderProduct.buyNum}</td>
+										#set($size = $childOrder.childOrdreProductVo.size)
+										<td rowspan="$size">
+											<p>¥$!number.format("#0.00",$math.mul($!math.div($!{orderProduct.skuPrice},100),$!{orderProduct.buyNum}))</p>
+											<p>（含运费¥0.00）</p>
+										</td>
+										<td rowspan="$size">待发货</td>
+										<td rowspan="$size">￥0.00</td>
+									</tr>
+								#end
+							#end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
                     </div>
                 </div>
             </div>

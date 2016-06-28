@@ -95,6 +95,9 @@
     <section class="product-bar">
        <div class="prod-detail">
            <div class="container">
+			<input type="hidden" class="status" value="$!{status}"/>
+			<input type="hidden" class="productID" value="$productID"/>
+			<input type="hidden" class="skuID" value="${productVo.skus[0].ID}"/>
                <div class="row">
                    <div class="col-md-5">
                        <div class="prod-image">
@@ -129,11 +132,11 @@
                         </div>
 						
 						#foreach($attrItem in $attrItems)
-                        <div class="prod-size" data-attrid="$attrItem.attrID">
+                        <div class="prod-size"  data-attrid="$attrItem.attrID">
                             <p>$!attrItem.attrName：</p>
                             <p class="choosen jq-choosen">
                                 #foreach($attrValue in $attrItem.attrValues)
-									<span>$!attrValue[1]</span>
+									<span data-valueid="$attrValue[0]">$!attrValue[1]</span>
 								#end
                             </p>
                         </div>
@@ -453,6 +456,159 @@
 					$(".hasImage-li").show();
 				}
 			});
+			
+			$(".prod-size").each(function(){
+				$(this).find(".choosen span:eq(0)").addClass("active");
+				
+			});
+			$(".choosen span").click(function(){
+				var prod_size = $(this).closest(".prod-size");
+				prod_size.find("span").removeClass("active");
+				$(this).addClass("active");
+				
+				var productID = $(".productID").val();
+				var param = "productID="+productID;
+				
+				$(".prod-size").each(function(){
+					var attrID = $(this).data("attrid");
+					var valueID = $(this).find(".active").data("valueid");
+					param+="&attrs="+attrID+"&values="+valueID;
+				});
+				
+				$.ajax({
+					url:"${link.contextPath}/product/querySku?"+param,
+					type:"POST",
+					dataType:"JSON",
+					success:function(ret){
+						
+						if(ret.errcode==0){
+							
+							$(".store").text("（库存："+ret.skuStock+"件）");
+							
+							$(".skuID").val(ret.skuID);
+							
+						}else{
+							$(".store").text("（库存：0件）");
+						}
+					}
+					
+				});
+				
+				
+			});
+			
+			$(".prod-add").click(function(){
+				var num = parseInt($(".num").val());
+				$(".num").val(num+1);
+			});
+			
+			$(".prod-sub").click(function(){
+				var num = parseInt($(".num").val());
+				if(num==1){
+					return;
+				}
+				$(".num").val(num-1);
+			});
+			
+			var productID = $(".productID").val();
+			var param = "productID="+productID;
+			
+			$(".prod-size").each(function(){
+				param+="&attrs="+$(this).data("attrid")+"&values="+$(this).find("span:eq(0)").data("valueid");
+			});
+			
+			$.ajax({
+				url:"${link.contextPath}/product/querySku?"+param,
+				type:"POST",
+				dataType:"JSON",
+				success:function(ret){
+					if(ret.errcode==0){
+						var numPattern = new RegExp("[0-9]+");
+						
+						$(".store").text("（库存："+ret.skuStock+"件）");
+						
+						$(".skuID").val(ret.skuID);
+						//curSkuStock = ret.skuStock;
+					}else{
+						$(".store").text("（库存：0件）");
+					}
+				}
+				
+			});	
+
+			//加入购物车
+			$(".prod-addToCart").click(function(){
+				
+				if($(".status").val()!='UP#'){
+					alert("该商品已下架");
+					return;
+				}
+				
+				var productID = $(".productID").val();
+				var buyNum = $(".num").val();
+				
+				$.ajax({
+					
+					url:"/shop_car/add_to_shopcar",
+					type:"POST",
+					dataType:"JSON",
+					data:{"productID":productID,"skuID":$(".skuID").val(),"buyNum":buyNum},
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							alert("添加成功");
+						}else if(ret && ret.errcode && ret.errcode!=0){
+							alert(ret.msg);
+						}else{
+							alert("网络异常");
+						}
+						
+					}
+					
+				});
+				
+				
+				
+				
+			});
+			
+			$(".prod-buyNow").click(function(){
+				
+				if($(".status").val()!='UP#'){
+					alert("该商品已下架无法进行购买");
+					return;
+				}
+				
+				var buyNum = $(".num").val();
+				
+				$.ajax({
+					url:"${link.contextPath}/product/check-limit",
+					type:"POST",
+					data:{"skuIds":$(".skuID").val(),"buyNums":buyNum},
+					dataType:"json",
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							var params = [];
+							params.push($("<input>",{name:"mode",value:"buyNow"}))
+							params.push($("<input>",{name:"skuIds",value:$(".skuID").val()}));
+							params.push($("<input>",{name:"buyNums",value:buyNum}));
+							
+							$('<form>', {  
+								method: 'post',
+								action: '${link.contextPath}/order/previewOrder'
+							}).append(params).submit();
+						}else if(ret && ret.errcode && ret.errcode==10000){
+							alert("商品超出限购数量,无法进行购买");
+						}else{
+							alert("网络异常,请稍后重试");
+						}
+					}
+				})
+				
+
+			});
+			
+			
+			
 			
 			
 		});

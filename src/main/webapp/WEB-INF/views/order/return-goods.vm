@@ -10,7 +10,7 @@
     <!-- css -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/reset.css" />
-    <link rel="stylesheet" href="/css/theme.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
     <!--[if (gte IE 6)&(lte IE 8)]>
     <link rel="stylesheet" href="/css/ie-8.css" />
     <![endif]-->
@@ -18,6 +18,8 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="/js/qiniu.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -27,6 +29,137 @@
     <![endif]-->
     <!-- title -->
     <title>申请退货</title>
+	
+	<script type="text/javascript">
+		function uuid() {
+			var s = [];
+			var hexDigits = "0123456789abcdef";
+			for (var i = 0; i < 36; i++) {
+				s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+			}
+			s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+			s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+			s[8] = s[13] = s[18] = s[23] = "-";
+			var uuid = s.join("");
+			return uuid;
+		}
+		$(function(){
+			$(".btn-register").click(function(){
+			
+				var returnReason = $("[name=returnReason]").val();
+				var refundFee = $(".refund-fee").val();
+				var returnDesc = $("[name=returnDesc]").val();
+				
+				if(refundFee.trim()==''){
+					alert("请填写退款金额！");
+					return;
+				}
+				
+				refundFee = parseFloat(refundFee);
+				if(isNaN(refundFee) || refundFee<=0){
+					alert("请填写合法的退款金额");
+					return;
+				}
+				
+				if(refundFee>$!{refundLimit}){
+					alert("您输入的金额超出退款金额");
+					return;
+				}
+				
+				console.log(returnReason+" "+refundFee+" "+returnDesc);
+				
+				$("input[name=refundFee]").val(refundFee.toFixed(2)*100);
+				
+				$("form").submit();
+				//location.href="/order/apply-return-goods?orderCode=$!{orderCode}&orderProductID=$!{orderProductID}&returnReason="+returnReason+"&refundFee="+$("input[name=refundFee]").val()+"&returnDesc="+returnDesc;
+				
+			});
+			var uptokan = "";
+			$.ajaxSetup({  
+				async : false 
+			});
+			$.get('/common/uptoken',function(result){uptoken = result});
+			console.log(uptoken);
+			var uploader = Qiniu.uploader({
+				runtimes: 'html5,flash,html4',
+				browse_button: 'pickfiles',
+				uptoken:uptoken,
+				container: 'container',
+				drop_element: 'container',
+				max_file_size: '100mb',
+				flash_swf_url: '/js/plupload/Moxie.swf',
+				dragdrop: true,
+				chunk_size: '3mb',
+				domain: 'http://7xrade.com2.z0.glb.qiniucdn.com',
+				auto_start: false,
+				init: {
+					'FilesAdded': function(up, files) {
+						console.log("sdfsfsdf");
+						var imgNum = $(".evaluate-img").length;
+						var upNum = files.length;
+						if(upNum+imgNum>3){
+							alert("最多只能上传3张图片");
+							for(var i=0;i<files.length;i++){
+								up.removeFile(files[i]);
+							}
+							return false;
+						}
+						up.start();
+					},
+					'BeforeUpload': function(up, file) {
+	//	                var progress = new FileProgress(file, 'fsUploadProgress');
+	//	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+	//	                if (up.runtime === 'html5' && chunk_size) {
+	//	                    progress.setChunkProgess(chunk_size);
+	//	                }
+					},
+					'UploadProgress': function(up, file) {
+	//	                var progress = new FileProgress(file, 'fsUploadProgress');
+	//	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+	//	                progress.setProgress(file.percent + "%", file.speed, chunk_size);
+					},
+					'UploadComplete': function() {
+						
+					},
+					'FileUploaded': function(up, file, info) {
+						
+						var domain = up.getOption('domain');
+						var res = $.parseJSON(info)
+						var imgPath = domain+"/"+res.key;
+						
+						if($(".evaluate-img").length==2){
+							$("#pickfiles").hide();
+						}
+						$.get('/common/imgPath',{'imgPath':imgPath},function(result){
+							$('.e-img').append('<span class="evaluate-img" style="position:relative;display:inline-block;margin-left:3px;width:80px;height:80px;vertical-align:middle;border:1px solid gray;"><img width="80" height="80" src="'+result+'"><a href="javascript:" style="position:absolute;right:-5px;top:-5px;" class="delete-pic"><img src="${link.contextPath}/images/Delete.png" style="width:15px;height:15px;"></a></span>');
+						})
+						
+						$('.imgPaths').append('<input type="hidden" name="imgs" value="'+res.key.replace(/return_img_/,'')+'"/>');
+						
+					},
+					'Error': function(up, err, errTip) {
+						alert("图片上传失败");
+					},
+					'Key': function(up, file) {
+						var key = 'return_img_'+new Date().getTime()+"_"+uuid()+"_"+file.name;
+						return key;
+					}
+				}
+			});
+			
+			$("#container").on("click",'.delete-pic',function(){
+				if(!$("#pickfiles").is("visible")){
+					$("#pickfiles").show();
+				}
+				var index = $(this).closest(".evaluate-img").index();
+				$(this).closest(".evaluate-img").remove();
+				$("input[name=imgs]:eq("+index+")").remove();
+				
+			});
+			
+			
+		});
+	</script>
 </head>
 <body>
     <!-- header -->
@@ -135,11 +268,13 @@
                                 <p>支付方式：$!{payChannel}</p>
                             </div>
                         </div>
-                        <div class="col-md-9">
-                            <form class="form"> 
+                        <div class="col-md-9" id="container">
+								<form action="/order/apply-return-goods" method="post">
+									<input type="hidden" name="orderCode" value="$!{orderCode}"/>
+									<input type="hidden" name="orderProductID" value="$!{orderProductID}"/>
                                 <div class="form-group">
                                     <label class="control-label">退款原因</label>
-                                    <select class="form-control">
+                                    <select class="form-control" name="returnReason">
                                         <option value="SEV">七天无理由退货</option>
 										<option value="DES">收到商品破损</option>
 										<option value="QUA">商品质量问题</option>
@@ -164,15 +299,18 @@
                                     <textarea class="form-control" name="returnDesc"></textarea>
                                 </div>
                                 <p>
-                                    上传凭证<span>(最多可上传5张)</span>
+                                    上传凭证<span>(最多可上传3张)</span>
                                 </p>
                                 <p>
-                                    <a href="javascript:;">
+									<span class="e-img"></span>
+                                    <a href="javascript:" id="pickfiles">
                                         <img src="/images/icon/assess.png" />
                                     </a>
-                                 </p>   
+									<div class="imgPaths" style="display:none;">
+									</div>
+                                </p>   
+								</form>
                                 <button class="btn btn-register">提交申请</button>   
-                            </form>
                         </div>
                     </div>
                 </div>
@@ -261,5 +399,6 @@
             </div>
         </div>
     </footer>
+	
 </body>
 </html>
