@@ -367,60 +367,14 @@
                             <div class="store">
                                 <h1>我的收藏</h1>
                                 <div class="owl-carousel jq-carousel">
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
+                                	#foreach($item in $productCollects)
+                                	<div class="owl-item">
+                                        <a href="/product/product_detail?productID=$item.productId">
+                                            <img src="$item.imgPath" />
                                         </a>
-                                        <p>￥389.00</p>
+                                        <p>￥$number.format("#0.00",$math.div($item.price,100))</p>
                                     </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
-                                    <div class="owl-item">
-                                        <a href="javascript:;">
-                                            <img src="/images/shoe/shoe-center.png" />
-                                        </a>
-                                        <p>￥389.00</p>
-                                    </div>
+                                	#end
                                 </div>
                             </div>
                         </div>    
