@@ -150,8 +150,8 @@
 								<tr class="status">
 									<td colspan="6" class="text-left">
 										<span>$!date.format("yyyy-MM-dd",$!{createTime})</span>
-										<span>订单编号：$!{childOrder.orderCode}</span>
-										<span>供应商：$!{childOrder.supName}</span>
+										<span>订单编号：$!{orderCode}</span>
+										<span>供应商：$!{supName}</span>
 									</td>
 								</tr>
 								#foreach($orderProduct in $childOrderProductVo)
