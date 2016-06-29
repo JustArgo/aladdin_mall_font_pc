@@ -21,6 +21,7 @@
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/theme.js"></script>
+    <script src="/js/echarts.min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -30,6 +31,100 @@
     <![endif]-->
     <!-- title -->
     <title>个人中心</title>
+    <script>
+    $(function(){
+    	var chart1 = echarts.init(document.getElementById('chart1'));
+    	// 指定图表的配置项和数据
+    	var option = {
+    		    title: {
+    		        text: '近5天我的销售收入'
+    		    },
+    		    tooltip: {
+    		        trigger: 'axis'
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis: {
+    		        type: 'category',
+    		        boundaryGap: false,
+    		        data: [
+    		               #foreach($item in $dailySales)
+    		               	'$item.dateMonth'#if($velocityCount!=$dailySales.size()),#end
+    		               #end
+    		               ]
+    		    },
+    		    yAxis: {
+    		    	type : 'value',
+    		    	axisLabel : {
+    		    		formatter: function(value){
+    		    			return value+"元";
+    		    		}
+    		    	}
+    		    },
+    		    series: [
+    		        {
+    		            name:'佣金',
+    		            type:'line',
+    		            stack: '总量',
+    		            data:[
+    		                  #foreach($item in $dailySales)
+    		                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
+    		                  #end
+    		                  ]
+    		        }
+    		    ]
+    		};
+        // 使用刚指定的配置项和数据显示图表。
+        chart1.setOption(option);
+        
+
+    	var chart2 = echarts.init(document.getElementById('chart2'));
+    	// 指定图表的配置项和数据
+        var option2 = {
+            title: {
+                text: '今日平台销售排行榜'
+            },
+            tooltip: {},
+            grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+            yAxis: {
+		    	type : 'value',
+		    	axisLabel : {
+		    		formatter: function(value){
+		    			return value+"元";
+		    		}
+		    	}
+		    },
+            xAxis: {
+                data: [
+                       #foreach($item in $dailyTopSales)
+	                  	'$!item.nickname'#if($velocityCount!=$dailySales.size()),#end
+	                   #end
+                       ]
+            },
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [
+                       #foreach($item in $dailyTopSales)
+	                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
+	                   #end
+                       ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        chart2.setOption(option2);
+    })
+    </script>
 </head>
 <body>
     <!-- header -->
@@ -200,16 +295,22 @@
                                         <img src="/images/person.png" />
                                     </a>
                                     <div class="fr">
-                                        <p>我一怒我把桌子一掀</p>
+                                        <p>$userInfo.nickname</p>
+                                        #if($userInfo.isGoldType==1)
                                         <a href="javascript:;">
                                             <i class="icon-gold"></i>金牌用户
                                         </a>
+                                        #end
+                                        #if($userInfo.isChannelType==1)
                                         <a href="javascript:;">
                                             <i class="icon-method"></i>渠道用户
                                         </a>
+                                        #end
+                                        #if($userInfo.isCashBackType==1)
                                         <a href="javascript:;">
                                             <i class="icon-return"></i>全返用户
                                         </a>
+                                        #end
                                     </div>
                                 </div>
                                 <div class="col-sm-3">
@@ -238,29 +339,29 @@
                                 </div>
                                 <div class="col-sm-3">
                                     <p>我的财富</p>
-                                    <p class="money">¥100.00</p>
+                                    <p class="money">¥$number.format("#0.00",$math.div($remainingSum,100))</p>
                                 </div>
                                 <div class="col-sm-3">
                                     <p>我的会员</p>
-                                    <p>15858</p>
+                                    <p>$countMemberAll</p>
                                 </div>
                             </div>
                             <div class="report">
                                 <div class="col-sm-6">
-                                    <h1>近5天我的销售收入</h1>
-                                    <div class="report-data">
+                                    <div id="chart1" style="width:450px;height:300px;"></div>
+                                    <!--<div class="report-data">
                                         <a href="javascript:;" class="left">
                                             <img src="/images/report/report-01.png" />
                                         </a>
-                                    </div>
+                                    </div>-->
                                 </div>
                                 <div class="col-sm-6">
-                                    <h1>今日平台销售排行榜</h1>
-                                    <div class="report-data">
+                                    <div id="chart2" style="width:450px;height:300px;"></div>
+                                    <!--<div class="report-data">
                                         <a href="javascript:;" class="right">
                                             <img src="/images/report/report-02.png" />
                                         </a>
-                                    </div>
+                                    </div>-->
                                 </div>
                             </div>
                             <div class="store">
