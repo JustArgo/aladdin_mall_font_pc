@@ -50,7 +50,7 @@ import com.mi360.aladdin.logistics.service.ILogisticsService;
 import com.mi360.aladdin.logistics.vo.LogisticsFormVo;
 import com.mi360.aladdin.logistics.vo.LogisticsInfoVo;
 import com.mi360.aladdin.mall.Principal;
-//import com.mi360.aladdin.mall.controller.BankCardController.AddType;
+import com.mi360.aladdin.mall.controller.BankCardController.AddType;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.mq.service.MqService;
@@ -148,7 +148,7 @@ public class OrderController {
 	public String placeOrder(String requestId, String orderCode, String payType, Integer[] skuIds, Integer[] buyNums, Long[] skuPrices, Long[] supplierAmounts,
 			Long pFee, Long pSum, String invoiceName, Integer invoiceID, Integer receaddID, String notes, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();;
 		String mqID = principal.getMqId();
 
 		if (skuIds != null) {
@@ -174,7 +174,9 @@ public class OrderController {
 
 		if (payType.equals(OrderPayment.PayChannel.WXP.toString())) {
 			return "redirect:wxPay?orderCode=" + orderCode;
-		} else if (payType.equals(OrderPayment.PayChannel.SUM.toString())) {
+		} else if(payType.equals(OrderPayment.PayChannel.WXS.toString())){
+			return "redirect:wxSPay?orderCode=" + orderCode;
+		}else if (payType.equals(OrderPayment.PayChannel.SUM.toString())) {
 			return "redirect:remainPay?orderCode=" + orderCode;
 		} else if(payType.equals(OrderPayment.PayChannel.UNI.toString())){
 			return "redirect:unionPay?orderCode=" + orderCode;
@@ -190,7 +192,7 @@ public class OrderController {
 		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
 		String mqID = principal.getMqId();
 
-		String openId = principal.getOpenId();
+		String openId = principal.getCardID();
 		logger.info("remainPay-->openId: " + openId);
 
 		try {
@@ -305,7 +307,7 @@ public class OrderController {
 
 		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String openID = principal.getOpenId();
+		String openID = principal.getCardID();
 
 		Map<String, String> unifiedOrderResult = new HashMap<String, String>();
 
@@ -348,6 +350,106 @@ public class OrderController {
 
 	}
 
+	/**
+	 * 微信扫码支付
+	 * 2016年6月29日
+	 */
+	@RequestMapping("wxSPay")
+	public String wxSPay(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		model.addAttribute("pSum",order.getpSum());
+		
+		if("CAN".equals(order.getOrderStatus())){
+			return "order/cancel";
+		}
+		if("COM".equals(order.getOrderStatus())){
+			return "order/com";
+		}
+		
+		Map<String,Object> content = orderService.getOrderStatus(requestId, orderCode);
+		
+		if(content!=null){
+			
+			MapData data = MapUtil.newInstance(dataDictionaryService.getBaseConfigByConfigKey(requestId, ConfigKey.order_close_time.getCode()));
+			MapData result = data.getResult();
+
+			Integer period_seconds = 60 * 60;
+
+			if (result != null) {
+				period_seconds = result.getInteger("configValue");
+				logger.info("period_seconds:" + period_seconds);
+			}
+			
+			Date createTime = order.getCreateTime();
+			if(System.currentTimeMillis()-createTime.getTime()>period_seconds*1000){
+				order.setOrderStatus("CAN");
+				orderService.updateOrder(order, requestId);
+				return "order/cancel";
+			}
+			
+			model.addAttribute("code_url",content.get("code_url"));
+			
+		}
+		
+		Map<String, String> parameters = new HashMap<String, String>();
+		
+		parameters.put("device_info", "WEB");
+		parameters.put("body", "扫码支付商品1");
+		parameters.put("detail", "扫码支付测试商品1");
+		parameters.put("out_trade_no", order.getOrderCode());
+		parameters.put("fee_type", "CNY");
+		parameters.put("total_fee", order.getpSum()+"");
+		parameters.put("spbill_create_ip", "120.76.112.96");
+		parameters.put("product_id", String.valueOf(System.currentTimeMillis()));
+		
+		Map<String,String> retMap = wxInteractionService.unifiedOrderNative(requestId, parameters);
+		logger.info("retMap:"+retMap);
+		
+		if("SUCCESS".equals(retMap.get("result_code")) && "SUCCESS".equals(retMap.get("return_code"))){
+			model.addAttribute("code_url",retMap.get("code_url"));
+			
+			orderService.saveOrderStatus(requestId, orderCode, retMap.get("code_url"), order.getCreateTime());
+			
+		}
+		
+		return "wechat/pay";
+		
+	}
+	
+	@RequestMapping("wxSPay-status")
+	@ResponseBody
+	public Map<String,Object> wxSPayStatus(String requestId, String orderCode){
+		
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		if(order!=null){
+			retMap.put("orderStatus", order.getOrderStatus());
+			retMap.put("payStatus", order.getPayStatus());
+		}
+		
+		return retMap;
+		
+	}
+	
+	@RequestMapping("/pay-success")
+	public String paySuccess(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		if(order!=null){
+			model.addAttribute("pSum",order.getpSum());
+		}
+		
+		return "order/pay-success";
+		
+	}
+	
 	@RequestMapping("/previewOrder")
 	public String previewOrder(String requestId, String orderCode, String mode, Integer[] skuIds, Integer[] buyNums, Integer receaddID, Model model,
 			HttpServletResponse response) {
@@ -1102,7 +1204,7 @@ public class OrderController {
 		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
 		// if(principal==null) principal=new Principal("2", "");
 		String mqID = principal.getMqId();
-		String openId = principal.getOpenId();
+		String openId = principal.getCardID();
 
 		try {
 
@@ -1234,7 +1336,7 @@ public class OrderController {
 
 		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
 		String mqID = principal.getMqId();
-		String openId = principal.getOpenId();
+		String openId = principal.getCardID();
 
 		MoneyReturn moneyReturn = orderService.applyReturnMoney(mqID, orderCode, refundFee, returnReason, returnDesc, requestId);
 
@@ -1668,7 +1770,7 @@ public class OrderController {
 
 			childOrderMap.put("supName", orderProductList.get(0).getSupName());
 			childOrderMap.put("orderCode", order.getOrderCode());
-			childOrderMap.put("childOrdreProductVo", childOrderProductVo);
+			childOrderMap.put("childOrderProductVo", childOrderProductVo);
 
 			childOrderVo.add(childOrderMap);
 			model.addAttribute("childOrderVo", childOrderVo);
@@ -1717,7 +1819,9 @@ public class OrderController {
 
 			childOrderMap.put("supName", orderProductList.get(0).getSupName());
 			childOrderMap.put("orderCode", childOrder.getOrderCode());
-			childOrderMap.put("childOrdreProductVo", childOrderProductVo);
+			childOrderMap.put("childOrderProductVo", childOrderProductVo);
+			childOrderMap.put("orderSum", childOrder.getOrderSum());
+			childOrderMap.put("postFee", childOrder.getPostFee());
 
 			childOrderVo.add(childOrderMap);
 		}
@@ -1812,6 +1916,205 @@ public class OrderController {
 		model.addAttribute("childOrderProductVo",childOrderProductVo);
 		
 		return "order/order-detail-yfh";
+		
+	}
+	
+	@RequestMapping("/order-detail-can")
+	public String orderDetailCan(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		String recName = order.getRecName();
+		String recMobile = order.getRecMobile();
+		String address = StringUtils.defaultString(order.getProvince(), "") + StringUtils.defaultString(order.getCity(), "")
+				+ StringUtils.defaultString(order.getDistrict(), "") + StringUtils.defaultString(order.getAddress(), "");
+
+		if (orderPayment != null) {
+			model.addAttribute("payChannel", OrderPayment.PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("payTime", orderPayment.getPayTime());
+		}
+		model.addAttribute("recName", recName);
+		model.addAttribute("recMobile", recMobile);
+		model.addAttribute("address", address);
+		
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		//发票抬头
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		List<OrderProduct> orderProductList = orderProductService.getOrderProductByOrderID(order.getID(), requestId);
+		List<Map<String,Object>> childOrderProductVo = new ArrayList<Map<String,Object>>(); 
+		if(orderProductList!=null && orderProductList.size()>0){
+			model.addAttribute("supName",orderProductList.get(0).getSupName());
+		}
+		for(OrderProduct op:orderProductList){
+			Map<String, Object> orderProductMap = new HashMap<String, Object>();
+			ProductSku sku = productSkuService.getSkuByID(op.getSkuID(), requestId);
+			orderProductMap.put("skuImg", QiNiuUtil.getDownloadUrl(sku.getSkuImg()));
+			orderProductMap.put("productName", op.getProductName());
+			orderProductMap.put("skuPrice", op.getSellPrice());
+			List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+			orderProductMap.put("skuStrs", skuStrs);
+			orderProductMap.put("productID", sku.getProductID());
+			orderProductMap.put("buyNum", op.getBuyNum());
+			childOrderProductVo.add(orderProductMap);
+		}
+		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		return "order/order-detail-can";
+		
+	}
+	
+	@RequestMapping("/order-detail-com")
+	public String orderDetailCom(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		String recName = order.getRecName();
+		String recMobile = order.getRecMobile();
+		String address = StringUtils.defaultString(order.getProvince(), "") + StringUtils.defaultString(order.getCity(), "")
+				+ StringUtils.defaultString(order.getDistrict(), "") + StringUtils.defaultString(order.getAddress(), "");
+
+		if (orderPayment != null) {
+			model.addAttribute("payChannel", OrderPayment.PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("payTime", orderPayment.getPayTime());
+		}
+		model.addAttribute("recName", recName);
+		model.addAttribute("recMobile", recMobile);
+		model.addAttribute("address", address);
+		
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		//发票抬头
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		List<OrderProduct> orderProductList = orderProductService.getOrderProductByOrderID(order.getID(), requestId);
+		List<Map<String,Object>> childOrderProductVo = new ArrayList<Map<String,Object>>(); 
+		if(orderProductList!=null && orderProductList.size()>0){
+			model.addAttribute("supName",orderProductList.get(0).getSupName());
+		}
+		for(OrderProduct op:orderProductList){
+			Map<String, Object> orderProductMap = new HashMap<String, Object>();
+			ProductSku sku = productSkuService.getSkuByID(op.getSkuID(), requestId);
+			orderProductMap.put("skuImg", QiNiuUtil.getDownloadUrl(sku.getSkuImg()));
+			orderProductMap.put("productName", op.getProductName());
+			orderProductMap.put("skuPrice", op.getSellPrice());
+			List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+			orderProductMap.put("skuStrs", skuStrs);
+			orderProductMap.put("productID", sku.getProductID());
+			orderProductMap.put("buyNum", op.getBuyNum());
+			childOrderProductVo.add(orderProductMap);
+		}
+		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		return "order/order-detail-com";
+		
+	}
+	
+	@RequestMapping("/order-detail-dfh")
+	public String orderDetailDfh(String requestId, String orderCode, Model model){
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		String recName = order.getRecName();
+		String recMobile = order.getRecMobile();
+		String address = StringUtils.defaultString(order.getProvince(), "") + StringUtils.defaultString(order.getCity(), "")
+				+ StringUtils.defaultString(order.getDistrict(), "") + StringUtils.defaultString(order.getAddress(), "");
+
+		if (orderPayment != null) {
+			model.addAttribute("payChannel", OrderPayment.PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("payTime", orderPayment.getPayTime());
+		}
+		model.addAttribute("recName", recName);
+		model.addAttribute("recMobile", recMobile);
+		model.addAttribute("address", address);
+		
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		//发票抬头
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		List<OrderProduct> orderProductList = orderProductService.getOrderProductByOrderID(order.getID(), requestId);
+		List<Map<String,Object>> childOrderProductVo = new ArrayList<Map<String,Object>>(); 
+		if(orderProductList!=null && orderProductList.size()>0){
+			model.addAttribute("supName",orderProductList.get(0).getSupName());
+		}
+		for(OrderProduct op:orderProductList){
+			Map<String, Object> orderProductMap = new HashMap<String, Object>();
+			ProductSku sku = productSkuService.getSkuByID(op.getSkuID(), requestId);
+			orderProductMap.put("skuImg", QiNiuUtil.getDownloadUrl(sku.getSkuImg()));
+			orderProductMap.put("productName", op.getProductName());
+			orderProductMap.put("skuPrice", op.getSellPrice());
+			List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+			orderProductMap.put("skuStrs", skuStrs);
+			orderProductMap.put("productID", sku.getProductID());
+			orderProductMap.put("buyNum", op.getBuyNum());
+			childOrderProductVo.add(orderProductMap);
+		}
+		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		return "order/order-detail-dfh";
+		
+	}
+	
+	@RequestMapping("/order-detail-dpl")
+	public String orderDetailDpl(String requestId, Integer orderID, Integer orderProductID, Model model){
+		
+		Order order = orderService.getOrderByID(orderID, requestId);
+		
+		model.addAttribute("orderCode",order.getOrderCode());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		String recName = order.getRecName();
+		String recMobile = order.getRecMobile();
+		String address = StringUtils.defaultString(order.getProvince(), "") + StringUtils.defaultString(order.getCity(), "")
+				+ StringUtils.defaultString(order.getDistrict(), "") + StringUtils.defaultString(order.getAddress(), "");
+
+		if (orderPayment != null) {
+			model.addAttribute("payChannel", OrderPayment.PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("payTime", orderPayment.getPayTime());
+		}
+		model.addAttribute("recName", recName);
+		model.addAttribute("recMobile", recMobile);
+		model.addAttribute("address", address);
+		
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("postFee",order.getPostFee());
+		
+		//发票抬头
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderProduct orderProduct = orderProductService.getOrderProductByID(orderProductID, requestId);
+		
+		List<Map<String,Object>> childOrderProductVo = new ArrayList<Map<String,Object>>(); 
+		if(orderProduct!=null){
+			model.addAttribute("supName",orderProduct.getSupName());
+		}
+		Map<String, Object> orderProductMap = new HashMap<String, Object>();
+		ProductSku sku = productSkuService.getSkuByID(orderProduct.getSkuID(), requestId);
+		orderProductMap.put("skuImg", QiNiuUtil.getDownloadUrl(sku.getSkuImg()));
+		orderProductMap.put("productName", orderProduct.getProductName());
+		orderProductMap.put("skuPrice", orderProduct.getSellPrice());
+		List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
+		orderProductMap.put("skuStrs", skuStrs);
+		orderProductMap.put("productID", sku.getProductID());
+		orderProductMap.put("buyNum", orderProduct.getBuyNum());
+		childOrderProductVo.add(orderProductMap);
+		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		return "order/order-detail-dpl";
 		
 	}
 	
@@ -2483,6 +2786,11 @@ public class OrderController {
 		// 1 查找出所有的订单商品
 		List<Map<String, Object>> childOrderList = orderService.getOrderListByMqID(mqID, pageIndex, DEFAULT_PAGE_SIZE, requestId);
 		for (int i = 0; i < childOrderList.size(); i++) {
+			
+			if(childOrderList.get(i).get("status").equals("DFK")){
+				childOrderList.get(i).put("remainTime", remainTime((Date) childOrderList.get(i).get("createTime"), requestId));
+			}
+			
 			List<Map<String, Object>> orderProductList = (List<Map<String, Object>>) childOrderList.get(i).get("orderProductList");
 			for (int j = 0; j < orderProductList.size(); j++) {
 				orderProductList.get(j).put("skuImg", QiNiuUtil.getDownloadUrl((String) (orderProductList.get(j).get("skuImg"))));
