@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>个人信息</title>
+    <script>
+    $(function(){
+    	 var submit1Able=true;
+    	 $('#submit1').click(function(){
+    		 if(submit1Able){
+    			 submit1Able=false;
+    			 var r=confirm("确定修改个人信息？")
+    			 if (r==true){
+    				 var sexs=$('input[name="sex"]');
+    				 var sex;
+    				 for(var i=0;i<sexs.length;i++){
+    					 if(sexs[i].checked==true){
+    						 sex=sexs[i].value;
+    					 }
+    				 }
+    				 var nickname=$('#nickname').val();
+    				 if(nickname==''){
+    					 alert("昵称不能为空");
+    					 submit1Able=true;
+    					 return;
+    				 }
+    				 $.ajax({ 
+         				url: 'save/info',
+         				data:{sex:sex,nickname:nickname},
+         				type:"post",
+         				success: function(data){
+         					if('success'==data){
+         						location.href="/user/info";
+         					}else if('error'==data){
+         						$('#chgImg').click();
+             					alert('系统繁忙，请稍后再试');
+             					submit1Able=true;
+         					}
+         				},
+         				error:function(){
+         					alert('系统繁忙，请稍后再试');
+         					submit1Able=true;
+         				}
+         			});
+    			 }else{
+    				 submit1Able=true;
+    			 }
+    		 }
+    	 })
+    	 
+    	 
+    	 var submit2Able=true;
+    	 $('#submit2').click(function(){
+    		 if(submit2Able){
+    			 submit2Able=false;
+    		 }
+    		 var r=confirm("确定修改登录密码？")
+			 if (r==true){
+				 var prePassword=$('#prePassword').val();
+				 var password=$('#password').val();
+				 var rePassword=$('#rePassword').val();
+				 if(prePassword==''){
+					 alert('请输入原始登陆密码');
+			    	 var submit2Able=true;
+					 return;
+				 }
+				 if(password==''){
+					 alert('请输入新登陆密码');
+			    	 var submit2Able=true;
+					 return;
+				 }
+				 if(!/^[\w\d]{5,20}$/.test(password)){
+					 alert('密码长度只能在5-20个字符之间');
+					 var submit2Able=true;
+					 return;
+				 }
+				 if(rePassword!=password){
+					 alert('两次输入密码不一致');
+			    	 var submit2Able=true;
+					 return;
+				 }
+				 $.ajax({ 
+     				url: 'save/loginPassword',
+     				data:{prePassword:prePassword,password:password},
+     				type:"post",
+     				success: function(data){
+     					if('success'==data){
+     						alert('修改成功');
+     						location.href="/user/info";
+     					}else if("wrong"==data){
+     						alert('原始登陆密码错误');
+         					submit2Able=true;
+     					}else if("wrong_tree_times"==data){
+     						alert('连续错误三次，请于24小时后重试');
+         					submit2Able=true;
+     					}else if('error'==data){
+         					alert('系统繁忙，请稍后再试');
+         					submit2Able=true;
+     					}
+     				},
+     				error:function(){
+     					alert('系统繁忙，请稍后再试');
+     					submit2Able=true;
+     				}
+     			});
+			 }else{
+				 submit2Able=true;
+			 }
+    	 })
+    	 
+    	 
+    	 
+    	 var submit3Able=true;
+    	 $('#submit3').click(function(){
+    		 if(submit3Able){
+    			 submit3Able=false;
+    		 }
+    		 var r=confirm("确定修改登录密码？")
+			 if (r==true){
+				 var prePaymentPassword=$('#prePaymentPassword').val();
+				 var paymentPassword=$('#paymentPassword').val();
+				 var rePaymentPassword=$('#rePaymentPassword').val();
+				 if(prePaymentPassword==''){
+					 alert('请输入原始支付密码');
+			    	 var submit3Able=true;
+					 return;
+				 }
+				 if(paymentPassword==''){
+					 alert('请输入新支付密码');
+			    	 var submit3Able=true;
+					 return;
+				 }
+				 if(!/^[\w\d]{5,20}$/.test(paymentPassword)){
+					 alert('密码长度只能在5-20个字符之间');
+					 var submit3Able=true;
+					 return;
+				 }
+				 if(rePaymentPassword!=paymentPassword){
+					 alert('两次输入密码不一致');
+			    	 var submit3Able=true;
+					 return;
+				 }
+				 $.ajax({ 
+     				url: 'save/paymentPassword',
+     				data:{prePaymentPassword:prePaymentPassword,paymentPassword:paymentPassword},
+     				type:"post",
+     				success: function(data){
+     					if('success'==data){
+     						alert('修改成功');
+     						location.href="/user/info";
+     					}else if("wrong"==data){
+     						alert('原始支付密码错误');
+         					submit3Able=true;
+     					}else if("wrong_tree_times"==data){
+     						alert('连续错误三次，请于24小时后重试');
+         					submit3Able=true;
+     					}else if('error'==data){
+         					alert('系统繁忙，请稍后再试');
+         					submit3Able=true;
+     					}
+     				},
+     				error:function(){
+     					alert('系统繁忙，请稍后再试');
+     					submit3Able=true;
+     				}
+     			});
+			 }else{
+				 submit3Able=true;
+			 }
+    	 })
+    })
+    </script>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="javascript:;">账户中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person.html">我的账户</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person-info.html" class="active">个人信息</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="level.html">会员等级</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="address.html">收货地址</a>
+                                </li class="sub">
+                                <li class="sub">
+                                    <a href="my-card.html">我的银行卡</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-sales.html">我的销售</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="alipay-binding.html">我要提现</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-code.html">我要推广</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="javascript:;">订单中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-order.html">我的订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">团购订单</a>
+                                </li>
+                                <li liclass="sub">
+                                    <a href="javascript:;" >砍价订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">一元购订单</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="advertise.html">参与活动</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">我的团购</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">我的一元购</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="wealth.html">我的财富</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="my-team.html">我的团队</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="collection.html">我的收藏</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content alipay-content">
+                            <div class="title nav-tabs">
+                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont">个人资料</a>
+                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont">修改登录密码</a>
+                                <a href="javascript:;" data-href="#page-3" class="jq-tabCont">修改支付密码</a>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="page-1">
+                                    <div class="alipay">
+                                        <div class="person-message">
+                                            <form class="form">
+                                                <div class="form-group">
+                                                    <label class="control-label">当前头像：</label>
+                                                    <a href="javascript:;">
+                                                        <img src="$userInfo.headImage" />
+                                                    </a>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">昵称：</label>
+                                                    <input type="text" value="$userInfo.nickname" id="nickname" class="form-control" #if($userInfo.userSource=="WdX#")disabled#end/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">性别：</label>
+                                                    <input type="radio" name="sex" value="1" #if($userInfo.userSource=="WdX#")disabled#end #if($userInfo.sex==1)checked="true"#end/>男
+                                                    <input type="radio" name="sex" value="0" #if($userInfo.userSource=="WdX#")disabled#end #if($userInfo.sex==0)checked="true"#end/>女
+                                                </div>
+                                                <button type="button" id="submit1"  #if($userInfo.userSource=="WdX#")disabled#end class="btn btn-save">保存</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="page-2">
+                                    <div class="modify">
+                                        <div class="form-box">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label class="control-label">原登录密码:</label>
+                                                    <input type="password" id="prePassword" class="form-control" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">新登录密码:</label>
+                                                    <input type="password"  id="password" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">重复新密码:</label>
+                                                    <input type="password"  id="rePassword" class="form-control">
+                                                </div>
+                                                <button type="button" id="submit2" class="btn btn-modify">保存</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="page-3">
+                                    <div class="modify">
+                                        <div class="form-box">
+                                            <form>
+                                                <div class="form-group">
+                                                    <label class="control-label">原支付密码:</label>
+                                                    <input type="password"  id="prePaymentPassword" class="form-control" />
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">新支付密码:</label>
+                                                    <input type="password"  id="paymentPassword" class="form-control">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">重复新密码:</label>
+                                                    <input type="password"  id="rePaymentPassword" class="form-control">
+                                                </div>
+                                                <button type="button" id="submit3" class="btn btn-modify">保存</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
