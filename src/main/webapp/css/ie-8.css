@@ -1,0 +1,71 @@
+@charset "UTF-8";
+
+.banner-bar .banner .side-area {
+    padding-top: 7px;
+    background-color: #f6f8f7;
+}
+.assessment .upload-image .top span {
+    margin-right: 10px;
+}
+.assessment .upload-image .bottom span {
+    margin-right: 0;
+}
+.banner .category-list {
+    padding: 7px 0;
+    background-color: #333333;
+}
+.banner .category-list > li a {
+    padding: 10px 0;
+}
+.banner .col-md-2 .side-area {
+	padding-top: 0;
+}
+.banner .col-md-2 .side-area > li img {
+  	width: auto;
+  	height: 94px;
+}
+.banner .col-md-2 .side-area > li {
+	padding: 0 10px;
+}
+.category-bar .category .col-md-2 p:first-child {
+  	padding-bottom: 15px;
+}
+.category-bar .category.list .addToCart {
+	margin-right: 8px;
+}
+.main .list .wealth .head .fl img {
+  	width: auto;
+  	height: 75px;
+}
+.cart .table-hover > tbody > td:hover {
+	border-right: 1px solid #ccc;
+}
+.cart .row.bottom .pull-right p:nth-child(2) {
+  	width: 780px;
+}
+.cart .row.bottom .pull-right p:nth-child(2) a:last-child {
+	margin-right: 0;
+}
+.cartbar .cart .table tbody td .num {
+  	height: 32px;
+  	line-height: 32px;
+}
+.main .list .content .recommend-list > li {
+  	margin-right: 30px;
+}
+.product-bar .prod-detail .silder-list > li img {
+  width: auto;
+  height: 70px;
+}
+.content .weichat-img .fl a:first-child img {
+  width: auto;
+  height: 260px;
+}
+.content .weichat-img .fl a:last-child img {
+  width: auto;
+  height: 58px;
+}
+.content .weichat-img .fr a img {
+  width: auto;
+  height: 356px;
+}

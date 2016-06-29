@@ -245,21 +245,22 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														<td>$!{orderProduct.buyNum}</td>
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																已完成
-																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+																<a href="/order/order-detail-com?orderCode=$childOrder.orderCode">订单详情</a>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																
@@ -288,21 +289,22 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														<td>$!{orderProduct.buyNum}</td>
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																已取消
-																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+																<a href="/order/order-detail-can?orderCode=$childOrder.orderCode">订单详情</a>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																
@@ -333,17 +335,18 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														<td>$!{orderProduct.buyNum}</td>
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																待付款
@@ -377,24 +380,25 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																待发货
-																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+																<a href="/order/order-detail-dfh?orderCode=$childOrder.orderCode">订单详情</a>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																<a href="/order/return-money?orderCode=$childOrder.orderCode" class="pay-money">退款</a>
@@ -425,20 +429,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																退款审核中
@@ -471,20 +476,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																退款中
@@ -517,20 +523,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																退款审核不通过
@@ -563,20 +570,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																退款成功
@@ -609,20 +617,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																退款失败
@@ -656,29 +665,28 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
-														
 														#if($velocityCount==1)
-															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
-															</td>
-															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																$!{orderProduct.statuStr}
-																<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
-															</td>
-															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
-															</td>
+														<td rowspan="$childOrder.orderProductList.size()" class="status">
+															<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+															<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
+														</td>
 														#end
+														<td class="status">
+															$!{orderProduct.statuStr}
+														</td>
+														<td class="status">
+															<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
+														</td>
 													</tr>
 												#end
 											#end
@@ -702,20 +710,21 @@
 																	<a href="javascript:;">$!{orderProduct.productName}</a>
 																</p>
 																<p>
-																	<span>颜色：墨蓝</span>
-																	<span>尺寸：XL</span>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																	#end
 																</p>
 															</div>
 														</td>
 														
-														<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+														<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 														
 														<td>$!{orderProduct.buyNum}</td>
 														
 														#if($velocityCount==1)
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-																<p>（含运费¥$!{childOrder.orderSum}）</p>
+																<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																已发货
@@ -763,21 +772,22 @@
 																<a href="javascript:;">$!{orderProduct.productName}</a>
 															</p>
 															<p>
-																<span>颜色：墨蓝</span>
-																<span>尺寸：XL</span>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																#end
 															</p>
 														</div>
 													</td>
-													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 													<td>$!{orderProduct.buyNum}</td>
 													#if($velocityCount==1)
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
-															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-															<p>（含运费¥$!{childOrder.orderSum}）</p>
+															<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+																<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 														</td>
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
 															待付款
-															<a href="/order/order-detail?orderCode=$childOrder.parentCode">订单详情</a>
+															<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
 															<a href="/order/cancel?orderCode=${childOrder.orderCode}">取消订单</a>
 														</td>
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
@@ -816,21 +826,22 @@
 																<a href="javascript:;">$!{orderProduct.productName}</a>
 															</p>
 															<p>
-																<span>颜色：墨蓝</span>
-																<span>尺寸：XL</span>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																#end
 															</p>
 														</div>
 													</td>
-													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 													<td>$!{orderProduct.buyNum}</td>
 													#if($velocityCount==1)
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
-															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-															<p>（含运费¥$!{childOrder.orderSum}）</p>
+															<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+															<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 														</td>
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
 															待发货
-															<a href="/order/order-detail?orderCode=$childOrder.orderCode">订单详情</a>
+															<a href="/order/order-detail-dfh?orderCode=$childOrder.orderCode">订单详情</a>
 														</td>
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
 															<a href="/order/return-money?orderCode=$childOrder.orderCode" class="pay-money">退款</a>
@@ -863,6 +874,11 @@
 															<p>
 																<a href="javascript:;">$!{waitForComment.productName}</a>
 															</p>
+															<p>
+																#foreach($skuStr in $waitForComment.skuStrs)
+																		<span>$skuStr</span>
+																#end
+															</p>
 														</div>
 													</td>
 													<td>¥$!number.format("#0.00",$math.div($!{waitForComment.sellPrice},100))</td>
@@ -872,7 +888,7 @@
 													</td>
 													<td class="status">
 														待评价
-														<a href="/order/order-detail?orderID=$waitForComment.childOrderID">订单详情</a>
+														<a href="/order/order-detail-dpl?orderID=$waitForComment.childOrderID&orderProductID=$waitForComment.orderProductID">订单详情</a>
 													</td>
 													<td class="status">
 														<a href="/order/evaluate-index?orderProductID=$waitForComment.orderProductID" class="pay-money">评价</a>
@@ -906,17 +922,18 @@
 																<a href="javascript:;">$!{orderProduct.productName}</a>
 															</p>
 															<p>
-																<span>颜色：墨蓝</span>
-																<span>尺寸：XL</span>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																#end
 															</p>
 														</div>
 													</td>
-													<td>¥$!number.format("#0.00",$!{orderProduct.skuPrice})</td>
+													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
 													<td>$!{orderProduct.buyNum}</td>
 													#if($velocityCount==1)
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
-															<p>¥$number.format("#0.00",$math.mul($!{orderProduct.skuPrice},$!{orderProduct.buyNum}))</p>
-															<p>（含运费¥$!{childOrder.orderSum}）</p>
+															<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+															<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
 														</td>
 														<td rowspan="$childOrder.orderProductList.size()" class="status">
 															#if($childOrder.status=='STK')
@@ -959,8 +976,9 @@
 																<a href="javascript:;">$!{orderProduct.productName}</a>
 															</p>
 															<p>
-																<span>颜色：墨蓝</span>
-																<span>尺寸：XL</span>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																#end
 															</p>
 														</div>
 													</td>

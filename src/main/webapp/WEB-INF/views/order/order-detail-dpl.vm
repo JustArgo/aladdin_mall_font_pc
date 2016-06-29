@@ -95,11 +95,11 @@
                     <div class="col-md-4">
                         <h3 class="title">订单信息</h3>
                         <div class="order-status">
-                            <p>收货地址：Leroy  18023499634 龙华新区万科金域华府一期 9栋615</p>
-                            <p>订单编号：xxxxxxxxxxxx</p>
-                            <p>成交时间：2016-5-28  16:30</p>
-                            <p>发票抬头：-</p>
-                            <p>支付方式：支付宝/微信</p>
+                            <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
+                            <p>订单编号：$!{orderCode}</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{createTime})</p>
+                            <p>发票抬头：$!{invoiceName}</p>
+                            <p>支付方式：$!{payChannel}</p>
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -132,25 +132,27 @@
                             </tr>
                         </thead>
                         <tbody>
+							#foreach($orderProduct in $childOrderProductVo)
                             <tr>
                                 <td class="text-left">
                                     <a href="javascript:;" class="fl">
-                                        <img src="/images/shoe/shoe.png" />
+                                        <img src="$!qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
                                     </a>
                                     <div class="fr">
                                         <p>
-                                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款大码第三方公司的方式 墨蓝  XL</a>
+                                            <a href="javascript:;">$!{orderProduct.productName}</a>
                                         </p>
                                         <p>
-                                            <span>颜色：墨蓝</span>
-                                            <span>尺寸：XL</span>
+                                            #foreach($skuStr in $orderProduct.skuStrs)
+												<span>$skuStr</span>
+											#end
                                         </p>
                                     </div>
                                 </td>
-                                <td>¥88.00</td>
-                                <td>1</td>
+                                <td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
+                                <td>$!{orderProduct.buyNum}</td>
                                 <td class="status">
-                                    <p>¥88.00</p>
+                                    <p>¥$!number.format("#0.00",$math.mul($!{orderProduct.buyNum},$!math.div($!{orderProduct.skuPrice},100)))</p>
                                     <p>（含运费¥0.00）</p>
                                 </td>
                                 <td>待评价</td>
@@ -159,10 +161,11 @@
                             <tr class="order-bottom">
                                 <td colspan="6">
                                     <div class="pull-right">
-                                        <p>实付款（含运费）：¥176.00</p>
+                                        <p>实付款（含运费）：¥$!number.format("#0.00",$math.mul($!{orderProduct.buyNum},$!math.div($!{orderProduct.skuPrice},100)))</p>
                                     </div>
                                 </td>
                             </tr>
+							#end
                         </tbody>
                     </table>
                 </div>

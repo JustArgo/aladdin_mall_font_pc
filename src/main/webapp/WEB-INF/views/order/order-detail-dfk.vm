@@ -178,13 +178,15 @@
 												</td>
 												<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
 												<td>$!{orderProduct.buyNum}</td>
-												#set($size = $childOrder.childOrdreProductVo.size)
-												<td rowspan="$size">
-													<p>¥$!number.format("#0.00",$math.mul($!math.div($!{orderProduct.skuPrice},100),$!{orderProduct.buyNum}))</p>
-													<p>（含运费¥0.00）</p>
-												</td>
-												<td rowspan="$size">待付款</td>
-												<td rowspan="$size">￥0.00</td>
+												#if($velocityCount==1)
+													#set($size = $childOrder.childOrdreProductVo.size)
+													<td rowspan="$size">
+														<p>¥$!number.format("#0.00",$!math.div($!{pSum},100))</p>
+														<p>（含运费¥$!number.format("#0.00",$math.div($!{pFee},100))）</p>
+													</td>
+													<td rowspan="$size">待付款</td>
+													<td rowspan="$size">￥$!number.format("#0.00",$math.div($!{pFee},100))</td>
+												#end
 											</tr>
 										#end
 									</tbody>

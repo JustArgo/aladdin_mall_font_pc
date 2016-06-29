@@ -97,7 +97,7 @@
                         <div class="order-status">
                             <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
                             <p>订单编号：$!{orderCode}</p>
-                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{createTime})</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
                             <p>发票抬头：$!{invoiceName}</p>
                             <p>支付方式：$!{payChannel}</p>
                         </div>
@@ -130,8 +130,7 @@
                             </tr>
                         </thead>
                         <tbody>
-							#foreach($childOrder in $childOrderVo)
-								#foreach($orderProduct in $childOrder.childOrdreProductVo)
+								#foreach($orderProduct in $childOrderProductVo)
 									<tr>
 										<td class="text-left">
 											<a href="javascript:;" class="fl">
@@ -150,16 +149,18 @@
 										</td>
 										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
 										<td>$!{orderProduct.buyNum}</td>
-										#set($size = $childOrder.childOrdreProductVo.size)
-										<td rowspan="$size">
-											<p>¥$!number.format("#0.00",$math.mul($!math.div($!{orderProduct.skuPrice},100),$!{orderProduct.buyNum}))</p>
-											<p>（含运费¥0.00）</p>
-										</td>
-										<td rowspan="$size">已取消</td>
-										<td rowspan="$size">￥0.00</td>
+										#if($velocityCount==1)
+											#set($size = $childOrder.childOrdreProductVo.size)
+											<td rowspan="$size">
+												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
+												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee},100))）</p>
+											</td>
+											<td rowspan="$size">已取消</td>
+											<td rowspan="$size">￥$!number.format("#0.00",$math.div($!{postFee},100))</td>
+										#end
 									</tr>
 								#end
-							#end
+							
                         </tbody>
                     </table>
                 </div>

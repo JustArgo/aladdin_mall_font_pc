@@ -40,11 +40,11 @@ public class ClientInterceptor extends HandlerInterceptorAdapter {
 
 		boolean isWx = ua.indexOf("micromessenger") > 0;// 是否微信浏览器
 
-		Principal principal = WebUtil.getCurrentPrincipal();
-		if (principal == null) {
+		SessionUserAuthInfo sessionUserAuthInfo = WebUtil.getCurrentSessionUserAuthInfo();
+		if (sessionUserAuthInfo == null) {
 			
 			
-			SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
+			sessionUserAuthInfo=new SessionUserAuthInfo();
 			sessionUserAuthInfo.setUserId(342);
 			sessionUserAuthInfo.setMqId("d9afefcc54ec4a2ca6ca099e8cbd2413");
 			sessionUserAuthInfo.setLuckNum(100000342);
