@@ -375,17 +375,17 @@ public class BankCardController {
 //		
 //	}
 //	
-//	/**
-//	 * 添加银行卡行为
-//	 * @author hsf
-//	 *
-//	 */
-//	public enum AddType{
-//		/**支付*/
-//		pay,
-//		/**添加*/
-//		add,
-//		/**提现*/
-//		withDraw;
-//	}
+	/**
+	 * 添加银行卡行为
+	 * @author hsf
+	 *
+	 */
+	public enum AddType{
+		/**支付*/
+		pay,
+		/**添加*/
+		add,
+		/**提现*/
+		withDraw;
+	}
 }

@@ -307,4 +307,27 @@ public class StoreController {
 //		
 //	}
 //	
+//	/**
+//	 * 店铺浏览
+//	 */
+//	@RequestMapping("/browse")
+//	public String browse(String requestId, Model model){
+//		
+//		Principal principal = WebUtil.getCurrentPrincipal();
+//		String mqId = principal.getMqId();
+//		
+//		Map<String,Object> storeMap = storeService.getStore(requestId, mqId);
+//		if((Integer)storeMap.get("errcode")==0){
+//			model.addAttribute("store",storeMap.get("result"));
+//		}
+//		
+//		Map<String,Object> productsMap = storeService.getProductInStore(requestId, mqId, 0, 12);
+//		if((Integer)productsMap.get("errcode")==0){
+//			model.addAttribute("productList",productsMap.get("result"));
+//		}
+//		
+//		return "store/store-browse";
+//		
+//	}
+	
 }

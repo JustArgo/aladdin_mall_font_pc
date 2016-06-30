@@ -126,7 +126,7 @@
                                 </td>
                                 <td class="text-left">
                                     <a href="javascript:;" class="fl">
-                                        <img src="$qiniu.getDownloadUrl(${shopCarProducts.imgPath})" />
+                                        <img src="$qiniu.getDownloadUrl(${shopCarProducts.imgPath})" style="width:121px;height:120px;"/>
                                     </a>
                                     <div class="fr">
                                         <p>

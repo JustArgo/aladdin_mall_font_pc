@@ -113,6 +113,6 @@
 	<dubbo:reference id="smsCodeVerifyService" interface="com.mi360.aladdin.message.sms.service.SmsCodeVerifyService"/>
 	
 	<dubbo:reference id="storeService" interface="com.mi360.aladdin.store.service.IStoreService"/> 
-	 
+	
 </beans>	
 	
