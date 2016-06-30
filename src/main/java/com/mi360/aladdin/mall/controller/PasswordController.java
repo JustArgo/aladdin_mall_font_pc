@@ -53,7 +53,7 @@ public class PasswordController {
 	}
 
 	/**
-	 * 验证用户名
+	 * 找回登陆密码 - 验证用户名
 	 * 
 	 * @param username
 	 *            用户名
@@ -90,13 +90,12 @@ public class PasswordController {
 	}
 
 	/**
-	 * 验证身份页面
+	 * 找回登陆密码 - 验证身份页面
 	 * 
 	 * @param username
 	 *            用户名
 	 * @param value
 	 *            密匙
-	 * @throws Exception
 	 */
 	@RequestMapping("/find/vertify")
 	public String vertify(String requestId, ModelMap modelMap) throws Exception {
@@ -145,6 +144,9 @@ public class PasswordController {
 		}
 	}
 
+	/**
+	 * 找回登陆密码 - 发送找回登陆密码短信验证
+	 */
 	@RequestMapping("/find/sms")
 	@ResponseBody
 	public String sms(String requestId) throws Exception {
@@ -171,6 +173,12 @@ public class PasswordController {
 		}
 	}
 
+	/**
+	 * 找回登陆密码 - 重置登录密码页面
+	 * 
+	 * @param captcha
+	 *            验证码
+	 */
 	@RequestMapping("/find/reset")
 	public String reset(String requestId, String captcha) throws Exception {
 		ExpireKey resetKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_RESET_KEY);
@@ -187,6 +195,12 @@ public class PasswordController {
 		return "password/find-reset";
 	}
 
+	/**
+	 * 找回登陆密码 - 重置登录密码提交
+	 * 
+	 * @param password
+	 *            登录密码
+	 */
 	@RequestMapping("/find/reset/submit")
 	public String resetSubmit(String requestId, String password) throws Exception {
 		ExpireKey resetKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY);
@@ -202,11 +216,17 @@ public class PasswordController {
 		return "password/find-complete";
 	}
 
+	/**
+	 * 找回登陆密码 - 验证短信验证码
+	 * 
+	 * @param captcha
+	 *            短信验证码
+	 */
 	@RequestMapping("/find/sms/vertify")
 	@ResponseBody
 	public String smsVertify(String requestId, String captcha) throws Exception {
 		ExpireKey usernameKey = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_USERNAME_KEY);
-		if (usernameKey == null) {//只是获取一下手机号码
+		if (usernameKey == null) {// 只是获取一下手机号码
 			throw new Exception();
 		}
 		String username = (String) usernameKey.getAttribution();
@@ -229,6 +249,12 @@ public class PasswordController {
 		}
 	}
 
+	/**
+	 * 找回登陆密码 - 通过邮箱重置登录密码页面
+	 * 
+	 * @param code
+	 *            找回登陆密码邮箱验证码
+	 */
 	@RequestMapping("/find/email/vertify/{code}")
 	public String emailVertify(String requestId, @PathVariable String code) throws Exception {
 		MapData serviceData = MapUtil.newInstance(emailVerifyService.getEmail(requestId, code, "PWD"));
@@ -241,4 +267,5 @@ public class PasswordController {
 		WebUtil.getSession().setAttribute(PASSWORD_FIND_RESET_SUBMIT_KEY, expireKey);
 		return "password/find-reset";
 	}
+
 }
