@@ -90,7 +90,7 @@
                     <ul class="refund-list refund-money">
                         <li class="active">
                             <a href="javascript:;">
-                                <p>卖家申请退款</p>
+                                <p>买家申请退款</p>
                                 <em>1</em>  
                              </a>
                         </li>
@@ -102,7 +102,7 @@
                         </li>
                         <li>
                             <a href="javascript:;">
-                                <p>等待商家收货</p>
+                                <p>等待商家退款</p>
                                 <em>3</em> 
                              </a>
                         </li>
@@ -121,10 +121,10 @@
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
-                                <p> 收货地址:$!{recNmae}  $!{address}</p>
+                                <p>收货地址：$!{recName}  $!{recMobile}  $!{address}</p>
                                 <p>订单编号：$!{orderCode}</p>
                                 <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
-                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>总    计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
                                 <p>发票抬头：$!{invoiceName}</p>
                                 <p>支付方式：$!{payChannel}</p>
                             </div>
@@ -185,20 +185,22 @@
 												<a href="javascript:;">$!{orderProduct.productName}</a>
 											</p>
 											<p>
-												<span>颜色：墨蓝</span>
-												<span>尺寸：XL</span>
+												#foreach($skuStr in $orderProduct.skuStrs)
+													<span>$skuStr</span>&nbsp;&nbsp;
+												#end
 											</p>
 										</div>
 									</td>
 									<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
 									<td>$!{orderProduct.buyNum}</td>
-									<td class="status">
-										<p>¥$!number.format("#0.00",$math.mul($!math.div($!{orderProduct.skuPrice},100),$!{orderProduct.buyNum}))</p>
-										<p>（含运费¥$!number.format("#0.00",$!{postFee})）</p>
-									</td>
 									#if($velocityCount==1)
-									<td rowspan="$orderProductList.size">待退款</td>
-									<td rowspan="$orderProductList.size">￥$!number.format("#0.00",$!{postFee})</td>
+										#set($size = $$childOrder[0].orderProductList.size())
+										<td rowspan="$size">
+											<p>¥$!number.format("#0.00",$!math.div($!{orderSum},100))</p>
+											<p>（含运费¥$!number.format("#0.00",$!math.div($!{postFee},100))）</p>
+										</td>
+										<td rowspan="$size">待退款</td>
+										<td rowspan="$size">￥$!number.format("#0.00",$!math.div($!{postFee},100))</td>
 									#end
 								</tr>
 							#end

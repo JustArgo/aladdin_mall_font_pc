@@ -23,10 +23,10 @@
     <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-    <script src="/js/selectivizr.js"></script>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>申请退款</title>
+    <title>退款失败</title>
 </head>
 <body>
     <!-- header -->
@@ -88,7 +88,7 @@
             <div class="container">
                 <div class="row">
                     <ul class="refund-list refund-money">
-                        <li class="active">
+                        <li>
                             <a href="javascript:;">
                                 <p>买家申请退款</p>
                                 <em>1</em>  
@@ -96,28 +96,28 @@
                         </li>
                         <li>
                             <a href="javascript:;">
-                               <p>商家审核通过</p>
+                               <p>商家审核不通过</p>
                                <em>2</em> 
                              </a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="javascript:;">
-                                <p>等待商家退款</p>
+                                <p>退款失败</p>
                                 <em>3</em> 
                              </a>
                         </li>
                     </ul>
-                </div>    
+                </div>
             </div>
         </div>
     </section>
 
     <!-- content-bar -->
-    <section class="content-bar apply-menu">
+    <section class="content-bar">
         <div class="content return">
             <div class="container">
                 <div class="row">
-                    <div class="return-item">
+                    <div class="return-item failed">
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
@@ -128,30 +128,23 @@
                                 <p>发票抬头：$!{invoiceName}</p>
                                 <p>支付方式：$!{payChannel}</p>
                             </div>
+                            <h2>退款信息</h2>
+                            <div class="information">
+                                <p>退款金额  ¥$!number.format("#0.00",$math.div($!{moneyReturn.applySum},100))</p>
+                                <p>退款原因  $!{returnReason}</p>
+                                <p>退款说明  $!{moneyReturn.returnDesc}</p>
+                                <p>退款编号  $!{moneyReturn.returnCode}</p>
+                                <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{moneyReturn.createTime})</p>
+                            </div>
                         </div>
-                        <div class="col-md-9">
-                            
-                                <div class="form-group">
-                                    <label class="control-label">退款原因</label>
-                                    <select class="form-control" name="returnReason">
-                                        <option value="ERR">拍错了/订单信息错误</option>
-										<option value="NOT">不想要了</option>
-										<option value="ABS">缺货</option>
-                                    </select>
-                                    <i></i>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label">退款金额</label>
-                                    <input type="text" placeholder="$!{refundLimit}" class="form-control refund-fee" value='$!number.format("#0.00",${applySum})'/>
-									<input type="hidden" name="refundFee" value='$!number.format("#0.00",${applySum})'/>
-                                    <p class="most">最多可以退款￥$!{refundLimit}</p>
-                                </div>
-                                <div class="form-group">
-                                    <label class="control-label">退款说明</label>
-                                    <textarea class="form-control" name="returnDesc"></textarea>
-                                </div> 
-                                <button class="btn btn-register">提交申请</button>   
-                            
+                        <div class="col-md-9 message">
+                            <div class="return-autid">  
+                                <h2>退款失败</h2>
+                                <p>请联系客服进行处理</p>
+                                <p>
+                                    <a href="javascript:;" class="service">联系客服</a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -159,12 +152,12 @@
         </div>
     </section>
     
-    <!-- cartbar -->
-    <section class="cartbar apply-menu">
+    <!-- cartbar -->    
+    <section class="cartbar">
         <div class="cart order-status">
             <div class="container">
                 <div class="row">
-                    <table class="table order-table table-bordered table-responsive">
+                    <table class="table order-table table-bordered table-hover table-responsive">
                         <thead>
                             <tr><th>商品</th>
                             <th>单价(元)</th>
@@ -174,7 +167,7 @@
                             <th>运费</th>
                         </tr></thead>
                         <tbody>
-							#foreach($orderProduct in $childOrder[0].orderProductList)
+                            #foreach($orderProduct in $childOrder[0].orderProductList)
 								<tr>
 									<td class="text-left">
 										<a href="javascript:;" class="fl">
@@ -199,7 +192,7 @@
 											<p>¥$!number.format("#0.00",$!math.div($!{orderSum},100))</p>
 											<p>（含运费¥$!number.format("#0.00",$!math.div($!{postFee},100))）</p>
 										</td>
-										<td rowspan="$size">待退款</td>
+										<td rowspan="$size">退款失败</td>
 										<td rowspan="$size">￥$!number.format("#0.00",$!math.div($!{postFee},100))</td>
 									#end
 								</tr>
@@ -292,41 +285,5 @@
             </div>
         </div>
     </footer>
-	<script type="text/javascript">
-		$(function(){
-			
-			$("[name=returnReason]").val("${returnReasonCode}");
-			$("textarea[name=returnDesc]").val("$!{returnDesc}");
-			
-			
-			
-			$(".btn-register").click(function(){
-				var returnReason = $("[name=returnReason]").val();
-				var refundFee = $(".refund-fee").val();
-				var returnDesc = $("[name=returnDesc]").val();
-				
-				if(refundFee.trim()==''){
-					alert("请填写退款金额！");
-					return;
-				}
-				
-				refundFee = parseFloat(refundFee);
-				if(isNaN(refundFee) || refundFee<=0){
-					alert("请填写合法的退款金额");
-					return;
-				}
-				
-				if(refundFee>$!{refundLimit}){
-					alert("您输入的金额超出退款金额");
-					return;
-				}
-				
-				$("input[name=refundFee]").val(refundFee.toFixed(2)*100);
-				
-				location.href="/order/apply-return-money?modify=1&orderCode=$!{orderCode}&returnReason="+returnReason+"&refundFee="+$("input[name=refundFee]").val()+"&returnDesc="+returnDesc;
-				
-			});
-		});
-	</script>
 </body>
 </html>

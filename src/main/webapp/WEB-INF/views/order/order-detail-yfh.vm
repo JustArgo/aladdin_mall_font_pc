@@ -104,7 +104,6 @@
                         <p>订单状态：已发货</p>
                         <p>
                             <a href="javascript:;" class="link">联系客服</a>
-                            <a href="javascript:;" class="return">退货</a>
                         </p>
                     </div>
                 </div>
@@ -123,7 +122,6 @@
                         <h3 class="title">物流信息</h3>
                         <div class="order-status">
                             <div class="box">
-                                <p>暂无物流信息</p>
                             </div>
                         </div>
                     </div>

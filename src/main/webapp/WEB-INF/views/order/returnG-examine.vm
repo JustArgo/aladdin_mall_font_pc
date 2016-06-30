@@ -26,7 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>退货审核</title>
+    <title>退货审核中</title>
 </head>
 <body>
     <!-- header -->
@@ -88,15 +88,15 @@
             <div class="container">
                 <div class="row">
                     <ul class="refund-list">
-                        <li class="active">
+                        <li>
                             <a href="javascript:;">
                                 <p>买家申请退货</p>
                                 <em>1</em>  
                              </a>
                         </li>
-                        <li>
+                        <li class="active">
                             <a href="javascript:;">
-                               <p>商家审核通过</p>
+                               <p>商家审核中</p>
                                <em>2</em> 
                              </a>
                         </li>
@@ -127,19 +127,19 @@
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
-                                <p>收货地址:$!{recNmae}  $!{address}</p>
+                                <p>收货地址: $!{recName}  $!{recMobile}  $!{address}</p>
                                 <p>订单编号：$!{orderCode}</p>
                                 <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
-                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>总    计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
                                 <p>发票抬头：$!{invoiceName}</p>
                                 <p>支付方式：$!{payChannel}</p>
                             </div>
-                            <h2>退款信息</h2>
+                            <h2>退货信息</h2>
                             <div class="information">
                                 <p>退款金额  ¥$!number.format("#0.00",$math.div($!{goodsReturn.applySum},100))</p>
-                                <p>退款原因  $!{returnReason}</p>
-                                <p>退款说明  $!{goodsReturn.returnDesc}</p>
-                                <p>退款编号  $!{goodsReturn.returnCode}</p>
+                                <p>退货原因  $!{returnReason}</p>
+                                <p>退货说明  $!{goodsReturn.returnDesc}</p>
+                                <p>退货编号  $!{goodsReturn.returnCode}</p>
                                 <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
                             </div>
                         </div>

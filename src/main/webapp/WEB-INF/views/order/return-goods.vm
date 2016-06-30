@@ -223,7 +223,7 @@
                     <ul class="refund-list">
                         <li class="active">
                             <a href="javascript:;">
-                                <p>卖家申请退款</p>
+                                <p>买家申请退货</p>
                                 <em>1</em>  
                              </a>
                         </li>
@@ -241,7 +241,7 @@
                         </li>
                         <li>
                             <a href="javascript:;">
-                                <p>退款完成</p>
+                                <p>退货完成</p>
                                 <em>4</em> 
                              </a>
                         </li>
@@ -260,10 +260,10 @@
                         <div class="col-md-3">
                             <h2>订单信息</h2>
                             <div class="information">
-                                <p> 收货地址:$!{recNmae}  $!{address}</p>
+                                <p>收货地址: $!{recName}  $!{recMobile}  $!{address}</p>
                                 <p>订单编号：$!{orderCode}</p>
                                 <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
-                                <p>总      计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>总    计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
                                 <p>发票抬头：$!{invoiceName}</p>
                                 <p>支付方式：$!{payChannel}</p>
                             </div>

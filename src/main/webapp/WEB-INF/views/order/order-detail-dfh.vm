@@ -104,7 +104,7 @@
                         <p>订单状态：待发货</p>
                         <p>
                             <a href="javascript:;" class="link">联系客服</a>
-                            <a href="javascript:;" class="return">退款</a>
+                            <a href="/order/return-money?orderCode=$!{orderCode}" class="return">退款</a>
                         </p>
                     </div>
                 </div>
@@ -114,7 +114,7 @@
                         <div class="order-status">
                             <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
                             <p>订单编号：$!{orderCode}</p>
-                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{createTime})</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
                             <p>发票抬头：$!{invoiceName}</p>
                             <p>支付方式：$!{payChannel}</p>
                         </div>
