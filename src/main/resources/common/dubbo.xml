@@ -114,5 +114,7 @@
 	
 	<dubbo:reference id="storeService" interface="com.mi360.aladdin.store.service.IStoreService"/> 
 	
+	<dubbo:reference id="alipayService" interface="com.mi360.aladdin.alipay.service.IAlipayService"/>
+	
 </beans>	
 	
