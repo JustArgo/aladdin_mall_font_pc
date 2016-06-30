@@ -457,15 +457,14 @@
 
  					})
  					
- 					
- 					$('.imgPaths').append('<input type="hidden" name="imgs" value="'+res.key.replace(/comment_img_/,'')+'"/>');
+ 					$('.imgPaths').append('<input type="hidden" name="headImg" value="'+imgPath+'"/>');
  					
  				},
  				'Error': function(up, err, errTip) {
  					alert("图片上传失败");
  				},
  				'Key': function(up, file) {
- 					var key = 'comment_img_'+new Date().getTime()+"_"+uuid()+"_"+file.name;
+ 					var key = 'head_img_'+new Date().getTime()+"_"+uuid()+"_"+file.name;
  					return key;
  				}
  			}
@@ -664,7 +663,7 @@
                                                         <img src="$userInfo.headImage" id="headImage"/>
                                                     </a>
                                                     <div class="photo" id="container" style="display:inline-block;margin-left:10px;">
-                                                        <input type="file" class="file" />
+                                                        <a id="pickfiles">选择文件</a>
                     									<div style="display:none:" class="imgPaths">
                     									</div>
                                                     </div>
