@@ -73,124 +73,274 @@
     	 })
     	 
     	 
+		var formValidate2={
+			password:{
+				target:$("#password"),
+				required:true,
+				reg:/^[\w\d]{5,20}$/,
+				tip:$('#passwordTip'),
+				validator:function(){
+					var v=formValidate2.rePassword.target.val();
+					if(v!=""){
+						formValidate2.validate(formValidate2.rePassword);
+					}
+					return true;
+				},
+				tipWord:'密码长度只能在5-20个字符之间'
+			},
+			prePassword:{
+				target:$("#prePassword"),
+				required:true,
+				tip:$('#prePasswordTip'),
+				tipWord:'请输入原始登陆密码'
+			},
+			rePassword:{
+				target:$("#rePassword"),
+				required:true,
+				validator:function(){
+					var v=formValidate2.password.target.val();
+					var v2=this.target.val();
+					if(v!=v2){
+						return false;
+					}
+					return true;
+				},
+				tip:$('#rePasswordTip'),
+				tipWord:'两次输入密码不一致'
+			},
+			init:function(){
+				this.password.target.blur(function(){
+					formValidate2.validate(formValidate2.password);
+				})
+				this.prePassword.target.blur(function(){
+					formValidate2.validate(formValidate2.prePassword);
+				})
+				this.rePassword.target.blur(function(){
+					formValidate2.validate(formValidate2.rePassword);
+				})
+				this.password.target.focus(function(){
+					formValidate2.password.tip.css('display','none');
+				})
+				this.rePassword.target.focus(function(){
+					formValidate2.rePassword.tip.css('display','none');
+				})
+				this.prePassword.target.focus(function(){
+					formValidate2.prePassword.tip.css('display','none');
+				})
+			},
+			validate:function(o){//通用验证
+				var v=o.target.val();
+				if(o.required){
+					if(v==""){//非空
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				if(v!=""){
+					if(o.reg!=undefined){//格式
+						if(!o.reg.test(v)){
+							o.tip.html(o.tipWord);
+							o.tip.css('display','inline');
+							return false;
+						}
+					}
+				}
+				if(o.validator!=undefined){//自定义验证
+					if(!o.validator()){
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				o.tip.css('display','none');
+				return true;
+			},
+			validateAll:function(){
+				if(this.validate(this.password)&this.validate(this.rePassword)&this.validate(this.prePassword)){
+					return true;
+				}
+				return false;
+			}
+		}
+		formValidate2.init();
     	 var submit2Able=true;
     	 $('#submit2').click(function(){
     		 if(submit2Able){
     			 submit2Able=false;
-    		 }
-    		 var r=confirm("确定修改登录密码？")
-			 if (r==true){
-				 var prePassword=$('#prePassword').val();
-				 var password=$('#password').val();
-				 var rePassword=$('#rePassword').val();
-				 if(prePassword==''){
-					 alert('请输入原始登陆密码');
-			    	 var submit2Able=true;
-					 return;
-				 }
-				 if(password==''){
-					 alert('请输入新登陆密码');
-			    	 var submit2Able=true;
-					 return;
-				 }
-				 if(!/^[\w\d]{5,20}$/.test(password)){
-					 alert('密码长度只能在5-20个字符之间');
-					 var submit2Able=true;
-					 return;
-				 }
-				 if(rePassword!=password){
-					 alert('两次输入密码不一致');
-			    	 var submit2Able=true;
-					 return;
-				 }
-				 $.ajax({ 
-     				url: 'save/loginPassword',
-     				data:{prePassword:prePassword,password:password},
-     				type:"post",
-     				success: function(data){
-     					if(data==0){
-     						alert('修改成功');
-     						location.href="/user/info";
-     					}else if(data==210603){
-     						alert('原始登陆密码错误');
-         					submit2Able=true;
-     					}else if(data==210602){
-     						alert('连续错误三次，请于24小时后重试');
-         					submit2Able=true;
-     					}else{
+    			 if(!formValidate2.validateAll()){
+    				 submit2Able=true;
+    				 return;
+    			 }
+    			 var r=confirm("确定修改登录密码？")
+    			 if (r==true){
+    				 var prePassword=$('#prePassword').val();
+    				 var password=$('#password').val();
+    				 $.ajax({ 
+         				url: 'save/loginPassword',
+         				data:{prePassword:prePassword,password:password},
+         				type:"post",
+         				success: function(data){
+         					if(data==0){
+         						alert('修改成功');
+         						location.href="/user/info";
+         					}else if(data==210603){
+         						alert('原始登陆密码错误');
+             					submit2Able=true;
+         					}else if(data==210602){
+         						alert('连续错误三次，请于24小时后重试');
+             					submit2Able=true;
+         					}else{
+             					alert('系统繁忙，请稍后再试');
+             					submit2Able=true;
+         					}
+         				},
+         				error:function(){
          					alert('系统繁忙，请稍后再试');
          					submit2Able=true;
-     					}
-     				},
-     				error:function(){
-     					alert('系统繁忙，请稍后再试');
-     					submit2Able=true;
-     				}
-     			});
-			 }else{
-				 submit2Able=true;
-			 }
+         				}
+         			});
+    			 }else{
+    				 submit2Able=true;
+    			 }
+    		 }
     	 })
     	 
     	 
     	 
+    	 
+    	 
+    	 var formValidate3={
+			paymentPassword:{
+				target:$("#paymentPassword"),
+				required:true,
+				reg:/^[\w\d]{5,20}$/,
+				tip:$('#paymentPasswordTip'),
+				validator:function(){
+					var v=formValidate3.rePaymentPassword.target.val();
+					if(v!=""){
+						formValidate3.validate(formValidate3.rePaymentPassword);
+					}
+					return true;
+				},
+				tipWord:'密码长度只能在5-20个字符之间'
+			},
+			prePaymentPassword:{
+				target:$("#prePaymentPassword"),
+				required:true,
+				tip:$('#prePaymentPasswordTip'),
+				tipWord:'请输入原始登陆密码'
+			},
+			rePaymentPassword:{
+				target:$("#rePaymentPassword"),
+				required:true,
+				validator:function(){
+					var v=formValidate3.paymentPassword.target.val();
+					var v2=this.target.val();
+					if(v!=v2){
+						return false;
+					}
+					return true;
+				},
+				tip:$('#rePaymentPasswordTip'),
+				tipWord:'两次输入密码不一致'
+			},
+			init:function(){
+				this.paymentPassword.target.blur(function(){
+					formValidate3.validate(formValidate3.paymentPassword);
+				})
+				this.prePaymentPassword.target.blur(function(){
+					formValidate3.validate(formValidate3.prePaymentPassword);
+				})
+				this.rePaymentPassword.target.blur(function(){
+					formValidate3.validate(formValidate3.rePaymentPassword);
+				})
+				this.paymentPassword.target.focus(function(){
+					formValidate3.paymentPassword.tip.css('display','none');
+				})
+				this.rePaymentPassword.target.focus(function(){
+					formValidate3.rePaymentPassword.tip.css('display','none');
+				})
+				this.prePaymentPassword.target.focus(function(){
+					formValidate3.prePaymentPassword.tip.css('display','none');
+				})
+			},
+			validate:function(o){//通用验证
+				var v=o.target.val();
+				if(o.required){
+					if(v==""){//非空
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				if(v!=""){
+					if(o.reg!=undefined){//格式
+						if(!o.reg.test(v)){
+							o.tip.html(o.tipWord);
+							o.tip.css('display','inline');
+							return false;
+						}
+					}
+				}
+				if(o.validator!=undefined){//自定义验证
+					if(!o.validator()){
+						o.tip.html(o.tipWord);
+						o.tip.css('display','inline');
+						return false;
+					}
+				}
+				o.tip.css('display','none');
+				return true;
+			},
+			validateAll:function(){
+				if(this.validate(this.paymentPassword)&this.validate(this.rePaymentPassword)&this.validate(this.prePaymentPassword)){
+					return true;
+				}
+				return false;
+			}
+		}
+		formValidate3.init();
     	 var submit3Able=true;
     	 $('#submit3').click(function(){
     		 if(submit3Able){
     			 submit3Able=false;
-    		 }
-    		 var r=confirm("确定修改登录密码？")
-			 if (r==true){
-				 var prePaymentPassword=$('#prePaymentPassword').val();
-				 var paymentPassword=$('#paymentPassword').val();
-				 var rePaymentPassword=$('#rePaymentPassword').val();
-				 if(prePaymentPassword==''){
-					 alert('请输入原始支付密码');
-			    	 var submit3Able=true;
-					 return;
-				 }
-				 if(paymentPassword==''){
-					 alert('请输入新支付密码');
-			    	 var submit3Able=true;
-					 return;
-				 }
-				 if(!/^[\w\d]{5,20}$/.test(paymentPassword)){
-					 alert('密码长度只能在5-20个字符之间');
-					 var submit3Able=true;
-					 return;
-				 }
-				 if(rePaymentPassword!=paymentPassword){
-					 alert('两次输入密码不一致');
-			    	 var submit3Able=true;
-					 return;
-				 }
-				 $.ajax({ 
-     				url: 'save/paymentPassword',
-     				data:{prePaymentPassword:prePaymentPassword,paymentPassword:paymentPassword},
-     				type:"post",
-     				success: function(data){
-     					if(data==0){
-     						alert('修改成功');
-     						location.href="/user/info";
-     					}else if(data==210603){
-     						alert('原始支付密码错误');
-         					submit3Able=true;
-     					}else if(data==210602){
-     						alert('连续错误三次，请于24小时后重试');
-         					submit3Able=true;
-     					}else {
+    			 if(!formValidate3.validateAll()){
+    				 submit3Able=true;
+    				 return;
+    			 }
+    			 var r=confirm("确定修改登录密码？")
+    			 if (r==true){
+    				 var prePaymentPassword=$('#prePaymentPassword').val();
+    				 var paymentPassword=$('#paymentPassword').val();
+    				 $.ajax({ 
+         				url: 'save/paymentPassword',
+         				data:{prePaymentPassword:prePaymentPassword,paymentPassword:paymentPassword},
+         				type:"post",
+         				success: function(data){
+         					if(data==0){
+         						alert('修改成功');
+         						location.href="/user/info";
+         					}else if(data==210603){
+         						alert('原始支付密码错误');
+             					submit3Able=true;
+         					}else if(data==210602){
+         						alert('连续错误三次，请于24小时后重试');
+             					submit3Able=true;
+         					}else {
+             					alert('系统繁忙，请稍后再试');
+             					submit3Able=true;
+         					}
+         				},
+         				error:function(){
          					alert('系统繁忙，请稍后再试');
          					submit3Able=true;
-     					}
-     				},
-     				error:function(){
-     					alert('系统繁忙，请稍后再试');
-     					submit3Able=true;
-     				}
-     			});
-			 }else{
-				 submit3Able=true;
-			 }
+         				}
+         			});
+    			 }else{
+    				 submit3Able=true;
+    			 }
+    		 }
     	 })
     })
     </script>
@@ -392,17 +542,20 @@
                                     <div class="modify">
                                         <div class="form-box">
                                             <form>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">原登录密码:</label>
                                                     <input type="password" id="prePassword" class="form-control" />
+                                                    <span class="error" id="prePasswordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">新登录密码:</label>
                                                     <input type="password"  id="password" class="form-control">
+                                                    <span class="error" id="passwordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">重复新密码:</label>
                                                     <input type="password"  id="rePassword" class="form-control">
+                                                    <span class="error" id="rePasswordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
                                                 <button type="button" id="submit2" class="btn btn-modify">保存</button>
                                             </form>
@@ -413,17 +566,20 @@
                                     <div class="modify">
                                         <div class="form-box">
                                             <form>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">原支付密码:</label>
                                                     <input type="password"  id="prePaymentPassword" class="form-control" />
+                                                    <span class="error" id="prePaymentPasswordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">新支付密码:</label>
                                                     <input type="password"  id="paymentPassword" class="form-control">
+                                                    <span class="error" id="paymentPasswordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group" style="text-align:left;padding-left:200px;">
                                                     <label class="control-label">重复新密码:</label>
                                                     <input type="password"  id="rePaymentPassword" class="form-control">
+                                                    <span class="error" id="rePaymentPasswordTip" style="display:none;">两次输入密码不一致</span>
                                                 </div>
                                                 <button type="button" id="submit3" class="btn btn-modify">保存</button>
                                             </form>
