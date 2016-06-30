@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="/js/qiniu.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>评价</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- cartbar -->
+    <section class="cartbar">
+        <div class="cart order-status assessment">
+            <div class="container">
+                <div class="row">
+                    <table class="table order-table table-bordered table-responsive">
+                        <thead>
+                            <tr>
+                                <th>商品</th>
+                                <th>单价(元)</th>
+                                <th>数量</th>
+                                <th>实付款(元)</th>
+                                <th>状态</th>
+                                <th>运费</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td class="text-left">
+                                    <a href="javascript:;" class="fl">
+                                        <img src="$qiniu.getDownloadUrl($!{skuImg})" style="width:121px;height:120px;"/>
+                                    </a>
+                                    <div class="fr">
+                                        <p>
+                                            <a href="javascript:;">$!{productName}</a>
+                                        </p>
+                                        <p>
+											#foreach($skuStr in $skuStrs)
+												<span>$skuStr</span>
+											#end
+                                        </p>
+                                    </div>
+                                </td>
+                                <td>¥$number.format("#0.00",$math.div($!{skuPrice},100))</td>
+                                <td>$!{buyNum}</td>
+                                <td class="status">
+                                    <p>¥$number.format("#0.00",$math.mul($number.format("#0.00",$math.div($!{skuPrice},100)),$!{buyNum}))</p>
+                                    <p>（含运费¥0.00）</p>
+                                </td>
+                                <td>待评论</td>
+                                <td>￥0.00</td>
+                            </tr>
+                        </tbody>
+                    </table>                
+                </div>
+                <div class="row description">
+                    <div class="col-md-2">
+                        <p>累计评价$!{commentStatistics.count}</p>
+                        <p>
+                            <span>与描述相符</span>
+                            <span class="hot">$!number.format("#0.0",$math.div($!{commentStatistics.descConform},100))</span>
+                        </p>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="box">
+                            <div class="degree">
+                                <ul>
+                                    <li>非常不满</li>
+                                    <li>不满意</li>
+                                    <li>一般</li>
+                                    <li>满意</li>
+                                    <li>非常满意</li>
+                                </ul>
+                                <span class="grade" style='right:$math.add(5,$math.mul(83,$math.sub(5,$!number.format("#0.0",$math.div($!{commentStatistics.descConform},100)))))px'>$!number.format("#0.0",$math.div($!{commentStatistics.descConform},100))</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+					<form action="/comments/comment" method="post">
+						<input type="hidden" name="orderProductID" value="$!{orderProductID}"/>
+						<input type="hidden" name="sendGoodsScore" value="0"/>
+						<input type="hidden" name="descScore" value="0"/>
+						<input type="hidden" name="serveScore" value="0"/>
+                    <div class="upload-image">
+                        <div class="col-md-6">
+                            <div class="top">
+                                <span>评价</span>
+                                <textarea class="form-control" rows="8" cols="8" name="commentStr"></textarea>
+                            </div>
+                            <div class="bottom">
+                                <span>晒图片</span>
+                                <div class="photo" id="container">
+                                    <a href="javascript:" class="upload" id="pickfiles">
+										
+                                        <img src="/images/icon/assess.png" />
+                                    </a>
+                                    <input type="file" class="file" />
+									<div style="display:none:" class="imgPaths">
+									</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <p>
+                                <span>
+                                    <span class="require">*</span>描述相符
+                                </span>
+                                <span class="start-level jq-start descConform">
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <span class="require">*</span>卖家服务
+                                </span>
+                                <span class="start-level jq-start service">
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                </span>
+                            </p>
+                            <p>
+                                <span>
+                                    <span class="require">*</span>物流速度
+                                </span>
+                                <span class="start-level jq-start speed">
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                    <a href="javascript:;" class="start"></a>
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+					</form>
+                    <div class="group">
+                        <button type="submit" class="btn btn-assessment">提交评价</button>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+	<script type="text/javascript">
+	
+		function uuid() {
+			var s = [];
+			var hexDigits = "0123456789abcdef";
+			for (var i = 0; i < 36; i++) {
+				s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+			}
+			s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+			s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+			s[8] = s[13] = s[18] = s[23] = "-";
+			var uuid = s.join("");
+			return uuid;
+		}
+		$(function(){
+			$(".jq-start a").click(function(){
+				var jq_start = $(this).closest(".jq-start");
+				var _index = $(this).index();
+				jq_start.find("a").removeClass("active");
+				jq_start.find("a").each(function(index,item){
+					if(index<=_index){
+						$(item).addClass("active");
+					}
+				})
+			});
+			
+			$(".btn-assessment").click(function(){
+				var descConform = 0;
+				var service = 0;
+				var speed = 0;
+				
+				descConform = $(".descConform .active").length;
+				service = $(".service .active").length;
+				speed = $(".speed .active").length;
+				
+				$("input[name=descScore]").val(descConform);
+				$("input[name=sendGoodsScore]").val(speed);
+				$("input[name=serveScore]").val(service);
+				
+				$("form").submit();
+				
+				
+			});
+			
+		});
+		
+		var uptokan = "";
+		$.ajaxSetup({  
+			async : false 
+		});
+		$.get('/common/uptoken',function(result){uptoken = result});
+		console.log(uptoken);
+		var uploader = Qiniu.uploader({
+			runtimes: 'html5,flash,html4',
+			browse_button: 'pickfiles',
+			uptoken:uptoken,
+			container: 'container',
+			drop_element: 'container',
+			max_file_size: '100mb',
+			flash_swf_url: '/js/plupload/Moxie.swf',
+			dragdrop: true,
+			chunk_size: '3mb',
+			domain: 'http://7xrade.com2.z0.glb.qiniucdn.com',
+			auto_start: false,
+			init: {
+				'FilesAdded': function(up, files) {
+					var imgNum = $(".evaluate-img").length;
+					console.log("imgNum:"+imgNum);
+					var upNum = files.length;
+					if(upNum+imgNum>3){
+						alert("最多只能上传3张图片");
+						for(var i=0;i<files.length;i++){
+							up.removeFile(files[i]);
+						}
+						return false;
+					}
+					up.start();
+				},
+				'BeforeUpload': function(up, file) {
+//	                var progress = new FileProgress(file, 'fsUploadProgress');
+//	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+//	                if (up.runtime === 'html5' && chunk_size) {
+//	                    progress.setChunkProgess(chunk_size);
+//	                }
+				},
+				'UploadProgress': function(up, file) {
+//	                var progress = new FileProgress(file, 'fsUploadProgress');
+//	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+//	                progress.setProgress(file.percent + "%", file.speed, chunk_size);
+				},
+				'UploadComplete': function() {
+					
+				},
+				'FileUploaded': function(up, file, info) {
+					
+					var domain = up.getOption('domain');
+					var res = $.parseJSON(info)
+					var imgPath = domain+"/"+res.key;
+					
+					if($(".evaluate-img").length==2){
+						$("#pickfiles").hide();
+					}
+					$.get('/common/imgPath',{'imgPath':imgPath},function(result){
+						//$('#container').prepend('<img src="'+result+'" style="width:80px;height:80px;margin-right:10px;">');
+						$("#container").prepend('<span class="evaluate-img" style="position:relative;display:inline-block;margin-left:3px;width:80px;height:80px;vertical-align:middle;border:1px solid gray;"><img width="80" height="80" src="'+result+'"><a href="javascript:" style="position:absolute;right:-5px;top:-5px;" class="delete-pic"><img src="${link.contextPath}/images/Delete.png" style="width:15px;height:15px;"></a></span>');
+					})
+					
+					
+					$('.imgPaths').append('<input type="hidden" name="imgs" value="'+res.key.replace(/comment_img_/,'')+'"/>');
+					
+				},
+				'Error': function(up, err, errTip) {
+					alert("图片上传失败");
+				},
+				'Key': function(up, file) {
+					var key = 'comment_img_'+new Date().getTime()+"_"+uuid()+"_"+file.name;
+					return key;
+				}
+			}
+		});
+		
+		$("#container").on("click",'.delete-pic',function(){
+	    	if(!$("#pickfiles").is("visible")){
+	    		$("#pickfiles").show();
+	    	}
+	    	var index = $(this).closest(".evaluate-img").index();
+	    	$(this).closest(".evaluate-img").remove();
+	    	$("input[name=imgs]:eq("+index+")").remove();
+	    	
+	    });
+		
+	</script>
+</body>
+</html>

@@ -1,20 +1,17 @@
 package com.mi360.aladdin.mall.controller.auth;
 
 import java.util.Date;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.PcAccountService;
-import com.mi360.aladdin.mall.util.WebUtil;
+import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.product.service.IProductCollectService;
-import com.mi360.aladdin.product.service.IProductService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -81,53 +78,80 @@ public class UserController {
 
 	@RequestMapping("/save/info")
 	@ResponseBody
-	public String saveInfo(String requestId, String headImage, Integer sex, String nickname) {
+	public Integer saveInfo(String requestId, String headImage, Integer sex, String nickname) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(userService.savePc(requestId, mqId, headImage, nickname, sex));
-		if (serviceData.getErrcode() == 0) {
-			return "success";
-		} else {
-			return "error";
-		}
+		return serviceData.getErrcode();
 	}
 
+	/**
+	 * 修改登录密码
+	 * 
+	 * @param prePassword
+	 *            原始登陆密码
+	 * @param password
+	 *            新登陆密码
+	 */
 	@RequestMapping("/save/loginPassword")
 	@ResponseBody
-	public String saveLoginPassword(String requestId, String prePassword, String password) {
+	public Integer saveLoginPassword(String requestId, String prePassword, String password) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
 				.newInstance(userService.modifyLoginPassword(requestId, mqId, prePassword, password));
-		int errcode = serviceData.getErrcode();
-		if (errcode == 0) {
-			return "success";
-		} else if (errcode == 210603) {
-			return "wrong";
-		} else if (errcode == 210602) {
-			return "wrong_tree_times";
-		} else {
-			return "error";
-		}
+		return serviceData.getErrcode();
 	}
 
+	/**
+	 * 修改支付密码
+	 * 
+	 * @param prePassword
+	 *            原始支付密码
+	 * @param password
+	 *            新支付密码
+	 */
 	@RequestMapping("/save/paymentPassword")
 	@ResponseBody
-	public String savePaymentPassword(String requestId, String prePaymentPassword, String paymentPassword) {
+	public Integer savePaymentPassword(String requestId, String prePaymentPassword, String paymentPassword) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
 				.newInstance(userService.modifyPaymentPassword(requestId, mqId, prePaymentPassword, paymentPassword));
-		int errcode = serviceData.getErrcode();
-		if (errcode == 0) {
-			return "success";
-		} else if (errcode == 210603) {
-			return "wrong";
-		} else if (errcode == 210602) {
-			return "wrong_tree_times";
-		} else {
-			return "error";
-		}
+		return serviceData.getErrcode();
 	}
 
+	/**
+	 * 设置支付密码
+	 * 
+	 * @param loginPassword
+	 *            登陆密码
+	 * @param paymentPassword
+	 *            支付密码
+	 */
+	@RequestMapping("/paymentPassword")
+	public String paymentPassword(String requestId, String loginPassword, String paymentPassword) {
+		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		MapData serviceData =MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
+		logger.info(serviceData.dataString());
+		if (serviceData.getBoolean("result")) {
+			return "redirect:/user";
+		}
+		return "user/first-set-payment-password";
+	}
+
+	@RequestMapping("save/paymentPassword/first")
+	@ResponseBody
+	public Integer savePaymentPasswordFirst(String requestId, String loginPassword, String paymentPassword,String captcha) {
+		if(!CaptchaUtil.validate(captcha)){
+			return -1;
+		}
+		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		MapData serviceData = MapUtil
+				.newInstance(userService.firstSetPaymentPassword(requestId, mqId, loginPassword, paymentPassword));
+		logger.info(serviceData.dataString());
+		return serviceData.getErrcode();
+	}
 }

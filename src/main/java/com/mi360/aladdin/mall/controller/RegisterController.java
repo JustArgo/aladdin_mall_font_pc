@@ -114,7 +114,7 @@ public class RegisterController {
 					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
 			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
-			if (errcode != 0 || errcode != 0) {
+			if (errcode != 0 ) {
 				return "error";
 			}
 			Integer luckNum = serviceData2.getInteger("luckNum");
