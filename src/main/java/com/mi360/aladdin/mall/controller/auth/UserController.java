@@ -133,7 +133,7 @@ public class UserController {
 	public String paymentPassword(String requestId, String loginPassword, String paymentPassword) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
-		MapData serviceData =MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
+		MapData serviceData = MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
 		logger.info(serviceData.dataString());
 		if (serviceData.getBoolean("result")) {
 			return "redirect:/user";
@@ -141,10 +141,11 @@ public class UserController {
 		return "user/first-set-payment-password";
 	}
 
-	@RequestMapping("save/paymentPassword/first")
+	@RequestMapping("/save/paymentPassword/first")
 	@ResponseBody
-	public Integer savePaymentPasswordFirst(String requestId, String loginPassword, String paymentPassword,String captcha) {
-		if(!CaptchaUtil.validate(captcha)){
+	public Integer savePaymentPasswordFirst(String requestId, String loginPassword, String paymentPassword,
+			String captcha) {
+		if (!CaptchaUtil.validate(captcha)) {
 			return -1;
 		}
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
@@ -153,5 +154,21 @@ public class UserController {
 				.newInstance(userService.firstSetPaymentPassword(requestId, mqId, loginPassword, paymentPassword));
 		logger.info(serviceData.dataString());
 		return serviceData.getErrcode();
+	}
+
+	@RequestMapping("/level")
+	public String level(String requestId, ModelMap modelMap) {
+		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
+		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
+		logger.info(serviceData.dataString());
+		MapData resultData=serviceData.getResult();
+		modelMap.addAttribute("userInfo", resultData.getData());
+		if (resultData.getInteger("isGoldType")==1) {
+			MapData serviceData2 = MapUtil.newInstance(verticalDistributionService.levelupInfo(requestId, mqId));
+			logger.info(serviceData2.dataString());
+			modelMap.addAttribute("levelInfo", serviceData2.getObject("result"));
+		}
+		return "user/level";
 	}
 }

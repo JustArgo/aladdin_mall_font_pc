@@ -9,19 +9,15 @@
     <meta name="author" content="" />
     <!-- css -->
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/owl.carousel.css" />
-    <link rel="stylesheet" href="/css/owl.theme.css" />
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/theme.css" />
     <!--[if (gte IE 6)&(lte IE 8)]>
-    <link rel="stylesheet" href="css/ie-8.css" />
+    <link rel="stylesheet" href="/css/ie-8.css" />
     <![endif]-->
     <!-- js -->
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/owl.carousel.min.js"></script>
     <script src="/js/theme.js"></script>
-    <script src="/js/echarts.min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -30,99 +26,10 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>个人中心</title>
+    <title>会员等级</title>
     <script>
     $(function(){
-    	var chart1 = echarts.init(document.getElementById('chart1'));
-    	// 指定图表的配置项和数据
-    	var option = {
-    		    title: {
-    		        text: '近5天我的销售收入'
-    		    },
-    		    tooltip: {
-    		        trigger: 'axis'
-    		    },
-    		    grid: {
-    		        left: '3%',
-    		        right: '4%',
-    		        bottom: '3%',
-    		        containLabel: true
-    		    },
-    		    xAxis: {
-    		        type: 'category',
-    		        boundaryGap: false,
-    		        data: [
-    		               #foreach($item in $dailySales)
-    		               	'$item.dateMonth'#if($velocityCount!=$dailySales.size()),#end
-    		               #end
-    		               ]
-    		    },
-    		    yAxis: {
-    		    	type : 'value',
-    		    	axisLabel : {
-    		    		formatter: function(value){
-    		    			return value+"元";
-    		    		}
-    		    	}
-    		    },
-    		    series: [
-    		        {
-    		            name:'佣金',
-    		            type:'line',
-    		            stack: '总量',
-    		            data:[
-    		                  #foreach($item in $dailySales)
-    		                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
-    		                  #end
-    		                  ]
-    		        }
-    		    ]
-    		};
-        // 使用刚指定的配置项和数据显示图表。
-        chart1.setOption(option);
-        
-
-    	var chart2 = echarts.init(document.getElementById('chart2'));
-    	// 指定图表的配置项和数据
-        var option2 = {
-            title: {
-                text: '今日平台销售排行榜'
-            },
-            tooltip: {},
-            grid: {
-		        left: '3%',
-		        right: '4%',
-		        bottom: '3%',
-		        containLabel: true
-		    },
-            yAxis: {
-		    	type : 'value',
-		    	axisLabel : {
-		    		formatter: function(value){
-		    			return value+"元";
-		    		}
-		    	}
-		    },
-            xAxis: {
-                data: [
-                       #foreach($item in $dailyTopSales)
-	                  	'$!item.nickname'#if($velocityCount!=$dailySales.size()),#end
-	                   #end
-                       ]
-            },
-            series: [{
-                name: '销量',
-                type: 'bar',
-                data: [
-                       #foreach($item in $dailyTopSales)
-	                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
-	                   #end
-                       ]
-            }]
-        };
-
-        // 使用刚指定的配置项和数据显示图表。
-        chart2.setOption(option2);
+    	
     })
     </script>
 </head>
@@ -228,13 +135,13 @@
                                     <a href="javascript:;">账户中心</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="person.html" class="active">我的账户</a>
+                                    <a href="person.html">我的账户</a>
                                 </li>
                                 <li class="sub">
                                     <a href="person-info.html">个人信息</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="level.html">会员等级</a>
+                                    <a href="level.html" class="active">会员等级</a>
                                 </li>
                                 <li class="sub">
                                     <a href="address.html">收货地址</a>
@@ -289,101 +196,136 @@
                     </div>
                     <div class="col-md-10">
                         <div class="content alipay-content">
-                            <div class="wealth person-center">
-                                <div class="col-sm-3 head">
-                                    <a href="javascript:;" class="fl">
-                                        <img src="$userInfo.headImage" />
-                                    </a>
-                                    <div class="fr">
-                                        <p>$userInfo.nickname</p>
-                                        #if($userInfo.isGoldType==1)
-                                        <a href="javascript:;">
-                                            <i class="icon-gold"></i>金牌用户
-                                        </a>
-                                        #end
-                                        #if($userInfo.isChannelType==1)
-                                        <a href="javascript:;">
-                                            <i class="icon-method"></i>渠道用户
-                                        </a>
-                                        #end
-                                        #if($userInfo.isCashBackType==1)
-                                        <a href="javascript:;">
-                                            <i class="icon-return"></i>全返用户
-                                        </a>
-                                        #end
-                                    </div>
-                                </div>
-                                <div class="col-sm-3">
-                                    <ul>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <i class="icon-pay"></i>待付款
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <i class="icon-pass"></i>待发货
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <i class="icon-assess"></i>待评价
-                                            </a>
-                                        </li>
-                                        <li>
-                                            <a href="javascript:;">
-                                                <i class="icon-money"></i>退款
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p>我的财富</p>
-                                    <p class="money">¥$number.format("#0.00",$math.div($remainingSum,100))</p>
-                                </div>
-                                <div class="col-sm-3">
-                                    <p>我的会员</p>
-                                    <p>$countMemberAll</p>
-                                </div>
+                            <div class="level">
+                                <h3>#if($userInfo.isGoldType==1)金牌用户/#end普通用户</h3>
+                                <!--<ul>
+                                    <li>
+                                    	<span class="fl">渠道会员</span>
+                                    	<span class="fl">渠道会员</span>
+                                        <span class="fr">金牌用户/普通用户</span>
+                                    </li>
+                                </ul>-->
                             </div>
-                            <div class="report">
-                                <div class="col-sm-6">
-                                    <div id="chart1" style="width:450px;height:300px;"></div>
-                                    <!--<div class="report-data">
-                                        <a href="javascript:;" class="left">
-                                            <img src="/images/report/report-01.png" />
-                                        </a>
-                                    </div>-->
-                                </div>
-                                <div class="col-sm-6">
-                                    <div id="chart2" style="width:450px;height:300px;"></div>
-                                    <!--<div class="report-data">
-                                        <a href="javascript:;" class="right">
-                                            <img src="/images/report/report-02.png" />
-                                        </a>
-                                    </div>-->
-                                </div>
+                            #if($userInfo.isChannelType==1)
+                            <div class="level">
+                            <h3>渠道用户</h3>
+                            <ul>
+                                <li>
+                                    <span class="fl">渠道会员</span>
+                                    <span class="fr">$levelInfo.channel.levelName</span>
+                                </li>
+                                <li>
+                                    <span class="fl">升级路程</span>
+                                    <span class="fr">$levelInfo.channel.levelName<i class="icon-left"></i>$levelInfo.channel.nextLevelName</span>
+                                </li>
+                                <li>
+                                    <span class="fl">自消费累计金额</span>
+                                    <span class="fr">￥$number.format("#0.00",$math.div($levelInfo.channel.selfSum,100))/￥$number.format("#0.00",$math.div($levelInfo.channel.nextSelfSum,100))</span>
+                                </li>
+                                <li>
+                                    <span class="fl">推荐金牌用户数</span>
+                                    <span class="fr">$levelInfo.channel.countDirectountGoldUser人/$levelInfo.channel.nextCountDirectountGoldUser人</span>
+                                </li>
+                                <li>
+                                    <span class="fl">团队金牌人数</span>
+                                    <span class="fr">$levelInfo.channel.countAllGoldUser人/$levelInfo.channel.nextCountAllGoldUser人</span>
+                                </li>
+                            </ul>
                             </div>
-                            <div class="store">
-                                <h1>我的收藏</h1>
-                                <div class="owl-carousel jq-carousel">
-                                	#foreach($item in $productCollects)
-                                	<div class="owl-item">
-                                        <a href="/product/product_detail?productID=$item.productId">
-                                            <img src="$item.imgPath" />
-                                        </a>
-                                        <p>￥$number.format("#0.00",$math.div($item.price,100))</p>
-                                    </div>
-                                	#end
-                                </div>
+                            #end
+                            #if($userInfo.isCashBackType==1)
+                            <div class="level">
+                            <h3>全返用户</h3>
+                            <ul>
+                                <li>
+                                    <span class="fl">全返会员</span>
+                                    <span class="fr">$levelInfo.gold.levelName</span>
+                                </li>
+                                <li>
+                                    <span class="fl">升级路程</span>
+                                    <span class="fr">$levelInfo.gold.levelName<i class="icon-left"></i>$levelInfo.gold.nextLevelName</span>
+                                </li>
+                                <li>
+                                    <span class="fl">团队消费人数</span>
+                                    <span class="fr">$levelInfo.gold.countConsumeMember人/$levelInfo.gold.nextCountConsumeMember人</span>
+                                </li>
+                                <li>
+                                    <span class="fl">自消费累计金额</span>
+                                    <span class="fr">￥$number.format("#0.00",$math.div($levelInfo.gold.selfSum,100))/￥$number.format("#0.00",$math.div($levelInfo.gold.nextSelfSum,100))</span>
+                                </li>
+                                <li>
+                                    <span class="fl">团队消费累计金额</span>
+                                    <span class="fr">￥$number.format("#0.00",$math.div($levelInfo.gold.teamSum,100))/￥$number.format("#0.00",$math.div($levelInfo.gold.nextTeamSum,100))</span>
+                                </li>
+                                <li>
+                                    <span class="fl">团队金牌人数</span>
+                                    <span class="fr">$levelInfo.gold.countAllGoldUser人/$levelInfo.gold.nextCountAllGoldUser人</span>
+                                </li>
+                            </ul>
                             </div>
+                            #end
                         </div>    
                     </div>
                 </div>
             </div>
         </div>
     </section>
- 
+    
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- footer -->
     <footer class="footer">
         <div class="footer-service">
@@ -467,17 +409,3 @@
     </footer>
 </body>
 </html>
-<script>
-$(function(){
-    $('.jq-carousel').owlCarousel({
-        items: 5,
-        autoPlay: true,
-        navigation : true,
-        navigationText: [
-            "<i class='glyphicon glyphicon-chevron-left'></i>",
-            "<i class='glyphicon glyphicon-chevron-right'></i>"
-        ],
-        slideSpeed : 300
-    });
-});    
-</script>
