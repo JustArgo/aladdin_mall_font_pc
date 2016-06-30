@@ -18,6 +18,8 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/plupload/plupload.full.min.js"></script>
+	<script type="text/javascript" src="/js/qiniu.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -342,6 +344,143 @@
     			 }
     		 }
     	 })
+    	 
+    	 
+    	 
+    	 
+    	 
+    	 
+    	 
+    		
+ 		function uuid() {
+ 			var s = [];
+ 			var hexDigits = "0123456789abcdef";
+ 			for (var i = 0; i < 36; i++) {
+ 				s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+ 			}
+ 			s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+ 			s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+ 			s[8] = s[13] = s[18] = s[23] = "-";
+ 			var uuid = s.join("");
+ 			return uuid;
+ 		}
+ 		$(function(){
+ 			$(".jq-start a").click(function(){
+ 				var jq_start = $(this).closest(".jq-start");
+ 				var _index = $(this).index();
+ 				jq_start.find("a").removeClass("active");
+ 				jq_start.find("a").each(function(index,item){
+ 					if(index<=_index){
+ 						$(item).addClass("active");
+ 					}
+ 				})
+ 			});
+ 			
+ 			$(".btn-assessment").click(function(){
+ 				var descConform = 0;
+ 				var service = 0;
+ 				var speed = 0;
+ 				
+ 				descConform = $(".descConform .active").length;
+ 				service = $(".service .active").length;
+ 				speed = $(".speed .active").length;
+ 				
+ 				$("input[name=descScore]").val(descConform);
+ 				$("input[name=sendGoodsScore]").val(speed);
+ 				$("input[name=serveScore]").val(service);
+ 				
+ 				$("form").submit();
+ 				
+ 				
+ 			});
+ 			
+ 		});
+ 		var uptoken = "";
+		$.ajaxSetup({  
+			async : false 
+		});
+		$.get('/common/uptoken',function(result){uptoken = result});
+		console.log(uptoken);
+ 		var uploader = Qiniu.uploader({
+ 			runtimes: 'html5,flash,html4',
+ 			browse_button: 'pickfiles',
+ 			uptoken:uptoken,
+ 			container: 'container',
+ 			drop_element: 'container',
+ 			max_file_size: '100mb',
+ 			flash_swf_url: '/js/plupload/Moxie.swf',
+ 			dragdrop: true,
+ 			chunk_size: '3mb',
+ 			domain: 'http://7xrade.com2.z0.glb.qiniucdn.com',
+ 			auto_start: false,
+ 			init: {
+ 				'FilesAdded': function(up, files) {
+ 					var imgNum = $(".evaluate-img").length;
+ 					console.log("imgNum:"+imgNum);
+ 					var upNum = files.length;
+ 					if(upNum+imgNum>3){
+ 						alert("最多只能上传3张图片");
+ 						for(var i=0;i<files.length;i++){
+ 							up.removeFile(files[i]);
+ 						}
+ 						return false;
+ 					}
+ 					up.start();
+ 				},
+ 				'BeforeUpload': function(up, file) {
+// 	                var progress = new FileProgress(file, 'fsUploadProgress');
+// 	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+// 	                if (up.runtime === 'html5' && chunk_size) {
+// 	                    progress.setChunkProgess(chunk_size);
+// 	                }
+ 				},
+ 				'UploadProgress': function(up, file) {
+// 	                var progress = new FileProgress(file, 'fsUploadProgress');
+// 	                var chunk_size = plupload.parseSize(this.getOption('chunk_size'));
+// 	                progress.setProgress(file.percent + "%", file.speed, chunk_size);
+ 				},
+ 				'UploadComplete': function() {
+ 					
+ 				},
+ 				'FileUploaded': function(up, file, info) {
+ 					
+ 					var domain = up.getOption('domain');
+ 					var res = $.parseJSON(info)
+ 					var imgPath = domain+"/"+res.key;
+ 					
+ 					if($(".evaluate-img").length==2){
+ 						$("#pickfiles").hide();
+ 					}
+ 					$.get('/common/imgPath',{'imgPath':imgPath},function(result){
+ 						//$('#container').prepend('<img src="'+result+'" style="width:80px;height:80px;margin-right:10px;">');
+ 						$("#headImage").attr("src",result);
+
+ 					})
+ 					
+ 					
+ 					$('.imgPaths').append('<input type="hidden" name="imgs" value="'+res.key.replace(/comment_img_/,'')+'"/>');
+ 					
+ 				},
+ 				'Error': function(up, err, errTip) {
+ 					alert("图片上传失败");
+ 				},
+ 				'Key': function(up, file) {
+ 					var key = 'comment_img_'+new Date().getTime()+"_"+uuid()+"_"+file.name;
+ 					return key;
+ 				}
+ 			}
+ 		});
+ 		
+ 		$("#container").on("click",'.delete-pic',function(){
+ 	    	if(!$("#pickfiles").is("visible")){
+ 	    		$("#pickfiles").show();
+ 	    	}
+ 	    	var index = $(this).closest(".evaluate-img").index();
+ 	    	$(this).closest(".evaluate-img").remove();
+ 	    	$("input[name=imgs]:eq("+index+")").remove();
+ 	    	
+ 	    });
+    	 
     })
     </script>
 </head>
@@ -517,12 +656,18 @@
                                 <div class="tab-pane fade active in" id="page-1">
                                     <div class="alipay">
                                         <div class="person-message">
-                                            <form class="form">
+                                            <form class="form" style="width:800px;">
+                                            
                                                 <div class="form-group">
                                                     <label class="control-label">当前头像：</label>
                                                     <a href="javascript:;">
-                                                        <img src="$userInfo.headImage" />
+                                                        <img src="$userInfo.headImage" id="headImage"/>
                                                     </a>
+                                                    <div class="photo" id="container" style="display:inline-block;margin-left:10px;">
+                                                        <input type="file" class="file" />
+                    									<div style="display:none:" class="imgPaths">
+                    									</div>
+                                                    </div>
                                                 </div>
                                                 <div class="form-group">
                                                     <label class="control-label">昵称：</label>
