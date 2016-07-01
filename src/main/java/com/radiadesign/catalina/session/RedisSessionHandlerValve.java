@@ -26,6 +26,7 @@ public class RedisSessionHandlerValve extends ValveBase {
       getNext().invoke(request, response);
     } finally {
       final Session session = request.getSessionInternal(false);
+//      System.out.println("redisSessionHandlerValue invoke finish,and storeOrRemoveSession");
       storeOrRemoveSession(session);
       manager.afterRequest();
     }
@@ -38,6 +39,7 @@ public class RedisSessionHandlerValve extends ValveBase {
           log.trace("Request with session completed, saving session " + session.getId());
           if (session.getSession() != null) {
             log.trace("HTTP Session present, saving " + session.getId());
+//            System.out.println("manager.save(session)");
             manager.save(session);
           } else {
             log.trace("No HTTP Session present, Not saving " + session.getId());

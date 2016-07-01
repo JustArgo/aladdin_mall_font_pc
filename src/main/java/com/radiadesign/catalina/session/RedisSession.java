@@ -1,5 +1,7 @@
 package com.radiadesign.catalina.session;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.NotSerializableException;
 import java.io.ObjectInputStream;
@@ -13,11 +15,19 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.catalina.Loader;
 import org.apache.catalina.Manager;
 import org.apache.catalina.session.StandardSession;
+import org.apache.catalina.util.CustomObjectInputStream;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.juli.logging.Log;
+import org.apache.juli.logging.LogFactory;
 
 
 public class RedisSession extends StandardSession {
+	
+	private final Log log = LogFactory.getLog(RedisSessionManager.class);
+	
 	protected static Boolean manualDirtyTrackingSupportEnabled = false;
 
 	public static void setManualDirtyTrackingSupportEnabled(Boolean enabled) {
@@ -32,10 +42,22 @@ public class RedisSession extends StandardSession {
 
 	protected HashMap<String, Object> changedAttributes;
 	protected Boolean dirty;
-
+	/**
+	 * 存放登录用户的信息的key
+	 */
+	private String redisSessionAttrKey;
+	
 	public RedisSession(Manager manager) {
 		super(manager);
 		resetDirtyTracking();
+		if (manager instanceof RedisSessionManager) {
+			RedisSessionManager ma = (RedisSessionManager) manager;
+			redisSessionAttrKey=ma.getLoginUserAttrKey();
+			if(log.isTraceEnabled()){
+				log.trace("  loginuser attr key= " + redisSessionAttrKey);
+			}
+			System.out.println("  loginuser attr key= " + redisSessionAttrKey);
+		}
 	}
 
 	public Boolean isDirty() {
@@ -53,8 +75,10 @@ public class RedisSession extends StandardSession {
 
 	@Override
 	public void setAttribute(String key, Object value) {
+		System.out.println("setAttribute,key="+key+",value="+value);
 		if (manualDirtyTrackingSupportEnabled && manualDirtyTrackingAttributeKey.equals(key)) {
 			dirty = true;
+//			System.out.println("dirty!!!!");
 			return;
 		}
 
@@ -62,6 +86,7 @@ public class RedisSession extends StandardSession {
 		if ((value != null || oldValue != null)
 				&& (value == null && oldValue != null || oldValue == null && value != null
 						|| !value.getClass().isInstance(oldValue) || !value.equals(oldValue))) {
+			System.out.println("changeAttributes");
 			changedAttributes.put(key, value);
 		}
 
@@ -219,7 +244,8 @@ public class RedisSession extends StandardSession {
 	}
 
 	/**
-	 * 从session对象中读入数据
+	 * 从session对象中读入数据,
+	 * redis读出的数据由json转为SessionLoginUserInfo,并且把它转换到session的attribute中
 	 * 
 	 * @param userinfo
 	 */
@@ -233,7 +259,19 @@ public class RedisSession extends StandardSession {
 		}
 		creationTime = (Long) creationTime2;
 		// lastAccessedTime = ((Long) stream.readObject()).longValue();
-		maxInactiveInterval = userinfo.getUser_auth().getExpireIn().intValue();
+		maxInactiveInterval = getMaxInactiveInterval()*1000;
+		if(userinfo.getUser_auth()!=null){
+			Object ei = userinfo.getUser_auth().get("expireIn");
+			if(ei!=null){
+				if (ei instanceof Number) {
+					Number nmn = (Number) ei;
+					maxInactiveInterval = nmn.intValue();
+				}
+				else{
+					maxInactiveInterval = Integer.parseInt(ei.toString());
+				}
+			}
+		}
 		isNew = userinfo.isNew();
 		isValid = userinfo.isValid();
 		thisAccessedTime = (Long) System.currentTimeMillis();
@@ -242,16 +280,22 @@ public class RedisSession extends StandardSession {
 		id = (String) userinfo.getId();
 		if (manager.getContext().getLogger().isDebugEnabled())
 			manager.getContext().getLogger().debug("readObject() loading session " + id);
-
+//		System.out.println("readObject() loading session " + id);
 		// Deserialize the attribute count and attribute values
 		if (attributes == null)
 			attributes = new ConcurrentHashMap<>();
 		boolean isValidSave = isValid;
 		isValid = true;
+		if(log.isTraceEnabled()){
+			log.trace("put loginUser attribute  with value '" + userinfo.getUser_auth() + "'");
+		}
+//		System.out.println("put loginUser attribute  with value '" + userinfo.getUser_auth() + "'");
 		if (manager.getContext().getLogger().isDebugEnabled())
 			manager.getContext().getLogger()
 					.debug("put loginUser attribute  with value '" + userinfo.getUser_auth() + "'");
-		attributes.put("loginUser", userinfo.getUser_auth());
+		if(userinfo.getUser_auth()!=null){
+			attributes.put(redisSessionAttrKey, userinfo.getUser_auth());
+		}
 		Map<String, Object> attrs = userinfo.getAttrs();
 		for (Iterator iterator = attrs.entrySet().iterator(); iterator.hasNext();) {
 			Map.Entry<String, Object> en = (Map.Entry<String, Object>) iterator.next();
@@ -259,9 +303,27 @@ public class RedisSession extends StandardSession {
 			Object value = en.getValue();
 			if ((value instanceof String) && (value.equals(NOT_SERIALIZED)))
 				continue;
+			if(log.isTraceEnabled()){
+				log.trace("  loading attribute '" + name + "' with value '" + value + "'");
+			}
+//			System.out.println("  loading attribute '" + name + "' with value '" + value + "'");
 			if (manager.getContext().getLogger().isDebugEnabled())
 				manager.getContext().getLogger().debug("  loading attribute '" + name + "' with value '" + value + "'");
-			attributes.put(name, value);
+			//通过序列化把base64的内容转成对象
+			try {
+				Object objectFromBase64 = getObjectFromBase64(value);
+				if(log.isTraceEnabled()){
+					log.trace("  attribute(disSerializer) '" + name + "' with value '" + objectFromBase64 + "'");
+				}
+//				System.out.println("  attribute(disSerializer) '" + name + "' with value '" + objectFromBase64 + "'");
+				if (manager.getContext().getLogger().isDebugEnabled())
+					manager.getContext().getLogger().debug("  attribute(disSerializer) '" + name + "' with value '" + objectFromBase64 + "'");
+				attributes.put(name,objectFromBase64 );
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 		isValid = isValidSave;
 
@@ -272,12 +334,50 @@ public class RedisSession extends StandardSession {
 		if (notes == null) {
 			notes = new Hashtable<>();
 		}
-
+		
 	}
 
 	/**
-	 * 把session信息写成SessionLoginUserInfo 对象
-	 * 
+	 * 从base64的对象中读取内容
+	 * @param value
+	 * @return
+	 * @throws IOException 
+	 * @throws ClassNotFoundException 
+	 */
+	private Object getObjectFromBase64(Object value) throws IOException, ClassNotFoundException {
+		if(value==null){
+			return null;
+		}
+		if (value instanceof String) {
+			String valuestr = (String) value;
+			
+			byte[] decodeBase64 = Base64.decodeBase64(valuestr);
+			Loader loader = null;
+		    if (manager.getContext() != null) {
+		      loader = manager.getContext().getLoader();
+		    }
+		    ClassLoader classLoader = null;
+		    if (loader != null) {
+		        classLoader = loader.getClassLoader();
+		    }
+		    ObjectInputStream oos = new CustomObjectInputStream(new ByteArrayInputStream(decodeBase64),classLoader);
+			try{
+				return oos.readObject();
+			}
+			finally{
+				if(oos!=null){
+					oos.close();
+				}
+			}
+		}
+		else{
+			return value;
+		}
+	}
+
+	/**
+	 * 把session信息写成SessionLoginUserInfo 对象,SessionLoginUserInfo会转化为json存入redis
+	 * 其中其它的属性,会通过序列化成base64,存到SessionLoginUserInfo的属性中
 	 * @return
 	 * @throws IOException
 	 */
@@ -288,40 +388,108 @@ public class RedisSession extends StandardSession {
 		userinfo.setId(id);
 		userinfo.setNew(isNew);
 		userinfo.setValid(isValid);
-		userinfo.setUser_auth((SessionUserAuthInfo) attributes.get("loginUser"));
+		
+		Object rawAuthInfo = attributes.get(redisSessionAttrKey);
+		if (rawAuthInfo instanceof SessionUserAuthInfo) {
+			SessionUserAuthInfo authinfo = (SessionUserAuthInfo) rawAuthInfo;
+			if (manager.getContext().getLogger().isDebugEnabled())
+				manager.getContext().getLogger().debug(
+						"  user login info= '" + authinfo + "'");
+			if(log.isTraceEnabled()){
+				log.trace("get SessionUserAuthInfo from  session= " +authinfo);
+			}
+//			System.out.println("get SessionUserAuthInfo from  session= " +authinfo);
+			if(authinfo!=null){
+				
+				userinfo.setUser_auth(authinfo.toMap());
+			}
+		}
+		if (rawAuthInfo instanceof Map) {
+			Map map = (Map) rawAuthInfo;
+//			System.out.println("get SessionUserAuthInfo(Map) from  session= " +map);
+			userinfo.setUser_auth(map);
+		}
+		else{
+			
+			System.out.println("in session's loginUserAttr is not the class of SessionUserAuthInfo or map");
+			System.out.println(rawAuthInfo!=null?rawAuthInfo.getClass():"is null");
+		}
 		userinfo.setThisAccessedTime(thisAccessedTime);
 		//写入其它的信息
 		String keys[] = keys();
 		ArrayList<String> saveNames = new ArrayList<>();
 		ArrayList<Object> saveValues = new ArrayList<>();
 		for (int i = 0; i < keys.length; i++) {
-			if("loginUser".equals(keys[i])){
+			if(redisSessionAttrKey.equals(keys[i])){
 				//此部分信息不需要再保存一次
 				continue;
 			}
 			Object value = attributes.get(keys[i]);
+//			System.out.println("attr  key="+keys[i]+",value="+value);
 			
 			if (value == null)
 				continue;
 			else if ((value instanceof Serializable) && (!exclude(keys[i]))) {
 				saveNames.add(keys[i]);
-				saveValues.add(value);
-			} else {
+				String base64 = serial2Base64(value);
+				saveValues.add(base64);
+				
+//			}else if(redisSessionAttrKey.equals(keys[i])){
+//				saveNames.add(keys[i]);
+//				saveValues.add(value);
+			}
+			else {
 				removeAttributeInternal(keys[i], true);
 			}
 		}
 		int n = saveNames.size();
 		for (int i = 0; i < n; i++) {
 				userinfo.putAttr(saveNames.get(i), saveValues.get(i));
+				if(log.isTraceEnabled()){
+					log.trace(
+							"  storing attribute '" + saveNames.get(i) + "' with value '" + saveValues.get(i) + "'");
+				}
+//				System.out.println(
+//							"  storing attribute '" + saveNames.get(i) + "' with value '" + saveValues.get(i) + "'");
 				if (manager.getContext().getLogger().isDebugEnabled())
 					manager.getContext().getLogger().debug(
 							"  storing attribute '" + saveNames.get(i) + "' with value '" + saveValues.get(i) + "'");
 		}
+		if(log.isTraceEnabled()){
+			log.trace("writeObject() storing session " + id+",and userinfo="+userinfo);
+		}
+//		System.out.println("writeObject() storing session " + id+",and userinfo="+userinfo);
 		if (manager.getContext().getLogger().isDebugEnabled())
 			manager.getContext().getLogger().debug("writeObject() storing session " + id);
+		if (manager.getContext().getLogger().isDebugEnabled())
+			manager.getContext().getLogger().debug("writeObject() userinfo= " + userinfo);
 
 		return userinfo;
 
+	}
+
+	/**
+	 * 把对像序列化为base64字符串
+	 * @param value
+	 * @return
+	 * @throws IOException 
+	 */
+	private String serial2Base64(Object value) throws IOException {
+		ByteArrayOutputStream os = new ByteArrayOutputStream();
+		ObjectOutputStream oos = new ObjectOutputStream(os);
+		try{
+			oos.writeObject(value);
+			byte[] byteData = os.toByteArray();
+			return new String(Base64.encodeBase64((byteData)));
+		}
+		finally{
+			if(oos!=null){
+				oos.close();
+			}
+			if(os!=null){
+				os.close();
+			}
+		}
 	}
 
 }

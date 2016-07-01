@@ -14,10 +14,14 @@ import java.util.Map;
  * 2016年2月4日 下午4:09:32
  * 本类主要做为 用户session登录信息,这个可与php的信息共通
  */
+//@JsonIgnoreProperties(ignoreUnknown = true)
 public class SessionLoginUserInfo implements Serializable {
 
 	
-	SessionUserAuthInfo user_auth;
+	/**
+	 * 登录用户
+	 */
+	Map<String,Object> user_auth;
 	
 	/**
 	 * 是否新session
@@ -50,18 +54,19 @@ public class SessionLoginUserInfo implements Serializable {
 	protected String id;
 
 	/**
-	 * 用户信息
+	 * 登录用户
 	 */
-	public SessionUserAuthInfo getUser_auth() {
+	public Map<String, Object> getUser_auth() {
 		return user_auth;
 	}
 
 	/**
-	 * 用户信息
+	 * 登录用户
 	 */
-	public void setUser_auth(SessionUserAuthInfo user_auth) {
+	public void setUser_auth(Map<String, Object> user_auth) {
 		this.user_auth = user_auth;
 	}
+	
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

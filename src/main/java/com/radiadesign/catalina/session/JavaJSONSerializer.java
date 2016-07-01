@@ -1,12 +1,11 @@
 package com.radiadesign.catalina.session;
 
-import org.apache.catalina.util.CustomObjectInputStream;
-import org.apache.tomcat.util.codec.binary.StringUtils;
-import org.codehaus.jackson.map.ObjectMapper;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpSession;
-import java.io.*;
-import java.util.Enumeration;
+
+import org.codehaus.jackson.map.ObjectMapper;
 
 
 /**
@@ -24,12 +23,14 @@ public class JavaJSONSerializer implements Serializer {
 
   @Override
   public byte[] serializeFrom(HttpSession session) throws IOException {
-
+	  System.out.println("javajsonserial serializeFrom");
     RedisSession redisSession = (RedisSession) session;
 //    Enumeration<String> attributeNames = redisSession.getAttributeNames();
 //    System.out.println("从session中读取属性并放在redis中");
     SessionLoginUserInfo sessionLoginUserInfo = redisSession.doWriteObject();
     ObjectMapper mapper = new ObjectMapper();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	mapper.setDateFormat(format);
     byte[] writeValueAsBytes = mapper.writeValueAsBytes(sessionLoginUserInfo);
 //    while (attributeNames.hasMoreElements()) {
 //		String attr = (String) attributeNames.nextElement();
@@ -41,6 +42,7 @@ public class JavaJSONSerializer implements Serializer {
 //		}
 //	}
 //    System.out.println("没有找到登录用户信息详情");
+//    System.out.println("redis <== "+new String(writeValueAsBytes));
     return writeValueAsBytes;
 //    ByteArrayOutputStream bos = new ByteArrayOutputStream();
 //    ObjectOutputStream oos = new ObjectOutputStream(new BufferedOutputStream(bos));
@@ -59,8 +61,12 @@ public class JavaJSONSerializer implements Serializer {
     String jsonstr = new String(data);
 //    System.out.println(jsonstr);
     ObjectMapper mapper = new ObjectMapper();
+    SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");  
+	mapper.setDateFormat(format);
     try {
 		SessionLoginUserInfo userinfo = mapper.readValue(jsonstr, SessionLoginUserInfo.class);
+		
+//		System.out.println("redis  ==>"+userinfo);
 		if(userinfo!=null)
 		{
 //			System.out.println(userinfo);

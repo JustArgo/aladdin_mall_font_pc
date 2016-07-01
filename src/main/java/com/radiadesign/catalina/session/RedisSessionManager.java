@@ -36,6 +36,7 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
   protected int database = 0;
   protected String password = null;
   protected int timeout = Protocol.DEFAULT_TIMEOUT;
+  protected String loginUserAttrKey = "loginUser";//存放登录用户的信息的key
   protected JedisPool connectionPool;
 
   protected RedisSessionHandlerValve handlerValve;
@@ -464,10 +465,14 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
       jedis = acquireConnection();
 
       Boolean isCurrentSessionPersisted = this.currentSessionIsPersisted.get();
+//      System.out.println("redis session manager before save into jedis");
       if (sessionIsDirty || (isCurrentSessionPersisted == null || !isCurrentSessionPersisted)) {
+//    	  System.out.println("redis session manager save"+binaryId+" into jedis");
+    	  byte[] serializeFrom = serializer.serializeFrom(redisSession);
+//    	  System.out.println("redisSessionString="+new String(serializeFrom));
         jedis.set(binaryId, serializer.serializeFrom(redisSession));
       }
-
+//      System.out.println("redis session manager after save into jedis");
       currentSessionIsPersisted.set(true);
 
       log.trace("Setting expire timeout on session [" + redisSession.getId() + "] to " + getMaxInactiveInterval());
@@ -552,4 +557,18 @@ public class RedisSessionManager extends ManagerBase implements Lifecycle {
     }
     serializer.setClassLoader(classLoader);
   }
+
+/**
+ * 存放登录用户的信息的key
+ */
+public String getLoginUserAttrKey() {
+	return loginUserAttrKey;
+}
+
+/**
+ * 存放登录用户的信息的key
+ */
+public void setLoginUserAttrKey(String loginUserAttrKey) {
+	this.loginUserAttrKey = loginUserAttrKey;
+}
 }
