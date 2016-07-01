@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hummingbird.common.ext.SessionUserAuthInfo;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.ExpireKey;
 import com.mi360.aladdin.mall.util.WebUtil;
@@ -18,7 +19,6 @@ import com.mi360.aladdin.message.sms.service.SmsCodeVerifyService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 注册
@@ -91,11 +91,6 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
-			sessionUserAuthInfo.setUserId(userId);
-			sessionUserAuthInfo.setMqId(mqId);
-			sessionUserAuthInfo.setLuckNum(luckNum);
-			WebUtil.getSession().setAttribute(REGISTER_PHONE_KEY, username);
 			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
@@ -120,10 +115,6 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
-			SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
-			sessionUserAuthInfo.setUserId(userId);
-			sessionUserAuthInfo.setMqId(mqId);
-			sessionUserAuthInfo.setLuckNum(luckNum);
 			return "success_email";
 		} else {
 			return "username_error";

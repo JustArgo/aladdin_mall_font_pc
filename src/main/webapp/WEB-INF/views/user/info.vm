@@ -663,7 +663,7 @@
                                                         <img src="$userInfo.headImage" id="headImage"/>
                                                     </a>
                                                     <div class="photo" id="container" style="display:inline-block;margin-left:10px;">
-                                                        <a id="pickfiles">选择文件</a>
+                                                        <a id="pickfiles" style="cursor: pointer;">选择文件</a>
                     									<div style="display:none:" class="imgPaths">
                     									</div>
                                                     </div>

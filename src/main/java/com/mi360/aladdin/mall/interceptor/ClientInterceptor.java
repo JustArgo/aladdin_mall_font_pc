@@ -18,7 +18,6 @@ import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 import com.mi360.aladdin.interaction.wx.service.WxInteractionService;
 import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 客户端过滤器
@@ -40,16 +39,16 @@ public class ClientInterceptor extends HandlerInterceptorAdapter {
 
 		boolean isWx = ua.indexOf("micromessenger") > 0;// 是否微信浏览器
 
-		SessionUserAuthInfo sessionUserAuthInfo = WebUtil.getCurrentSessionUserAuthInfo();
-		if (sessionUserAuthInfo == null) {
+//		SessionUserAuthInfo sessionUserAuthInfo = WebUtil.getCurrentSessionUserAuthInfo();
+		if (false) {
 			
 			
-			sessionUserAuthInfo=new SessionUserAuthInfo();
-			sessionUserAuthInfo.setUserId(342);
-			sessionUserAuthInfo.setMqId("d9afefcc54ec4a2ca6ca099e8cbd2413");
-			sessionUserAuthInfo.setLuckNum(100000342);
-			
-			WebUtil.login(sessionUserAuthInfo);
+//			sessionUserAuthInfo=new SessionUserAuthInfo();
+//			sessionUserAuthInfo.setUserId(342);
+//			sessionUserAuthInfo.setMqId("d9afefcc54ec4a2ca6ca099e8cbd2413");
+//			sessionUserAuthInfo.setLuckNum(100000342);
+//			
+//			WebUtil.login(sessionUserAuthInfo);
 
 			
 /*

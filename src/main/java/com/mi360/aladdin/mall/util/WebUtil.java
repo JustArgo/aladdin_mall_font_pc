@@ -1,15 +1,18 @@
 package com.mi360.aladdin.mall.util;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.jboss.netty.util.HashedWheelTimer;
 import org.springframework.web.context.request.RequestAttributes;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import com.mi360.aladdin.mall.Principal;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * Web工具
@@ -27,18 +30,18 @@ public class WebUtil extends HttpServlet {
 	 * 
 	 * @return 身份信息，未登录为null
 	 */
-	public static SessionUserAuthInfo getCurrentSessionUserAuthInfo() {
+	public static Map<String, Object> getCurrentUserInfo() {
 		
 //		Principal principal=new Principal(317,"ee9de73cf5a24e1597d916e61bd89365", "");// liqing
 //		Principal principal=new Principal(279,"d140dd2c30dc4005aa2758ecb1ca981b", ""); //涓藉嫟
 //		Principal principal=new Principal(332,"1621f314a9574a4e8918a3e38a33f85f", ""); //john
 //		Principal principal=new Principal(320,"e5a3ccc5fd814c06b0bb8adcf9000923", ""); //yongzhong
-		SessionUserAuthInfo sessionUserAuthInfo = new SessionUserAuthInfo();
-		sessionUserAuthInfo.setUserId(342);
-		sessionUserAuthInfo.setMqId("d9afefcc54ec4a2ca6ca099e8cbd2413");
-		sessionUserAuthInfo.setLuckNum(100000342);
-		return sessionUserAuthInfo;
-		//return (Principal) getSession().getAttribute(Principal.ATTRIBUTE_KEY);
+		Map<String, Object> map=new HashMap<>();
+		map.put("userId", "342");
+		map.put("mqId", "d9afefcc54ec4a2ca6ca099e8cbd2413");
+		map.put("luckNum", 100000342);
+		return map;
+//		return (Map<String, Object>) getSession().getAttribute("loginUser");
 	}
 
 	/**
@@ -46,11 +49,11 @@ public class WebUtil extends HttpServlet {
 	 * 
 	 * @return
 	 */
-	public static void login(SessionUserAuthInfo sessionUserAuthInfo) {
+	public static void login(Map<String, Object> userInfo) {
 		RequestAttributes requestAttributes = RequestContextHolder.currentRequestAttributes();
 		if (requestAttributes != null) {
 			HttpServletRequest request = ((ServletRequestAttributes) requestAttributes).getRequest();
-			request.getSession().setAttribute("loginUser", sessionUserAuthInfo);
+			request.getSession().setAttribute("loginUser", userInfo);
 		}
 	}
 
