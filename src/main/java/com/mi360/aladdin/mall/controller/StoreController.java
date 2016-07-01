@@ -10,13 +10,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.store.service.IStoreService;
 import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 
 @Controller
@@ -36,8 +34,8 @@ public class StoreController {
 	@RequestMapping("/")
 	public String index(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.getStore(requestId, mqId);
 		logger.info(map);
@@ -78,8 +76,8 @@ public class StoreController {
 	@RequestMapping("/open")
 	public String openStore(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.getStore(requestId, mqId);
 		logger.info("map:"+map);
@@ -99,8 +97,8 @@ public class StoreController {
 	@RequestMapping("/create")
 	public String createStore(String requestId, String title, String logoPath, String abstraction, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.createStore(requestId, mqId, title, logoPath, abstraction);
 		logger.info("map:"+map);
@@ -132,8 +130,8 @@ public class StoreController {
 	@RequestMapping("/setting")
 	public String setting(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> storeMap = storeService.getStore(requestId, mqId);
 		logger.info("storeMap:"+storeMap);
@@ -154,8 +152,8 @@ public class StoreController {
 	@RequestMapping("/update")
 	public String updateStore(String requestId, String title, String logoPath, String abstraction, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.updateStoreInfo(requestId, mqId, title, abstraction, logoPath);
 		logger.info("map:"+map);
@@ -175,8 +173,8 @@ public class StoreController {
 	@RequestMapping("/products")
 	public String products(String requestId,  Model model, Integer startIndex, Integer pageSize){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.getProductInStore(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("map:"+map);
@@ -202,8 +200,8 @@ public class StoreController {
 	@RequestMapping("/sale-calc")
 	public String saleCalc(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> map = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
 		logger.info("map:"+map);
@@ -229,8 +227,8 @@ public class StoreController {
 	@RequestMapping("/order")
 	public String orderIndex(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> allOrderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
 		logger.info("allOrderMap:"+allOrderMap);
@@ -273,8 +271,8 @@ public class StoreController {
 	public Map<String,Object> topProducts(String requestId, Integer[] productIds){
 		
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		return storeService.topProductInStore(requestId, mqId, productIds);
 		
@@ -287,8 +285,8 @@ public class StoreController {
 	@ResponseBody
 	public Map<String,Object> recommend(String requestId, Integer[] productIds){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		return storeService.recommendProducts(requestId, mqId, productIds);
 		
@@ -301,8 +299,8 @@ public class StoreController {
 	@ResponseBody
 	public Map<String,Object> cancelProxy(String requestId, Integer[] productIds){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		return storeService.delProductsFromStore(requestId, mqId, productIds);
 		
@@ -314,8 +312,8 @@ public class StoreController {
 	@RequestMapping("/browse")
 	public String browse(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqId = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
 		
 		Map<String,Object> storeMap = storeService.getStore(requestId, mqId);
 		if((Integer)storeMap.get("errcode")==0){

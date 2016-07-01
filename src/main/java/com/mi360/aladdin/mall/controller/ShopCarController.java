@@ -4,7 +4,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.http.impl.nio.reactor.ExceptionEvent;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -12,13 +11,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.order.service.IOrderService;
 import com.mi360.aladdin.product.domain.Product;
 import com.mi360.aladdin.product.service.IProductService;
 import com.mi360.aladdin.shopcar.service.IShopCarService;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 
 @Controller
@@ -43,8 +40,8 @@ public class ShopCarController {
 	@RequestMapping("")
 	public String shopping_cart(String requestId,Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		List<Map<String,Object>> supplierProducts = shopCarService.viewShopCar(mqID, requestId);		
 		
@@ -70,8 +67,8 @@ public class ShopCarController {
 	@ResponseBody
 	public String remove_shopcar_product(String requestId,Integer[] skuIDs){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		if(mqID==null || skuIDs==null){
 			return "{\"errcode\":10042,\"errmsg\":\"invalid arguments\"}";
@@ -84,8 +81,8 @@ public class ShopCarController {
 	@ResponseBody
 	public String add_to_shopcar(String requestId,Integer productID, Integer skuID, Integer buyNum){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		//查询 该商品的限购数量
 		Product product = productService.queryProduct(productID,requestId);
@@ -111,8 +108,8 @@ public class ShopCarController {
 	@ResponseBody
 	public Map<String, Object> shopcarCount(String requestId){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		Map<String, Object> retMap = new HashMap<String,Object>();
 		retMap.put("errcode", 0);

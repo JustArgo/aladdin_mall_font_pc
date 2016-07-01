@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -33,6 +34,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.AccountService;
+import com.mi360.aladdin.alipay.service.IAlipayService;
 import com.mi360.aladdin.comment.domain.CommentStatistics;
 import com.mi360.aladdin.comment.service.ICommentService;
 import com.mi360.aladdin.data.dictionary.service.DataDictionaryService;
@@ -56,6 +58,7 @@ import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.mq.service.MqService;
 import com.mi360.aladdin.order.service.IOrderProductService;
 import com.mi360.aladdin.order.service.IOrderService;
+import com.mi360.aladdin.order.service.PcIOrderService;
 import com.mi360.aladdin.product.domain.Product;
 import com.mi360.aladdin.product.domain.ProductSku;
 import com.mi360.aladdin.product.service.IPostFeeService;
@@ -73,7 +76,6 @@ import com.mi360.aladdin.unionpay.service.UnionpayService;
 import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 @Controller
 @RequestMapping("/order")
@@ -142,14 +144,19 @@ public class OrderController {
 	
 	@Autowired
 	private MqService mqService;
+	
+	@Autowired
+	private IAlipayService alipayService;
 
+	@Autowired
+	private PcIOrderService pcOrderService;
 	
 	@RequestMapping("/placeOrder")
 	public String placeOrder(String requestId, String orderCode, String payType, Integer[] skuIds, Integer[] buyNums, Long[] skuPrices, Long[] supplierAmounts,
 			Long pFee, Long pSum, String invoiceName, Integer invoiceID, Integer receaddID, String notes, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();;
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		if (skuIds != null) {
 			List<Map<String, Object>> noUpProductNameList = productService.checkCanPlaceOrder(skuIds, requestId);
@@ -176,10 +183,12 @@ public class OrderController {
 			return "redirect:wxPay?orderCode=" + orderCode;
 		} else if(payType.equals(OrderPayment.PayChannel.WXS.toString())){
 			return "redirect:wxSPay?orderCode=" + orderCode;
-		}else if (payType.equals(OrderPayment.PayChannel.SUM.toString())) {
+		} else if (payType.equals(OrderPayment.PayChannel.SUM.toString())) {
 			return "redirect:remainPay?orderCode=" + orderCode;
 		} else if(payType.equals(OrderPayment.PayChannel.UNI.toString())){
 			return "redirect:unionPay?orderCode=" + orderCode;
+		} else if(payType.equals(OrderPayment.PayChannel.ALI.toString())){
+			return "redirect:alipay?orderCode=" + orderCode;
 		}
 
 		return "redirect:unionPay?orderCode=" + orderCode;
@@ -189,10 +198,10 @@ public class OrderController {
 	@RequestMapping("/remainPay")
 	public String remainPay(String requestId, String orderCode, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
-		String openId = principal.getCardID();
+		String openId = (String)principal.get("openId");
 		logger.info("remainPay-->openId: " + openId);
 
 		try {
@@ -280,8 +289,8 @@ public class OrderController {
 	public String unionPay(String requestId, ModelMap model, String orderCode) {
 		System.out.println("unionPay--");
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		Order parentOrder = orderService.getOrderByOrderCode(orderCode, requestId);
 		
@@ -305,9 +314,9 @@ public class OrderController {
 	@ResponseBody
 	public Map<String, String> wxPay(String requestId, String orderCode) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String openID = principal.getCardID();
+		String openId = (String)principal.get("openId");
 
 		Map<String, String> unifiedOrderResult = new HashMap<String, String>();
 
@@ -330,7 +339,7 @@ public class OrderController {
 			}
 
 			Map<String, String> parameters = new HashMap<String, String>();
-			parameters.put("openid", openID);
+			parameters.put("openid", openId);
 			if (productNumSet.size() == 1) {
 				parameters.put("body", firstProductName);
 			} else {
@@ -435,6 +444,33 @@ public class OrderController {
 		
 	}
 	
+	@RequestMapping("/alipay")
+	public String alipay(String requestId, String orderCode, Model model){
+		
+		Map<String,String> param = new HashMap<String,String>();
+		
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		param.put("total_fee", String.format("%.2f",order.getpSum()/100.0));
+		param.put("out_trade_no", orderCode);
+		param.put("subject", "restful-directPay商品");
+		param.put("body", "restful-directPay-即时到账测试");
+		
+		String alipayHtml = alipayService.directPayAlipayHtml(param, requestId);
+		
+		System.out.println("alipayHtml:"+alipayHtml);
+		
+		logger.info("alipayHtml:"+alipayHtml);
+		
+		model.addAttribute("alipayHtml",alipayHtml);
+		
+		pcOrderService.finishedPay(requestId, orderCode, "ALI", UUID.randomUUID().toString().replace("-", ""), new Date());
+		
+		return "order/alipay";
+		
+	}
+	
 	@RequestMapping("/pay-success")
 	public String paySuccess(String requestId, String orderCode, Model model){
 		
@@ -454,8 +490,8 @@ public class OrderController {
 	public String previewOrder(String requestId, String orderCode, String mode, Integer[] skuIds, Integer[] buyNums, Integer receaddID, Model model,
 			HttpServletResponse response) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		if (StringUtils.isNotBlank(orderCode)) {
 			model.addAttribute("orderCode", orderCode);
 		}
@@ -621,7 +657,7 @@ public class OrderController {
 	 * @RequestMapping("/viewOrder") public String viewOrder(String
 	 * requestId,Integer orderID, Model model){
 	 * 
-	 * SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+	 * Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 	 * //if(principal==null) principal=new Principal("2", ""); String mqID =
 	 * principal.getMqId();
 	 * 
@@ -742,8 +778,8 @@ public class OrderController {
 	@RequestMapping("/buyNow")
 	public String order(String requestId, Integer productID, Integer skuID, Integer buyNum, Long skuPrice, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		return "redirect:previewOrder?mode=buyNow&skuIds=" + skuID + "&buyNums=" + buyNum;
 	}
@@ -754,9 +790,9 @@ public class OrderController {
 	@RequestMapping("settle")
 	public String settle(String requestId, Integer[] skuIDs, Integer[] buyNums, Long[] skuPrices) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		List<ShopCarProduct> shopCarProducts = shopCarService.getShopCarProducts(mqID, requestId);
 		for (int i = 0; i < skuIDs.length; i++) {
@@ -797,9 +833,9 @@ public class OrderController {
 	@RequestMapping("chooseReceAdd")
 	public String chooseReceAdd(String requestId, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		List<ReceiveAddress> adds = manageReceAddService.listUsableAddress(mqID, requestId);
 		for (int i = 0; i < adds.size(); i++) {
@@ -853,9 +889,9 @@ public class OrderController {
 	@RequestMapping("/order_add_rece_address")
 	public String add(String requestId, ReceiveAddress receiveAddress, Model model) throws Exception {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		if (receiveAddress != null) {
 			receiveAddress.setMqID(mqID);
@@ -1201,10 +1237,10 @@ public class OrderController {
 	public String applyReturnGoods(String requestId, String orderCode, Integer modify, Integer orderProductID, String returnReason, Long refundFee,
 			String returnDesc, String[] imgs, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null) principal=new Principal("2", "");
-		String mqID = principal.getMqId();
-		String openId = principal.getCardID();
+		String mqID = (String)principal.get("mqId");
+		String openId = (String)principal.get("openId");
 
 		try {
 
@@ -1334,9 +1370,9 @@ public class OrderController {
 	@RequestMapping("/apply-return-money")
 	public String applyReturnMoney(String requestId, String orderCode, Integer modify, String returnReason, Long refundFee, String returnDesc, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
-		String openId = principal.getCardID();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
+		String openId = (String)principal.get("openId");
 
 		MoneyReturn moneyReturn = orderService.applyReturnMoney(mqID, orderCode, refundFee, returnReason, returnDesc, requestId);
 
@@ -1440,9 +1476,9 @@ public class OrderController {
 	@RequestMapping("/order-index")
 	public String orderIndex(String requestId, Model model, Integer pageIndex, Integer pageSize, String orderType, String tab, HttpServletRequest request) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		String appId = (String) request.getAttribute("appId");
 		// 1 查找出所有的订单商品
@@ -1450,7 +1486,8 @@ public class OrderController {
 
 		// 查找出待评论的商品 默认第1页 每页8条
 		List<Map<String, Object>> waitForCommentList = orderService.selectWaitForCommentList(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
-
+		logger.info("waitForCommentList:"+waitForCommentList);
+		
 		// 查找出待评论的
 		List<Map<String, Object>> returnGoodsList = orderService.selectReturnGoodsList(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 
@@ -1460,12 +1497,16 @@ public class OrderController {
 		List<Map<String, Object>> noSendOrderList = orderService.selectNoSendOrder(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 		logger.info("noSendOrderList:" + noSendOrderList);
 
+		List<Map<String, Object>> sendOrderList = orderService.selectSendOrder(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
+		logger.info("sendOrderList:"+sendOrderList);
+		
 		//查询退款相关的
 		List<Map<String,Object>> returnMoneyList = orderService.selectReturnMoneyList(mqID, 0, DEFAULT_PAGE_SIZE, requestId);
 		
 		model.addAttribute("noPayedOrderList", noPayedOrderList);
 		model.addAttribute("noSendOrderList", noSendOrderList);
 		model.addAttribute("childOrderList", childOrderList);
+		model.addAttribute("sendOrderList", sendOrderList);
 		
 		for(int i=0;i<childOrderList.size();i++){
 			
@@ -1491,6 +1532,14 @@ public class OrderController {
 		model.addAttribute("returnMoneyList", returnMoneyList);
 		model.addAttribute("returnGoodsList", returnGoodsList);
 		model.addAttribute("tab", tab);
+		
+		model.addAttribute("orderListCount",(pcOrderService.getOrderListByMqIDCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noPayedOrderListCount",(pcOrderService.selectNoPayedOrderCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noSendOrderListCount",(pcOrderService.selectNoSendOrderCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("sendOrderListCount",(pcOrderService.selectSendOrderCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("waitForCommentListCount",(pcOrderService.selectWaitForCommentListCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnMoneyListCount",(pcOrderService.selectReturnMoneyListCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnGoodsListCount",(pcOrderService.selectReturnGoodsListCount(requestId, mqID)+(DEFAULT_PAGE_SIZE-1))/DEFAULT_PAGE_SIZE);
 
 		return "/order/order-index";
 	}
@@ -1498,9 +1547,9 @@ public class OrderController {
 	@RequestMapping("/return-goods-detail")
 	public String returnGoodsDetail(String requestId, Integer goodsReturnID, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		GoodsReturn goodsReturn = orderService.getGoodsReturnByID(goodsReturnID, requestId);
 		Map<String, Object> supReceAdd = supplierService.getReceAddByID(goodsReturn.getSupID(), requestId);
@@ -1528,8 +1577,8 @@ public class OrderController {
 		model.addAttribute("orderCode", goodsReturn.getOrderCode());
 		model.addAttribute("returnReasonCode", goodsReturn.getReturnReason());
 		
-		model.addAttribute("recName",order.getRecName());
-		model.addAttribute("recMobile",order.getRecMobile());
+		model.addAttribute("orderRecName",order.getRecName());
+		model.addAttribute("orderRecMobile",order.getRecMobile());
 		model.addAttribute("address",order.getAddress());
 		
 		model.addAttribute("payTime",order.getPayTime());
@@ -1586,9 +1635,9 @@ public class OrderController {
 	@RequestMapping("/return-money-detail")
 	public String returnMoneyDetail(String requestId, Integer moneyReturnID, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		MoneyReturn moneyReturn = orderService.getMoneyReturnByID(moneyReturnID, requestId);
 
@@ -1629,7 +1678,7 @@ public class OrderController {
 		} else if ("COM".equals(moneyReturn.getStatus())) {// 后台确认退款
 			return "order/returnR-success";
 		} else if ("FAI".equals(moneyReturn.getStatus())) {
-			return "order/returnR-reject";
+			return "order/returnR-fail";
 		}
 
 		return "404";
@@ -1914,6 +1963,30 @@ public class OrderController {
 			childOrderProductVo.add(orderProductMap);
 		}
 		model.addAttribute("childOrderProductVo",childOrderProductVo);
+		
+		//查询物流信息
+		//LogisticsFormVo logisticsFormVo = logisticsService.getLogisticsFormByCompanyID(order.getLogisticsNum(), order.getLogisticsID(), requestId);
+		
+		LogisticsFormVo logisticsFormVo2 = new LogisticsFormVo();
+		logisticsFormVo2.setLogisticsCode("sdfd");
+		logisticsFormVo2.setLogisticsName("顺丰公司");
+		logisticsFormVo2.setLogisticsNum("23424");
+		LogisticsInfoVo logisticsInfoVo1 = new LogisticsInfoVo();
+		logisticsInfoVo1.setContext("躺下街道1巷4号");
+		logisticsInfoVo1.setTime("2014年5月18号");
+
+		LogisticsInfoVo logisticsInfoVo2 = new LogisticsInfoVo();
+		logisticsInfoVo2.setContext("上舍街道");
+		logisticsInfoVo2.setTime("2013年8月13号");
+		
+		List<LogisticsInfoVo> infoList = new ArrayList<LogisticsInfoVo>();
+		infoList.add(logisticsInfoVo1);
+		infoList.add(logisticsInfoVo2);
+		
+		logisticsFormVo2.setLogisticsInfos(infoList);
+		
+		model.addAttribute("logisticsFormVo",logisticsFormVo2);
+		
 		
 		return "order/order-detail-yfh";
 		
@@ -2395,9 +2468,9 @@ public class OrderController {
 	@RequestMapping("/pay-again")
 	public String payAgain(String requestId, String orderCode, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		Order parentOrder = orderService.getOrderByOrderCode(orderCode, requestId);
 		if (parentOrder == null) {
@@ -2603,8 +2676,8 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String,Object>> moreReturnMoney(String requestId, Integer pageIndex, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		List<Map<String,Object>> returnMoneyList = orderService.selectReturnMoneyList(mqID, (pageIndex - 1) * DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE, requestId);
 		for (int i = 0; i < returnMoneyList.size(); i++) {
@@ -2627,9 +2700,9 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String, Object>> moreReturnGoods(String requestId, Integer pageIndex, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		List<Map<String, Object>> returnGoodsList = orderService.selectReturnGoodsList(mqID, pageIndex, DEFAULT_PAGE_SIZE, requestId);
 
@@ -2645,9 +2718,9 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String, Object>> moreComments(String requestId, Integer pageIndex, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		List<Map<String, Object>> waitForCommentList = orderService.selectWaitForCommentList(mqID, pageIndex, DEFAULT_PAGE_SIZE, requestId);
 
@@ -2663,8 +2736,8 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String, Object>> moreNoSend(String requestId, Integer pageIndex, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		List<Map<String, Object>> noSendOrderList = orderService.selectNoSendOrder(mqID, (pageIndex - 1) * DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE, requestId);
 		for (int i = 0; i < noSendOrderList.size(); i++) {
@@ -2779,9 +2852,9 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String, Object>> moreOrder(String requestId, Integer pageIndex, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		// 1 查找出所有的订单商品
 		List<Map<String, Object>> childOrderList = orderService.getOrderListByMqID(mqID, pageIndex, DEFAULT_PAGE_SIZE, requestId);
@@ -2806,8 +2879,8 @@ public class OrderController {
 	@ResponseBody
 	public List<Map<String, Object>> moreNoPayOrder(String requestId, Integer pageIndex) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		List<Map<String, Object>> noPayOrderList = orderService.selectNoPayedOrder(mqID, (pageIndex - 1) * DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE, requestId);
 
@@ -2832,9 +2905,9 @@ public class OrderController {
 	@RequestMapping("/return-goods-detail-orderproductid")
 	public String returnGoodsDetailWithOrderProductID(String requestId, Integer orderProductID, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		GoodsReturn goodsReturn = orderService.getGoodsReturnByOrderProductID(orderProductID, requestId);
 
@@ -2842,7 +2915,23 @@ public class OrderController {
 			logger.info("查找的退款单不存在");
 			return "404";
 		}
-
+		
+		Order order = orderService.getOrderByOrderCode(goodsReturn.getOrderCode(), requestId);
+		model.addAttribute("orderRecName",order.getRecName());
+		model.addAttribute("orderRecMobile",order.getRecMobile());
+		model.addAttribute("address",order.getAddress());
+		
+		model.addAttribute("orderCode",order.getOrderCode());
+		model.addAttribute("payTime",order.getPayTime());
+		model.addAttribute("orderSum",order.getOrderSum());
+		model.addAttribute("invoiceName",order.getInvoiceName());
+		
+		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
+		if(orderPayment!=null){
+			model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+		}
+		
+		
 		model.addAttribute("goodsReturn", goodsReturn);
 		// 退货原因
 		if (goodsReturn.getReturnReason().equals("SJ#")) {
@@ -2883,11 +2972,11 @@ public class OrderController {
 		} else if ("DTK".equals(status)) {
 			return "order/returnG-dtk";
 		} else if ("TKZ".equals(status)) {
-			return "order/returnG-takeG";
+			return "order/returnG-tkz";
 		} else if ("JTK".equals(status)) {
 			return "order/returnG-jtk";
 		} else if ("FAI".equals(status)) {
-			return "order/returnG-reject";
+			return "order/returnG-fail";
 		} else if ("COM".equals(status)) {
 			return "order/returnG-success";
 		}

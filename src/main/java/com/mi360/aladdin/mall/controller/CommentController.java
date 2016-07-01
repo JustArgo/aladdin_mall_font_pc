@@ -28,7 +28,6 @@ import com.mi360.aladdin.product.service.IProductSkuService;
 import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 
 /**
@@ -71,8 +70,8 @@ public class CommentController{
 	@RequestMapping("/commentlist")
 	public String getCommentList(String requestId,Integer productID,Integer pageIndex,Integer pageSize,Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String) principal.get("mqId");
 		
 		if(productID==null){
 			return "404";
@@ -179,8 +178,8 @@ public class CommentController{
 	@RequestMapping("/comment")
 	public String comment(String requestId, Integer orderProductID, Integer sendGoodsScore, Integer descScore, Integer serveScore, String commentStr, String[] imgs){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		OrderProduct orderProduct = orderProductService.getOrderProductByID(orderProductID, requestId);
 		
