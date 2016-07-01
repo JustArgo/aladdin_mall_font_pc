@@ -1,18 +1,18 @@
 package com.mi360.aladdin.mall.controller;
 
-
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.hummingbird.common.ext.SessionUserAuthInfo;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 首页控制器
@@ -56,11 +56,11 @@ public class LoginController {
 				MapData resultData = serviceData2.getResult();
 				int userId = resultData.getInteger("id");
 				int luckNum = resultData.getInteger("luckNum");
-				SessionUserAuthInfo sessionUserAuthInfo=new SessionUserAuthInfo();
-				sessionUserAuthInfo.setUserId(userId);
-				sessionUserAuthInfo.setMqId(mqId);
-				sessionUserAuthInfo.setLuckNum(luckNum);
-				WebUtil.login(sessionUserAuthInfo);
+				Map<String, Object> loginUserInfo = new SessionUserAuthInfo().toMap();
+				loginUserInfo.put("userId", String.valueOf(userId));
+				loginUserInfo.put("mqId", mqId);
+				loginUserInfo.put("luckNum", luckNum);
+				WebUtil.login(loginUserInfo);
 				return "success";
 			}
 		}
