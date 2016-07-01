@@ -130,7 +130,7 @@ public class UserController {
 	 *            支付密码
 	 */
 	@RequestMapping("/paymentPassword")
-	public String paymentPassword(String requestId, String loginPassword, String paymentPassword) {
+	public String paymentPassword(String requestId, String loginPassword, String paymentPassword, Integer fromPay, String location, ModelMap modelMap) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
@@ -138,6 +138,8 @@ public class UserController {
 		if (serviceData.getBoolean("result")) {
 			return "redirect:/user";
 		}
+		modelMap.addAttribute("fromPay", fromPay);
+		modelMap.addAttribute("location",location);
 		return "user/first-set-payment-password";
 	}
 
