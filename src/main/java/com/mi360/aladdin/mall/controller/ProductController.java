@@ -51,6 +51,10 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 public class ProductController {
 	private Logger logger = Logger.getLogger(this.getClass());
 
+	private static final String DEFAULT_PLATFORM = "PC#";
+	
+	private static final int DEFAULT_PAGE_SIZE = 12;
+	
 	@Autowired
 	private IProductService productService;
 
@@ -383,10 +387,16 @@ public class ProductController {
 		model.addAttribute("productList", productList);
 		model.addAttribute("keyWord", keyWord);
 
+		List<Map> promoteList = productService.selectByKeyWordWithPagination("", 0, 4, "sellCount", requestId);
+		model.addAttribute("promoteList",promoteList);	
+		
 		// 查找搜索历史
 		List<ProductSearchRecord> searchRecordList = productService.selectPopularSearchRecord(mqID, requestId);
 		model.addAttribute("searchRecordList", searchRecordList);
-
+		
+		int count = productService.getProductCount(requestId, DEFAULT_PLATFORM);
+		model.addAttribute("pageCount",(count+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		
 		if (productList.size() == 0) {
 			productList = productService.selectByKeyWordWithPagination("", 0, 10, "createTime", requestId);
 			model.addAttribute("productList", productList);
