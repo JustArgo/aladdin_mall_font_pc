@@ -162,13 +162,39 @@ public class UserController {
 		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
 		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
-		MapData resultData=serviceData.getResult();
+		MapData resultData = serviceData.getResult();
 		modelMap.addAttribute("userInfo", resultData.getData());
-		if (resultData.getInteger("isGoldType")==1) {
+		if (resultData.getInteger("isGoldType") == 1) {
 			MapData serviceData2 = MapUtil.newInstance(verticalDistributionService.levelupInfo(requestId, mqId));
 			logger.info(serviceData2.dataString());
 			modelMap.addAttribute("levelInfo", serviceData2.getObject("result"));
 		}
 		return "user/level";
+	}
+
+	@RequestMapping("/sales")
+	public String sales(String requestId, ModelMap modelMap, Integer page, Integer pageSize) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (pageSize == null || pageSize < 1) {
+			pageSize = 15;
+		}
+		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
+		MapData serviceData = MapUtil.newInstance(verticalSettlementService.findSales(requestId, mqId, page, pageSize));
+		logger.info(serviceData.dataString());
+		modelMap.addAttribute("sales", serviceData.getObject("result"));
+		return "user/sales";
+	}
+
+	@RequestMapping("/collects")
+	public String collects(String requestId) {
+		return "user/collects";
+	}
+
+	@RequestMapping("/team")
+	public String team(String requestId) {
+		return "user/team";
 	}
 }
