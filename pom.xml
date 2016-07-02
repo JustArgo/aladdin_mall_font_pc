@@ -73,6 +73,38 @@
 			<artifactId>spring-aop</artifactId>
 			<version>3.2.9.RELEASE</version>
 		</dependency>
+	
+		    <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>my-jar</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/alljsonserializer.jar</systemPath>
+		    </dependency>
+		    
+		     <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>alljsonserializer</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/alljsonserializer.jar</systemPath>
+		    </dependency>
+		    
+		     <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>commons-codec</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/commons-codec-1.6.jar</systemPath>
+		    </dependency>
+
+			 <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>sessionLoginUser</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/sessionLoginUser.jar</systemPath>
+		    </dependency>
 
 		<!-- aop -->
 		<dependency>
