@@ -99,7 +99,7 @@ public class ProductController {
 	public String productDetail(String requestId, Integer productID, Model model) {
 
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
-		String mqID = (String)principal.get("mqId");
+		String mqID = "d9afefcc54ec4a2ca6ca099e8cbd2413";//(String)principal.get("mqId");
 
 		// 参数判断
 		if (productID == null) {
