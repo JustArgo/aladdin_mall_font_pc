@@ -212,6 +212,8 @@ public class ProductController {
 		model.addAttribute("commentVoListAll",commentVoListAll);
 		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
 		
+		//添加商品浏览历史记录
+		productService.addBrowseHistory(requestId, mqID, productID, "NOR");
 		
 		return "product/product_detail";
 	}

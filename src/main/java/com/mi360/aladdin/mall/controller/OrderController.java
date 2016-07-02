@@ -465,7 +465,7 @@ public class OrderController {
 		
 		model.addAttribute("alipayHtml",alipayHtml);
 		
-		pcOrderService.finishedPay(requestId, orderCode, "ALI", UUID.randomUUID().toString().replace("-", ""), new Date());
+		//pcOrderService.finishedPay(requestId, orderCode, "ALI", UUID.randomUUID().toString().replace("-", ""), new Date());
 		
 		return "order/alipay";
 		

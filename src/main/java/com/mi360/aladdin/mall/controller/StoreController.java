@@ -307,7 +307,7 @@ public class StoreController {
 	}
 	
 	/**
-	 * 店铺浏览
+	 * 店铺浏览 自己浏览自己的店铺
 	 */
 	@RequestMapping("/browse")
 	public String browse(String requestId, Model model){
@@ -329,4 +329,24 @@ public class StoreController {
 		
 	}
 	
+	/**
+	 * 查看别人的店铺
+	 */
+	@RequestMapping("/view")
+	public String view(String requestId, Integer storeId, Model model){
+		
+		Map<String,Object> storeMap = storeService.getStoreByStoreId(requestId, storeId);
+		
+		Map<String,Object> productCountMap = storeService.getProductCountInStoreByStoreId(requestId, storeId);
+		
+		Map<String,Object> productList = storeService.getProductInStoreByStoreId(requestId, storeId, 0, 12);
+		
+		model.addAttribute("store",storeMap.get("result"));
+		model.addAttribute("productCount",productCountMap.get("result"));
+		model.addAttribute("productList",productList.get("result"));
+		model.addAttribute("storeId",storeId);
+		
+		return "store/view";
+		
+	}
 }

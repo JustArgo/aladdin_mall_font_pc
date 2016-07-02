@@ -1,8 +1,6 @@
 package com.mi360.aladdin.mall.controller;
 
-import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -11,20 +9,13 @@ import net.sinofool.alipay.AlipayRequestData;
 import net.sinofool.alipay.PCDirectSDK;
 import net.sinofool.alipay.base.StringPair;
 
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.util.EntityUtils;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.alipay.api.AlipayApiException;
 import com.alipay.api.AlipayClient;
-import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.AlipaySystemOauthTokenRequest;
 import com.alipay.api.request.AlipayUserUserinfoShareRequest;
 import com.alipay.api.response.AlipaySystemOauthTokenResponse;
@@ -35,6 +26,8 @@ import com.mi360.aladdin.mall.util.AlipayServiceEnvConstants;
 @Controller
 @RequestMapping("/alipay")
 public class AliPayController {
+	
+	private Logger logger = Logger.getLogger(AliPayController.class);
 	
 	@RequestMapping("/auth")
 	public void auth(String requestId, String app_id, String source, String scope, String auth_code){
@@ -202,6 +195,30 @@ public class AliPayController {
             alipayApiException.printStackTrace();
         }
 
+		
+	}
+	
+	/**
+	 * 支付宝支付 成功后 前台回调地址
+	 * @return
+	 * 2016年7月2日
+	 */
+	@RequestMapping("/directpay/redirect")
+	public String redirect(String requestId, String is_success, String out_trade_no, String trade_status, String total_fee, Model model){
+		
+		logger.info("requestId:"+requestId+" is_success:"+is_success+" out_trade_no:"+out_trade_no+" trade_status:"+trade_status+" total_fee:"+total_fee);
+		
+		model.addAttribute("orderCode",out_trade_no);
+		
+		if("T".equals(is_success) && "TRADE_SUCCESS".equals(trade_status)){
+			
+			model.addAttribute("pSum",Double.valueOf(total_fee)*100);
+			return "order/pay-success";
+			
+		}else{
+			return "order/pay-fail";
+		}
+		
 		
 	}
 	

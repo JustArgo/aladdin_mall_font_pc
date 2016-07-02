@@ -23,10 +23,7 @@
     <!-- title -->
     <title>商品详情-介绍页</title>
 	<style>
-		.imgLiquidNotFill{
-			display:inline-block;
-			width:100px;
-		}
+		
 	</style>
 </head>
 <body>
@@ -107,8 +104,8 @@
 			<input type="hidden" class="skuID" value="${productVo.skus[0].ID}"/>
                <div class="row">
                    <div class="col-md-5">
-                       <div class="prod-image">
-                           <a href="javascript:;">
+                       <div class="prod-image imgLiquidNotFill" style="width:499px;height:400px;display:inline-block;">
+                           <a href="javascript:;" class="big-img">
                                <img src="$!qiniu.getDownloadUrl($productImgList[0])" />
                            </a>
                        </div>
@@ -117,9 +114,11 @@
 								#foreach($productImg in $productImgList)
 									
 									<li #if($velocityCount==1) class="active" #end>
-									   <a href="javascript:;">
-										   <img src="$qiniu.getDownloadUrl($productImg)" />
-									   </a>
+									   <div class="imgLiquidNotFill" style="width:88px;height:74px;display:inline-block;">
+										   <a href="javascript:;" class="small-img">
+											   <img src="$qiniu.getDownloadUrl($productImg)" />
+										   </a>
+									   </div>
 									</li>
 								#end
                            </ul>
@@ -286,15 +285,12 @@
 													<p>$!{commentVo.comment.commentDesc}</p>
 													<p class="photo">
 														#foreach($img in ${commentVo.comment.imgs})
-														<div class="imgLiquidNotFill" style="height:77px;">
+														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
 															<a href="javascript:;">
 															   <img src="$qiniu.getDownloadUrl($img.imgPath)">
 															</a>
 														</div>
 														#end
-														<div class="imgLiquidNotFill" style="height:77px;">
-															<img src="/images/5727171351132061766.jpg">
-														</div>
 													</p>
 												</div>
 												<div class="col-sm-3">
@@ -329,7 +325,7 @@
 													<p>$!{commentVo.comment.commentDesc}</p>
 													<p class="photo">
 														#foreach($img in ${commentVo.comment.imgs})
-														<div class="imgLiquidNotFill" style="height:77px;">
+														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
 															<a href="javascript:;">
 															   <img src="$qiniu.getDownloadUrl($img.imgPath)">
 															</a>
@@ -625,6 +621,17 @@
 				verticalAlign: "center"
 			});
 			
+			$(".small-img").click(function(){
+				if(!$(this).closest("li").hasClass("active")){
+					var src = $(this).find("img").attr("src");
+					$(".big-img img").attr("src",src);
+					$(".imgLiquidNotFill").imgLiquid({
+						fill: false,
+						horizontalAlign: "center",
+						verticalAlign: "center"
+					});
+				}
+			});
 			
 			
 		});
