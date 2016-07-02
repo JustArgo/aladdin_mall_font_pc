@@ -23,7 +23,9 @@
     <!-- title -->
     <title>商品详情-介绍页</title>
 	<style>
-		
+		.commentDesc{
+			height:80px;
+		}
 	</style>
 </head>
 <body>
@@ -282,22 +284,24 @@
 													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
 												</div>
 												<div class="col-sm-6">
-													<p>$!{commentVo.comment.commentDesc}</p>
+													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
 													<p class="photo">
 														#foreach($img in ${commentVo.comment.imgs})
-														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
+														<span class="imgLiquidNotFill" style="width:90px;height:77px;display:inline-block;">
 															<a href="javascript:;">
 															   <img src="$qiniu.getDownloadUrl($img.imgPath)">
 															</a>
-														</div>
+														</span>
 														#end
 													</p>
 												</div>
 												<div class="col-sm-3">
 													<p>
-														<a href="javascript:;">
-															<img src="$!{commentVo.userHeadImg}">
-														</a>
+														<span class="imgLiquidNotFill" style="width:112px;height:112px;display:inline-block;">
+															<a href="javascript:;">
+																<img src="$!{commentVo.userHeadImg}">
+															</a>
+														</span>
 													</p>
 													<p class="name">$!{commentVo.userName}</p>
 												</div>
