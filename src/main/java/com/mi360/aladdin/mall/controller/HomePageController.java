@@ -20,7 +20,6 @@ import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.product.service.IProductService;
 import com.mi360.aladdin.shopcar.service.IShopCarService;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 /**
  * 首页控制器
@@ -63,8 +62,8 @@ public class HomePageController {
 			System.out.println("not exists");
 		}
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		List<Map<String, String>> order = new ArrayList<>();
 		Map<String, String> map = new HashMap<>();

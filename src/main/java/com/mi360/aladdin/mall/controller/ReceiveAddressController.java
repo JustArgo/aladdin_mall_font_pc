@@ -12,13 +12,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.receadd.domain.Address;
 import com.mi360.aladdin.receadd.domain.ReceiveAddress;
 import com.mi360.aladdin.receadd.service.IAddressService;
 import com.mi360.aladdin.receadd.service.IManageReceAddService;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 
 /**
@@ -51,8 +49,8 @@ public class ReceiveAddressController {
 		
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		retMap.put("errcode", 0);
 		
@@ -170,8 +168,8 @@ public class ReceiveAddressController {
 	@RequestMapping("/manage_rece_add")
 	public String manage(String requestId, Model model){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		List<ReceiveAddress> adds = manageReceAddService.listUsableAddress(mqID,requestId);
 		List<Map<String,Object>> addressList = new ArrayList<Map<String,Object>>();
@@ -253,8 +251,8 @@ public class ReceiveAddressController {
 	@ResponseBody
 	public int setUserDefaultAddress(String requestId, Integer id,String isDefault){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		return manageReceAddService.setUserDefaultAddress(mqID, id, isDefault,requestId);
 		

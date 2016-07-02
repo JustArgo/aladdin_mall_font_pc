@@ -22,11 +22,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.mi360.aladdin.comment.domain.Comment;
 import com.mi360.aladdin.comment.service.ICommentService;
 import com.mi360.aladdin.comment.service.ICommentVoService;
 import com.mi360.aladdin.comment.vo.CommentVo;
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.order.service.IOrderService;
@@ -47,13 +45,16 @@ import com.mi360.aladdin.shopcar.service.IShopCarService;
 import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
-import com.radiadesign.catalina.session.SessionUserAuthInfo;
 
 @Controller
 @RequestMapping("/product")
 public class ProductController {
 	private Logger logger = Logger.getLogger(this.getClass());
 
+	private static final String DEFAULT_PLATFORM = "PC#";
+	
+	private static final int DEFAULT_PAGE_SIZE = 12;
+	
 	@Autowired
 	private IProductService productService;
 
@@ -97,8 +98,8 @@ public class ProductController {
 	@RequestMapping("/product_detail")
 	public String productDetail(String requestId, Integer productID, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		// 参数判断
 		if (productID == null) {
@@ -267,9 +268,9 @@ public class ProductController {
 	@ResponseBody
 	public Map<String, Object> collect(String requestId, Integer productID, Integer collect) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		logger.info("productID: " + productID + " collect: " + collect);
 
@@ -341,9 +342,9 @@ public class ProductController {
 	@RequestMapping("/search-index")
 	public String searchIndex(String requestId, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		String mqID = (String)principal.get("mqId");
 
 		List<ProductSearchRecord> searchRecordList = productService.selectPopularSearchRecord(mqID, requestId);
 		model.addAttribute("searchRecordList", searchRecordList);
@@ -364,8 +365,8 @@ public class ProductController {
 	@RequestMapping("/search")
 	public String search(String requestId, String keyWord, Integer searchID, Model model) {
 
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 
 		Integer pageSize = 8;
 
@@ -386,10 +387,16 @@ public class ProductController {
 		model.addAttribute("productList", productList);
 		model.addAttribute("keyWord", keyWord);
 
+		List<Map> promoteList = productService.selectByKeyWordWithPagination("", 0, 4, "sellCount", requestId);
+		model.addAttribute("promoteList",promoteList);	
+		
 		// 查找搜索历史
 		List<ProductSearchRecord> searchRecordList = productService.selectPopularSearchRecord(mqID, requestId);
 		model.addAttribute("searchRecordList", searchRecordList);
-
+		
+		int count = productService.getProductCount(requestId, DEFAULT_PLATFORM);
+		model.addAttribute("pageCount",(count+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		
 		if (productList.size() == 0) {
 			productList = productService.selectByKeyWordWithPagination("", 0, 10, "createTime", requestId);
 			model.addAttribute("productList", productList);
@@ -466,8 +473,8 @@ public class ProductController {
 	@ResponseBody
 	public Map<String,Object> checkLimit(String requestId, Integer[] skuIds, Integer[] buyNums, String fromShopCar){
 		
-		SessionUserAuthInfo principal = WebUtil.getCurrentSessionUserAuthInfo();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		Map<String,Object> retMap = new HashMap<String,Object>();
 		retMap.put("errcode", 0);
