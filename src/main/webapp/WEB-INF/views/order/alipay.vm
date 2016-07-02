@@ -23,10 +23,10 @@
     <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!--[if (gte IE 6)&(lte IE 8)]>
-    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <script src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>待评价订单</title>
+    <title>取消订单</title>
 </head>
 <body>
     <!-- header -->
@@ -82,105 +82,61 @@
                             </a>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
     
-    <!-- orderbar -->
-    <section class="orderbar">
-        <div class="order">
+    <!-- message-bar -->
+    <section class="message-bar payment">
+        <div class="message">
             <div class="container">
-                <div class="row order-message">
-                    <div class="col-md-4">
-                        <h3 class="title">订单信息</h3>
-                        <div class="order-status">
-                            <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
-                            <p>订单编号：$!{orderCode}</p>
-                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{createTime})</p>
-                            <p>发票抬头：$!{invoiceName}</p>
-                            <p>支付方式：$!{payChannel}</p>
+                <div class="row">
+                    <div class="info">
+                        <i class="icon-info-check"></i>
+                        <div class="detail">
+                            $!{alipayHtml}
                         </div>
-                    </div>
-                    <div class="col-md-8">
-                        <h3 class="title assessment">已完成</h3>
-                        <p class="service">
-                            <a href="javascript:;">联系客服</a>
-                        </p>
                     </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- cartbar -->
-    <section class="cartbar apply-menu">
-        <div class="cart order-status">
-            <div class="container">
-                <div class="row">
-                    <table class="table order-table table-bordered table-responsive">
-                        <thead>
-                            <tr>
-                                <th>商品</th>
-                                <th>单价(元)</th>
-                                <th>数量</th>
-                                <th>实付款(元)</th>
-                                <th>状态</th>
-                                <th>运费</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-							
-								#foreach($orderProduct in $childOrderProductVo)
-									<tr>
-										<td class="text-left">
-											<a href="javascript:;" class="fl">
-												<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
-											</a>
-											<div class="fr">
-												<p>
-													<a href="javascript:;">$!{orderProduct.productName}</a>
-												</p>
-												<p>
-													#foreach($skuStr in $orderProduct.skuStrs)
-														<span>$skuStr</span>
-													#end
-												</p>
-											</div>
-										</td>
-										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
-										<td>$!{orderProduct.buyNum}</td>
-										#if($velocityCount==1)
-											#set($size = $childOrder.childOrdreProductVo.size())
-											<td rowspan="$size">
-												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
-												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee},100))）</p>
-											</td>
-											<td rowspan="$size">已完成</td>
-											<td rowspan="$size">￥$!number.format("#0.00",$math.div($!{postFee},100))</td>
-										#end
-									</tr>
-								#end
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </section>
-    
     <!-- category-bar -->
     <section class="category-bar">
         <div class="category list">
             <div class="container">
                 <div class="row">
                     <h1 class="title">
-                        <span>浏览记录</span>
+                        <span>为您推荐</span>
                     </h1>
                 </div>
                 <div class="row">
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
+                            <img src="/images/product/product-01.png" />
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -190,7 +146,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
+                            <img src="/images/product/product-01.png" />
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -200,7 +156,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
+                            <img src="/images/product/product-01.png" />
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -210,7 +166,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
+                            <img src="/images/product/product-01.png" />
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">

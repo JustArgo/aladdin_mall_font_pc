@@ -36,6 +36,7 @@
 		<input type="hidden" name="pSum" value="$!{totalPrice}"/>
 		<input type="hidden" name="hasPaymentPassword" value="1"/>
 		<input type="hidden" name="storeId" value="$!{storeId}"/>
+		<input type="hidden" name="orderCode" value="$!{orderCode}"/>
 	
 		<header class="header">
 			<!-- navbar -->
@@ -170,7 +171,6 @@
 					<div class="row">
 						<a href="javascript:;" class="fl jq-openAddress">展示所有收货地址</a>
 						<a href="javascript:;" class="fl jq-closeAddress hide-link">收起所有收货地址</a>
-						<a href="/receadd/manage_rece_add" class="fr">管理收货地址</a>
 					</div>
 				</div>
 			</div>
@@ -237,7 +237,7 @@
 										<div class="pull-left">
 											<div class="form-group">
 												<label class="control-label">卖家留言：</label>
-												<input type="text" class="form-control" placeholder="选填，填写您与卖家达成一致的要求" />
+												<input type="text" class="form-control" placeholder="选填，填写您与卖家达成一致的要求" readonly="readonly"/>
 											</div>
 											<div class="checkbox">
 												<label>

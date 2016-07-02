@@ -46,6 +46,7 @@ $(document).ready(function(){
       pause: 'hover'
     });
 
+    /*
     $('.jq-subToCart').on('click', function(){
         var value = parseInt($(this).next().val());
         if(value == 0) return false;
@@ -56,7 +57,8 @@ $(document).ready(function(){
         var value = parseInt($(this).prev().val());
         $(this).prev().val(value + 1);
     });
-
+	*/
+    
     initModalWrap.init();
 
     /* popup */

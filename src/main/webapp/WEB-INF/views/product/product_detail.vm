@@ -603,6 +603,9 @@
 							params.push($("<input>",{name:"mode",value:"buyNow"}))
 							params.push($("<input>",{name:"skuIds",value:$(".skuID").val()}));
 							params.push($("<input>",{name:"buyNums",value:buyNum}));
+							#if(${storeId})
+							params.push($("<input>",{name:"storeId",value:$!{storeId}}));
+							#end
 							
 							$('<form>', {  
 								method: 'post',
