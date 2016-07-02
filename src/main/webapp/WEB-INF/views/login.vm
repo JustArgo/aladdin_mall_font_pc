@@ -63,7 +63,7 @@
     						$('#tip').css('display','block');
     						submitAble=true;
     					}else if('success'){
-    						location.href="${link.contextPath}/index.html"
+    						location.href="${link.contextPath}/user"
     					}else if('error'==data){
     						$('#chgImg').click();
     						alert('系统繁忙，请稍后再试');

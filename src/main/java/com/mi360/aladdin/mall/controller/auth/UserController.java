@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.PcAccountService;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
+import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.product.service.IProductCollectService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
@@ -41,7 +42,7 @@ public class UserController {
 
 	@RequestMapping()
 	public String index(String requestId, ModelMap modelMap) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+//		 String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
@@ -187,6 +188,10 @@ public class UserController {
 		MapData serviceData = MapUtil.newInstance(verticalSettlementService.findSales(requestId, mqId, page, pageSize));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("sales", serviceData.getObject("result"));
+		MapData serviceData2=MapUtil.newInstance(verticalSettlementService.countSales(requestId, mqId));
+		logger.info(serviceData2.dataString());
+		modelMap.addAttribute("total", (int)Math.ceil(serviceData2.getDouble("result")/pageSize));
+		modelMap.addAttribute("page", page);
 		return "user/sales";
 	}
 
@@ -198,5 +203,12 @@ public class UserController {
 	@RequestMapping("/team")
 	public String team(String requestId) {
 		return "user/team";
+	}
+	
+	@RequestMapping("/logout")
+	@ResponseBody
+	public String logout(String requestId){
+		WebUtil.login(null);
+		return "success";
 	}
 }
