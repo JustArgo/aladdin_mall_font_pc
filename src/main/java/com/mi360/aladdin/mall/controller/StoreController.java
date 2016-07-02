@@ -171,7 +171,14 @@ public class StoreController {
 	 * 店铺商品管理
 	 */
 	@RequestMapping("/products")
-	public String products(String requestId,  Model model, Integer startIndex, Integer pageSize){
+	public String products(String requestId,  String tab, Integer page, Model model){
+		
+		if(tab==null){
+			tab="sale";
+		}
+		if(page==null){
+			page=1;
+		}
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
@@ -310,7 +317,14 @@ public class StoreController {
 	 * 店铺浏览 自己浏览自己的店铺
 	 */
 	@RequestMapping("/browse")
-	public String browse(String requestId, Model model){
+	public String browse(String requestId, Model model, Integer page){
+		
+		if(page==null){
+			page = 1;
+		}
+		
+		final int RECOMMEND_PAGE = 3;
+		final int NOT_RECOMMEND_PAGE = 8;
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
@@ -320,10 +334,25 @@ public class StoreController {
 			model.addAttribute("store",storeMap.get("result"));
 		}
 		
-		Map<String,Object> productsMap = storeService.getProductInStore(requestId, mqId, 0, 12);
-		if((Integer)productsMap.get("errcode")==0){
-			model.addAttribute("productList",productsMap.get("result"));
-		}
+		int notRecommendCount = storeService.getNotRecommendProductCount(requestId, mqId);
+		int recommendCount = storeService.getRecommendProductCount(requestId, mqId);
+		
+		int notRecommendTotal = (notRecommendCount+NOT_RECOMMEND_PAGE-1)/NOT_RECOMMEND_PAGE;
+		int recommendTotal = (recommendCount+RECOMMEND_PAGE-1)/RECOMMEND_PAGE;
+		
+		List<Map<String,Object>> notRecommendProductList = storeService.getNotRecommendProduct(requestId, mqId, (page-1)*NOT_RECOMMEND_PAGE, NOT_RECOMMEND_PAGE);
+		List<Map<String,Object>> recommendProductList = storeService.getRecommendProduct(requestId, mqId, (page-1)*RECOMMEND_PAGE, RECOMMEND_PAGE);
+		
+		model.addAttribute("notRecommendProductList",notRecommendProductList);
+		model.addAttribute("recommendProductList",recommendProductList);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("total",notRecommendTotal>recommendTotal?notRecommendTotal:recommendTotal);
+			
+//		Map<String,Object> productsMap = storeService.getProductInStore(requestId, mqId, 0, 12);
+//		if((Integer)productsMap.get("errcode")==0){
+//			model.addAttribute("productList",productsMap.get("result"));
+//		}
 		
 		return "store/store-browse";
 		
