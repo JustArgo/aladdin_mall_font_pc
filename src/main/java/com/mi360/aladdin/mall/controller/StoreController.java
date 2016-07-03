@@ -278,10 +278,20 @@ public class StoreController {
 	 * 销售统计
 	 */
 	@RequestMapping("/sale-calc")
-	public String saleCalc(String requestId, Model model){
+	public String saleCalc(String requestId, String tab, Integer page, Model model){
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
+		
+		if(tab==null||"".equals(tab.trim())){
+			tab = "income";
+		}
+		if(page==null){
+			page=1;
+		}
+		
+		int incomeCount = storeService.getIncomeCalcCount(requestId, mqId);
+		model.addAttribute("incomePage",(incomeCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
 		
 		Map<String,Object> map = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
 		logger.info("map:"+map);
@@ -290,10 +300,42 @@ public class StoreController {
 			model.addAttribute("orderList");
 		}
 		
-		Map<String,Object> saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		Map<String,Object> saleIncomeMap = null;
+		
+		if("income".equals(tab)){
+			saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		}
+		
 		logger.info("saleIncomeMap:"+saleIncomeMap);
+		List<Map<String,Object>> listPageList = new ArrayList<Map<String,Object>>();
+		
 		if((Integer)saleIncomeMap.get("errcode")==0){
 			List<Map<String,Object>> distributionList = (List<Map<String, Object>>) saleIncomeMap.get("result");
+			
+			if(distributionList!=null && distributionList.size()>0){
+				Map<String,Object> listPageMap = new HashMap<String,Object>();
+				listPageMap.put("completeTime", distributionList.get(0).get("completeTime"));
+				listPageMap.put("money",distributionList.get(0).get("distributionUserReward"));
+				listPageList.add(listPageMap);
+				for(int i=1;i<distributionList.size();i++){
+					Map<String,Object> distribution = distributionList.get(i);
+					Map<String,Object> lastMap = listPageList.get(listPageList.size()-1);
+					
+					Date distributionDate = (Date) distribution.get("completeTime");
+					Date lastMapDate = (Date)lastMap.get("completeTime");
+					
+					if(distributionDate.getYear()==lastMapDate.getYear()&&distributionDate.getMonth()==lastMapDate.getMonth()&&distributionDate.getDate()==lastMapDate.getDate())
+					
+					
+					if(((Date)distribution.get("completeTime")).getYear()==){
+						int a = new Date().getYear();
+					}
+				}
+			}
+			
+			
 			model.addAttribute("distributionList",distributionList);
 		}
 		
@@ -305,27 +347,92 @@ public class StoreController {
 	 * 订单管理
 	 */
 	@RequestMapping("/order")
-	public String orderIndex(String requestId, Model model){
+	public String orderIndex(String requestId, String tab, Integer page, Model model){
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
 		
-		Map<String,Object> allOrderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		if(tab==null||"".equals(tab.trim())){
+			tab="all";
+		}
+		
+		System.out.println("page:"+page);
+		System.out.println("page==null:"+page==null);
+		
+		if(page==null){
+			page=1;
+		}
+		
+		Map<String,Object> allOrderMap = null;
+		Map<String,Object> noPayOrderMap = null;
+		Map<String,Object> noSendOrderMap = null;
+		Map<String,Object> waitForCommentMap = null;
+		Map<String,Object> returnMoneyMap = null;
+		Map<String,Object> returnGoodsMap = null;
+		
+		Map<String,Object> allOrderCountMap = storeService.getOrderCount(requestId, mqId, null, null);
+		int noPayOrderCount = storeService.getNoPayOrderCount(requestId, mqId);
+		int noSendOrderCount = storeService.getNoSendOrderCount(requestId, mqId);
+		int waitForCommentCount = storeService.getWaitForCommentCount(requestId, mqId);
+		int returnMoneyCount = storeService.getReturnMoneyCount(requestId, mqId);
+		int returnGoodsCount = storeService.getReturnGoodsCount(requestId, mqId);
+		
+		model.addAttribute("allOrderCount",((Integer)allOrderCountMap.get("result")+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noPayOrderCount",(noPayOrderCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noSendOrderCount",(noSendOrderCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("waitForCommentCount",(waitForCommentCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnMoneyCount",(returnMoneyCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnGoodsCount",(returnGoodsCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("tab",tab);
+		
+		if("all".equals(tab)){
+			allOrderMap = storeService.getOrder(requestId, mqId, null, null, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			allOrderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		}
+		
+		if("dfk".equals(tab)){
+			noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("dfh".equals(tab)){
+			noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("dpl".equals(tab)){
+			waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("tk".equals(tab)){
+			returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("th".equals(tab)){
+			returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		}
+		
 		logger.info("allOrderMap:"+allOrderMap);
 		
-		Map<String,Object> noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("noPayOrderMap:"+noPayOrderMap);
 		
-		Map<String,Object> noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("noSendOrderMap:"+noSendOrderMap);
 		
-		Map<String,Object> waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("waitForCommentMap:"+waitForCommentMap);
 		
-		Map<String,Object> returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("returnMoneyMap:"+returnMoneyMap);
 		
-		Map<String,Object> returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("returnGoodsMap:"+returnGoodsMap);
 		
 		
