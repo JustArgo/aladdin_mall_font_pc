@@ -33,7 +33,8 @@ public class WebUtil extends HttpServlet {
 //		Principal principal=new Principal(279,"d140dd2c30dc4005aa2758ecb1ca981b", ""); //涓藉嫟
 //		Principal principal=new Principal(332,"1621f314a9574a4e8918a3e38a33f85f", ""); //john
 //		Principal principal=new Principal(320,"e5a3ccc5fd814c06b0bb8adcf9000923", ""); //yongzhong
-		Principal principal = new Principal(342, "d9afefcc54ec4a2ca6ca099e8cbd2413", "oiUxPwfWK32w9VlqU0sm1F0SIUuk", 100000342);
+//		Principal principal = new Principal(342, "d9afefcc54ec4a2ca6ca099e8cbd2413", "oiUxPwfWK32w9VlqU0sm1F0SIUuk", 100000342);
+		Principal principal = new Principal(206, "6313b50f20754261846c10fb23c6d33b", "ojXXot253-tB5TY0Tk_mjipUKDBI", 100000206);
 		return principal;
 		//return (Principal) getSession().getAttribute(Principal.ATTRIBUTE_KEY);
 	}

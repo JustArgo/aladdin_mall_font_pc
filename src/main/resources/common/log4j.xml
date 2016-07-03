@@ -51,6 +51,20 @@
 		<param name="BufferSize" value="0" />
 		<appender-ref ref="dailyUnionpay" />
 	</appender>
+	
+	<appender name="STDOUT" class="org.apache.log4j.ConsoleAppender">
+		<!-- 设置监视器输出方式 -->
+		<layout class="org.apache.log4j.PatternLayout">
+		<param name="ConversionPattern"
+		value="%-4r [%t] %-5p %c %x - %m%n" />
+		</layout>
+		<!--滤镜设置输出的级别-->
+		<filter class="org.apache.log4j.varia.LevelRangeFilter">
+		<param name="levelMin" value="debug" />
+		<param name="levelMax" value="debug" />
+		<param name="AcceptOnMatch" value="true" />
+		</filter>
+	</appender>
 
 	<!-- 微信回调接口日志 -->
 	<logger name="com.mi360.aladdin.mall.controller.WxController" additivity="false">
@@ -65,8 +79,9 @@
 	</logger>
 
 	<root>
-		<level value="INFO" />
+		<level value="debug" />
 		<appender-ref ref="asyncDailyINFO" />
+		<appender-ref ref="STDOUT" />
 		<!-- <appender-ref ref="asyncDailyERROR" /> -->
 	</root>
 

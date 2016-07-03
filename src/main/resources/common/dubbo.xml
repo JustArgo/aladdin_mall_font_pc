@@ -10,9 +10,9 @@
 						http://www.springframework.org/schema/context/spring-context-3.0.xsd">
 
 	<dubbo:application name="${dubbo.application_name}" />
-	<dubbo:registry address="${dubbo.registry_address}" timeout="180000" />
+	<dubbo:registry address="${dubbo.registry_address}" timeout="180000" subscribe="true" register="false"/>
 
-	<dubbo:consumer  timeout="${dubbo.timeout}" check="false"/>
+	<dubbo:consumer  timeout="${dubbo.timeout}" check="false" />
 
 	<dubbo:reference id="productService"
 		interface="com.mi360.aladdin.product.service.IProductService"  />
