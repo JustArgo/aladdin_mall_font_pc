@@ -140,10 +140,6 @@
                         <div class="col-md-9 message">
                             <div class="return-autid">  
                                 <h2>退款失败</h2>
-                                <p>请联系客服进行处理</p>
-                                <p>
-                                    <a href="javascript:;" class="service">联系客服</a>
-                                </p>
                             </div>
                         </div>
                     </div>

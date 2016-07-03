@@ -145,9 +145,6 @@
                         </div>
                         <div class="col-md-9 message">
                             <div class="return-autid"> 
-                                <p>
-                                    <a href="/order/modify-return-goods?goodsReturnID=$!{goodsReturn.ID}" class="audit">修改退货申请</a>
-                                </p> 
                                 <h2>等待商家处理退货申请</h2>
                                 <p>商家同意：申请将达成，商家将退款到您的账户里</p>
                                 <p>商家拒绝：将需要您修改退款申请</p>

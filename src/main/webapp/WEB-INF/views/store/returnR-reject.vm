@@ -140,11 +140,6 @@
                         <div class="col-md-9 message">
                             <div class="return-autid">  
                                 <h2>商家审核不通过</h2>
-                                <p>需要您联系客服或修改退款申请</p>
-                                <p>
-                                    <a href="/order/modify-return-money?moneyReturnID=$!{moneyReturn.ID}" class="audit">修改退款申请</a>
-                                    <a href="javascript:;" class="service">联系客服</a>
-                                </p>
                             </div>
                         </div>
                     </div>

@@ -26,7 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>已取消</title>
+    <title>已取消订单</title>
 </head>
 <body>
     <!-- header -->
@@ -104,9 +104,6 @@
                     </div>
                     <div class="col-md-8">
                         <h3 class="title assessment">已取消</h3>
-                        <p class="service">
-                            <a href="javascript:;">联系客服</a>
-                        </p>
                     </div>
                 </div>
             </div>

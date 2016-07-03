@@ -26,7 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>待发货订单详情</title>
+    <title>待付款订单</title>
 </head>
 <body>
     <!-- header -->

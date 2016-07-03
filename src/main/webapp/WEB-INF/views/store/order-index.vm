@@ -178,9 +178,9 @@
 															</div>
 														</div>
 														<div class="pull-right status">
-															<span>$!{orderProduct.statusStr}</span>
+															<span>$!{orderProduct.statuStr}</span>
 															
-															#if(${orderProduct.statusStr})
+															#if(${orderProduct.statuStr})
 																<a class="btn btn-search" href="/store/return-goods-detail-orderproductid?orderProductID=$!{orderProduct.ID}">查看退货详情</a>
 															#end
 															

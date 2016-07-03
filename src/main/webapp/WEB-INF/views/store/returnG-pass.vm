@@ -143,35 +143,10 @@
                                 <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
                             </div>
                         </div>
-                        <div class="col-md-9">
-                            <form id="logisticsForm" action="/order/set-return-goods-logistics" method="post">
-								<input type="hidden" name="goodsReturnID" value="$!{goodsReturn.ID}">
-                                <div class="pass-box"> 
-                                    <p class="pass">商家审核通过</p>
-                                    <p>寄回地址：$!{fullAddress}</p>
-                                    <p>收  货  人：$!{recName}</p>
-                                    <p>联系电话：$!{recMobile}</p>
-                                    <p>填写物流单号</p>
-                                </div> 
-                                <div class="form-group">
-                                    <label class="control-label">物流公司</label>
-                                    <select class="form-control" name="logisticsID">
-                                        <option value="0">请选择物流公司</option>
-										#foreach($expressCompany in $expressCompanyList)
-											<option value="$expressCompany.ID">$expressCompany.companyName</option>
-										#end
-                                    </select>
-                                    <i></i>
-                                </div>
-                                <div class="form-group ">
-                                    <label class="control-label">物流单号</label>
-                                    <input type="text" class="form-control" placeholder="请填写物流单号" name="logisticsNum"/>
-									<input type="hidden" name="logistics" value=""/>
-                                </div>
-							</form>
-                               
-							<button class="btn btn-register">提交</button>
-                            
+                        <div class="col-md-9 message">
+								<div class="return-autid"> 
+									<h2>商家审核通过</h2>
+								</div>
                         </div>
                     </div>
                 </div>

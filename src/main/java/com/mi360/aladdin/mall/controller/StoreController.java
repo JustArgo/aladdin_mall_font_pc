@@ -967,9 +967,11 @@ public class StoreController {
 		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
 		List<Order> childOrderList = new ArrayList<Order>();
 		childOrderList.add(order);
-		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
-		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
-		model.addAttribute("postFee",order.getPostFee());
+		if(orderPayment!=null){
+			model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+			model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("postFee",order.getPostFee());
+		}
 		
 		
 		model.addAttribute("orderCode",order.getOrderCode());
