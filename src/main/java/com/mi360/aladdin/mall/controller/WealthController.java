@@ -74,8 +74,8 @@ public class WealthController {
 	}
 
 	private String getAccountInfo(String requestId, Model model) {
-		Principal principal = WebUtil.getCurrentPrincipal();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		Map<String, Object>  accountMap = (Map<String, Object>) pcAccountService.getAccountInfo(requestId, mqID).get("result");
 		
@@ -172,9 +172,8 @@ public class WealthController {
 	@RequestMapping("/off-recharge-index")
 	public String offRechargeIndex(String requestId, Model model, HttpServletRequest request) {
 		
-		Principal principal = WebUtil.getCurrentPrincipal();
-		Integer luckNum = principal.getLuckNum();
-		model.addAttribute("luckNum", luckNum);
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		model.addAttribute("luckNum", principal.get("luckNum"));
 
 		return "/wealth/off-recharge-index";
 	}
@@ -192,7 +191,7 @@ public class WealthController {
 			String remark) {
 
 		String mqID = getAccountInfo(requestId, model);
-		Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, WebUtil.getCurrentPrincipal().getLuckNum(), sum, externalOrderId, null, phone, remark);
+		Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, (Integer)WebUtil.getCurrentUserInfo().get("luckNum"), sum, externalOrderId, null, phone, remark);
 		
 		System.out.println("map" +map);
 		
