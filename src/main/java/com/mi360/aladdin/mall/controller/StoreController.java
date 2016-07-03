@@ -332,9 +332,9 @@ public class StoreController {
 		model.addAttribute("allOrder",allOrderMap.get("result"));
 		model.addAttribute("noPayOrder",noPayOrderMap.get("result"));
 		model.addAttribute("noSendOrder",noSendOrderMap.get("result"));
-		model.addAttribute("waitForComment",waitForCommentMap.get("result"));
-		model.addAttribute("returnMoney",returnMoneyMap.get("result"));
-		model.addAttribute("returnGoods",returnGoodsMap.get("result"));
+		model.addAttribute("waitForCommentOrder",waitForCommentMap.get("result"));
+		model.addAttribute("returnMoneyOrder",returnMoneyMap.get("result"));
+		model.addAttribute("returnGoodsOrder",returnGoodsMap.get("result"));
 		
 		return "store/order-index";
 		
