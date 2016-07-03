@@ -629,7 +629,7 @@
 										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
 										<td>$!{orderProduct.buyNum}</td>
 										#if($velocityCount==1)
-											#set($size = $childOrdreProductVo.size())
+											#set($size = $childOrderProductVo.size())
 											<td rowspan="$size">
 												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
 												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee}))）</p>
