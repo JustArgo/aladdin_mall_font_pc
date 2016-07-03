@@ -15,12 +15,18 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
     <title>商品详情-介绍页</title>
+	<style>
+		.commentDesc{
+			height:80px;
+		}
+	</style>
 </head>
 <body>
     <!-- header -->
@@ -95,10 +101,13 @@
     <section class="product-bar">
        <div class="prod-detail">
            <div class="container">
+			<input type="hidden" class="status" value="$!{status}"/>
+			<input type="hidden" class="productID" value="$productID"/>
+			<input type="hidden" class="skuID" value="${productVo.skus[0].ID}"/>
                <div class="row">
                    <div class="col-md-5">
-                       <div class="prod-image">
-                           <a href="javascript:;">
+                       <div class="prod-image imgLiquidNotFill" style="width:499px;height:400px;display:inline-block;">
+                           <a href="javascript:;" class="big-img">
                                <img src="$!qiniu.getDownloadUrl($productImgList[0])" />
                            </a>
                        </div>
@@ -107,9 +116,11 @@
 								#foreach($productImg in $productImgList)
 									
 									<li #if($velocityCount==1) class="active" #end>
-									   <a href="javascript:;">
-										   <img src="$qiniu.getDownloadUrl($productImg)" />
-									   </a>
+									   <div class="imgLiquidNotFill" style="width:88px;height:74px;display:inline-block;">
+										   <a href="javascript:;" class="small-img">
+											   <img src="$qiniu.getDownloadUrl($productImg)" />
+										   </a>
+									   </div>
 									</li>
 								#end
                            </ul>
@@ -129,11 +140,11 @@
                         </div>
 						
 						#foreach($attrItem in $attrItems)
-                        <div class="prod-size" data-attrid="$attrItem.attrID">
+                        <div class="prod-size"  data-attrid="$attrItem.attrID">
                             <p>$!attrItem.attrName：</p>
                             <p class="choosen jq-choosen">
                                 #foreach($attrValue in $attrItem.attrValues)
-									<span>$!attrValue[1]</span>
+									<span data-valueid="$attrValue[0]">$!attrValue[1]</span>
 								#end
                             </p>
                         </div>
@@ -271,23 +282,26 @@
 													</span>
 													<p>$date.format("yyyy-MM-dd",$commentVo.comment.createTime)</p>
 													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
-													<p>42</p>
 												</div>
 												<div class="col-sm-6">
-													<p>$!{commentVo.comment.commentDesc}</p>
+													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
 													<p class="photo">
 														#foreach($img in ${commentVo.comment.imgs})
-														<a href="javascript:;">
-														   <img src="$qiniu.getDownloadUrl($img)">
-														</a>
+														<span class="imgLiquidNotFill" style="width:90px;height:77px;display:inline-block;">
+															<a href="javascript:;">
+															   <img src="$qiniu.getDownloadUrl($img.imgPath)">
+															</a>
+														</span>
 														#end
 													</p>
 												</div>
 												<div class="col-sm-3">
 													<p>
-														<a href="javascript:;">
-															<img src="$!{commentVo.userHeadImg}">
-														</a>
+														<span class="imgLiquidNotFill" style="width:112px;height:112px;display:inline-block;">
+															<a href="javascript:;">
+																<img src="$!{commentVo.userHeadImg}">
+															</a>
+														</span>
 													</p>
 													<p class="name">$!{commentVo.userName}</p>
 												</div>
@@ -310,15 +324,16 @@
 													</span>
 													<p>$date.format("yyyy-MM-dd",$commentVo.comment.createTime)</p>
 													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
-													<p>42</p>
 												</div>
 												<div class="col-sm-6">
 													<p>$!{commentVo.comment.commentDesc}</p>
 													<p class="photo">
 														#foreach($img in ${commentVo.comment.imgs})
-														<a href="javascript:;">
-														   <img src="$qiniu.getDownloadUrl($img)">
-														</a>
+														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
+															<a href="javascript:;">
+															   <img src="$qiniu.getDownloadUrl($img.imgPath)">
+															</a>
+														</div>
 														#end
 													</p>
 												</div>
@@ -451,6 +466,177 @@
 				}else{
 					$(".all-li").hide();
 					$(".hasImage-li").show();
+				}
+			});
+			
+			$(".prod-size").each(function(){
+				$(this).find(".choosen span:eq(0)").addClass("active");
+				
+			});
+			$(".choosen span").click(function(){
+				var prod_size = $(this).closest(".prod-size");
+				prod_size.find("span").removeClass("active");
+				$(this).addClass("active");
+				
+				var productID = $(".productID").val();
+				var param = "productID="+productID;
+				
+				$(".prod-size").each(function(){
+					var attrID = $(this).data("attrid");
+					var valueID = $(this).find(".active").data("valueid");
+					param+="&attrs="+attrID+"&values="+valueID;
+				});
+				
+				$.ajax({
+					url:"${link.contextPath}/product/querySku?"+param,
+					type:"POST",
+					dataType:"JSON",
+					success:function(ret){
+						
+						if(ret.errcode==0){
+							
+							$(".store").text("（库存："+ret.skuStock+"件）");
+							
+							$(".skuID").val(ret.skuID);
+							
+						}else{
+							$(".store").text("（库存：0件）");
+						}
+					}
+					
+				});
+				
+				
+			});
+			
+			$(".prod-add").click(function(){
+				var num = parseInt($(".num").val());
+				$(".num").val(num+1);
+			});
+			
+			$(".prod-sub").click(function(){
+				var num = parseInt($(".num").val());
+				if(num==1){
+					return;
+				}
+				$(".num").val(num-1);
+			});
+			
+			var productID = $(".productID").val();
+			var param = "productID="+productID;
+			
+			$(".prod-size").each(function(){
+				param+="&attrs="+$(this).data("attrid")+"&values="+$(this).find("span:eq(0)").data("valueid");
+			});
+			
+			$.ajax({
+				url:"${link.contextPath}/product/querySku?"+param,
+				type:"POST",
+				dataType:"JSON",
+				success:function(ret){
+					if(ret.errcode==0){
+						var numPattern = new RegExp("[0-9]+");
+						
+						$(".store").text("（库存："+ret.skuStock+"件）");
+						
+						$(".skuID").val(ret.skuID);
+						//curSkuStock = ret.skuStock;
+					}else{
+						$(".store").text("（库存：0件）");
+					}
+				}
+				
+			});	
+
+			//加入购物车
+			$(".prod-addToCart").click(function(){
+				
+				if($(".status").val()!='UP#'){
+					alert("该商品已下架");
+					return;
+				}
+				
+				var productID = $(".productID").val();
+				var buyNum = $(".num").val();
+				
+				$.ajax({
+					
+					url:"/shop_car/add_to_shopcar",
+					type:"POST",
+					dataType:"JSON",
+					data:{"productID":productID,"skuID":$(".skuID").val(),"buyNum":buyNum},
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							alert("添加成功");
+						}else if(ret && ret.errcode && ret.errcode!=0){
+							alert(ret.msg);
+						}else{
+							alert("网络异常");
+						}
+						
+					}
+					
+				});
+				
+				
+				
+				
+			});
+			
+			$(".prod-buyNow").click(function(){
+				
+				if($(".status").val()!='UP#'){
+					alert("该商品已下架无法进行购买");
+					return;
+				}
+				
+				var buyNum = $(".num").val();
+				
+				$.ajax({
+					url:"${link.contextPath}/product/check-limit",
+					type:"POST",
+					data:{"skuIds":$(".skuID").val(),"buyNums":buyNum},
+					dataType:"json",
+					success:function(ret){
+						if(ret && ret.errcode==0){
+							var params = [];
+							params.push($("<input>",{name:"mode",value:"buyNow"}))
+							params.push($("<input>",{name:"skuIds",value:$(".skuID").val()}));
+							params.push($("<input>",{name:"buyNums",value:buyNum}));
+							#if(${storeId})
+							params.push($("<input>",{name:"storeId",value:$!{storeId}}));
+							#end
+							
+							$('<form>', {  
+								method: 'post',
+								action: '${link.contextPath}/order/previewOrder'
+							}).append(params).submit();
+						}else if(ret && ret.errcode && ret.errcode==10000){
+							alert("商品超出限购数量,无法进行购买");
+						}else{
+							alert("网络异常,请稍后重试");
+						}
+					}
+				})
+				
+
+			});
+			
+			$(".imgLiquidNotFill").imgLiquid({
+				fill: false,
+				horizontalAlign: "center",
+				verticalAlign: "center"
+			});
+			
+			$(".small-img").click(function(){
+				if(!$(this).closest("li").hasClass("active")){
+					var src = $(this).find("img").attr("src");
+					$(".big-img img").attr("src",src);
+					$(".imgLiquidNotFill").imgLiquid({
+						fill: false,
+						horizontalAlign: "center",
+						verticalAlign: "center"
+					});
 				}
 			});
 			

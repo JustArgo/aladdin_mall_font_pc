@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>生成订单</title>
+</head>
+<body>
+    <!-- header -->
+	<form id="placeOrder" action="/order/placeOrder" method="post">
+		
+		<input type="hidden" name="pFee" value="$!{totalPostFee}"/>
+		<input type="hidden" name="pSum" value="$!{totalPrice}"/>
+		<input type="hidden" name="hasPaymentPassword" value="1"/>
+		<input type="hidden" name="storeId" value="$!{storeId}"/>
+		<input type="hidden" name="orderCode" value="$!{orderCode}"/>
+	
+		<header class="header">
+			<!-- navbar -->
+			<div class="navbar navbar-static-top">
+				<div class="container">
+					
+					<input type="hidden" name="payType" value=""/>
+					
+					<div class="row">
+						<ul class="nav navbar-nav navbar-left"> 
+							<li>
+								<a href="login.html">登录</a>
+							</li>
+							<li>    
+								<a href="register.html">免费注册</a>
+							</li>
+							<li>    
+								<a href="store.html">我的店铺</a>
+							</li>   
+						</ul>
+						<ul class="nav navbar-nav navbar-right"> 
+							<li>
+								<a href="person.html">个人中心</a>
+							</li>
+							<li>
+								<a href="cart.html">购物车</a>
+							</li> 
+							<li>
+								<a href="order.html">我的订单</a>
+							</li> 
+							<li>
+								<a href="collection.html">我的收藏</a>
+							</li> 
+							<li>
+								<a href="link.html">联系客服</a>
+							</li>   
+						</ul>
+					</div>
+				</div>
+			</div>
+			<!-- searchbar -->
+			<div class="searchbar">
+				<div class="search">
+					<div class="container">
+						<div class="row">
+							<div class="pull-left">
+								<a href="index.html" class="logo">
+									<img src="/images/logo/logo.png">
+								</a>
+							</div>
+							<div class="pull-right">
+								<a href="javascript:;">
+									<img src="/images/code.png" />
+								</a>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</header>
+		
+		<section class="address-bar"> 
+			<div class="address">
+				<div class="container">
+					<div class="row">
+						<input type="hidden" name="receaddID" value="$!{receaddID}"/>
+						<input type="hidden" name="mode" value="$!{mode}"/>
+						<h3 class="title">选择收货地址</h3>
+					</div>
+					<div class="row jq-address">
+						<div class="col-md-3 active" data-id="$!{receaddID}">
+							<p>
+								<span class="fl">
+									<span class="default">默认</span>$!{addressPrefix}
+								</span>
+								<span class="fr">（$!{recName}收）</span>
+							</p>
+							<p>详细地址：$!{fullAddress}</p>
+							<p>手机号码：$!{recMobile}</p>
+						</div>
+						
+						#foreach($remainAddress in $remainAddressList)
+							#if($velocityCount<=3)
+								<div class="col-md-3" data-id="${remainAddress.address.ID}">
+									<p>
+										<span class="fl">$!{remainAddress.simpleAddress}</span>
+										<span class="fr">（$!{remainAddress.address.recName}收）</span>
+									</p>
+									<p>详细地址：$!{remainAddress.address.address}</p>
+									<p>手机号码：$!{remainAddress.address.recMobile}</p>
+								</div>
+							#end
+						#end
+						
+						
+						
+					</div>
+					<div class="row jq-address">
+						
+						#foreach($remainAddress in $remainAddressList)
+							#if($velocityCount>3 and $velocityCount<=7)
+								<div class="col-md-3" data-id="${remainAddress.address.ID}">
+									<p>
+										<span class="fl">$!{remainAddress.simpleAddress}</span>
+										<span class="fr">（$!{remainAddress.address.recName}收）</span>
+									</p>
+									<p>详细地址：$!{remainAddress.address.address}</p>
+									<p>手机号码：$!{remainAddress.address.recMobile}</p>
+								</div>
+							#end
+						#end
+						
+					</div>
+					
+					
+					<div class="row jq-address">
+						
+						#foreach($remainAddress in $remainAddressList)
+							#if($velocityCount>7 and $velocityCount<=11)
+								<div class="col-md-3" data-id="${remainAddress.address.ID}">
+									<p>
+										<span class="fl">$!{remainAddress.simpleAddress}</span>
+										<span class="fr">（$!{remainAddress.address.recName}收）</span>
+									</p>
+									<p>详细地址：$!{remainAddress.address.address}</p>
+									<p>手机号码：$!{remainAddress.address.recMobile}</p>
+								</div>
+							#end
+						#end
+						
+					</div>
+					<div class="row">
+						<a href="javascript:;" class="fl jq-openAddress">展示所有收货地址</a>
+						<a href="javascript:;" class="fl jq-closeAddress hide-link">收起所有收货地址</a>
+					</div>
+				</div>
+			</div>
+		</section>
+	
+
+    <!-- cartbar -->
+    <section class="cartbar">
+        <div class="cart">
+            <div class="container">
+                <div class="row">
+                    <div class="head">
+                        <p>
+                            <span>确认订单信息</span>
+                        </p>
+                    </div>
+                    <table class="table order-table table-bordered table-hover table-responsive">
+                        <thead>
+                            <th>商品</th>
+                            <th>单价(元)</th>
+                            <th>数量</th>
+                            <th>小计(元)</th>
+                        </thead>
+                        <tbody>
+                            
+							#foreach($orderProduct in $supplierProducts)
+							
+								<tr>
+									<td colspan="6" class="text-left">供应商：$!{orderProduct.supName}</td>
+								</tr>
+								#foreach($orderProductDetail in $orderProduct.shopCarProducts)
+									<tr>
+										<td class="text-left">
+											<input type="hidden" name="skuIds" value="${orderProductDetail.skuID}"/>
+											<input type="hidden" name="buyNums" value="${orderProductDetail.skuQuality}"/>
+											<input type="hidden" name="skuPrices" value="$!{orderProductDetail.skuPrice}"/>
+											
+											<a href="javascript:;" class="fl">
+												<img src="$!qiniu.getDownloadUrl(${orderProductDetail.imgPath})" style="width:121px;height:120px;"/>
+											</a>
+											<div class="fr">
+												<p>
+													<a href="javascript:;">$!{orderProductDetail.productName}</a>
+												</p>
+												<p>
+													#if($orderProductDetail.skuStrs.isEmpty())<span>&nbsp;</span>#end
+													#foreach($skuStr in $orderProductDetail.skuStrs)<span>$skuStr</span>&nbsp;#end
+												</p>
+											</div>
+										</td>
+										<td>¥$number.format("#0.00",$math.div(${orderProductDetail.skuPrice},100))</td>
+										<td>
+											<a href="javascript:;" class="sub jq-subToCart">-</a>
+											<input type="text" class="num" value="${orderProductDetail.skuQuality}" />
+											<a href="javascript:;" class="add jq-addToCart">+</a>
+										</td>
+										<td>¥$number.format("#0.00",$math.mul($math.div(${orderProductDetail.skuPrice},100),${orderProductDetail.skuQuality}))</td>
+									</tr>
+									
+								#end
+								
+								<tr class="order-bottom">
+									<td colspan="6">
+										<div class="pull-left">
+											<div class="form-group">
+												<label class="control-label">卖家留言：</label>
+												<input type="text" class="form-control" placeholder="选填，填写您与卖家达成一致的要求" readonly="readonly"/>
+											</div>
+											<div class="checkbox">
+												<label>
+													<input type="checkbox" checked="true" />发票
+												</label>
+											</div>
+										</div>
+										<div class="pull-right">
+											<p>运费：#if($orderProduct.postFee==0)包邮#else￥$number.format("#0.00",$math.div(${orderProduct.postFee},100))#end</p>
+											<p>供应商合计（含运费）：¥$number.format("#0.00",$math.div($!{orderProduct.supplierAmount},100))</p>
+										</div>
+									</td>
+								</tr>
+								
+							#end
+							
+							
+							
+                            
+                        </tbody>
+                    </table>
+                </div>
+				
+				<input type="hidden" name="invoiceID" value=""/>
+				<input type="hidden" name="invoiceName" value=""/>
+				
+                <div class="row bottom">
+                    <div class="pull-left">
+                        <p>温馨提示：运费是每个供应商结算一次</p>
+                    </div>
+                    <div class="pull-right">
+                        <p class="price-total">实付款（含运费）：¥$number.format("#0.00",$math.div($!{totalPrice},100))</p>
+                        <p>
+                            <span>选择付款方式：</span>
+                            <a href="javascript:;">
+                                <input type="radio" name="method" data-paytype="union"/>
+                                <img src="/images/way/way-01.png">
+                            </a>
+                            <a href="javascript:;">
+                                <input type="radio" name="method" data-paytype="ali" checked="true" />
+                                <img src="/images/way/way-02.png">
+                            </a>
+                            <a href="javascript:;">
+                                <input type="radio" name="method" data-paytype="wx"/>
+                                <img src="/images/way/way-03.png">
+                            </a>
+                            <a href="javascript:;">
+                                <input type="radio" name="method" data-paytype="paypal"/>
+                                <img src="/images/way/way-04.png">
+                            </a>
+                            <a href="javascript:;">
+                                <input type="radio" name="method" data-paytype="remain" #if($remainNotEnough)disabled="disabled"#end/>
+                                <span>账户余额（￥$number.format("#0.00",$math.div($!{remainingSum},100))）</span>
+                            </a>
+                        </p>
+                        <button type="button" class="btn btn-pay jq-orderError" data-toggle="modal" data-target="#myModal" data-href="/Aladdin/order-popup.html" data-class="modal-cartProduct">立即支付</button>
+                    </div>    
+                </div>
+            </div>
+        </div>
+    </section>
+	</form>
+	
+	<div class="form-box payment" style="display:none;">
+		<form>
+			<h2>支付密码设置</h2>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>登录密码：
+				</label>
+				<input type="password" id="password" class="form-control" placeholder="请输入您的登录密码" />
+				<span class="error" id="passwordTip" style="display:none;">输入登录密码错误</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>设置支付密码：
+				</label>
+				<div class="item">
+					<i class="icon-eye"></i>
+					<input type="password" id="paymentPassword" class="form-control" placeholder="请设置您的支付密码" />
+				</div>
+				<span class="error" id="paymentPasswordTip" style="display:none;">密码长度只能在6-20个字符之间</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>确认支付密码：
+				</label>
+				<div class="item">
+					<i class="icon-eye"></i>
+					<input type="password" id="rePaymentPassword" class="form-control" placeholder="确认密码" />
+				</div>    
+				<span class="error" id="rePaymentPasswordTip" style="display:none;">两次输入密码不一致</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>验证码：
+				</label>
+				<input type="text" class="form-control code" placeholder="验证码" id="captcha" />
+				<a href="javascript:;" class="code">
+					<img id="captchaImg" style="width:90px;height:32px;">
+				<a/>
+				<a href="javascript:;" class="update" id="chgImg">换一张</a>
+				<span class="error" id="captchaTip" style="display:none;padding-left: 30px;">验证码输入错误</span>
+			</div>
+			<div class="checkbox">
+			  <label>
+				<input type="checkbox" value="" id="readed">
+				我已同意并阅读<a href="javascript:;">《用户注册协议》</a>
+			  </label>
+			</div>
+			<button type="button" id="submit" class="btn btn-register">完成设置</button>
+			<p  class="accout">
+				<a href="forget-password.html">忘记登录密码？</a>
+			</p>
+		</form> 
+	</div>
+	
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+	<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+	<script type="text/javascript">
+		$(function(){
+			
+			$.ajaxSettings.traditional=true;
+			
+			$(".btn-pay").click(function(){
+				
+				var payType = $("input[name=method]:checked").data("paytype");
+				console.log("payType:"+payType);
+				
+				var limit = false;
+				
+				var skuIds = [];
+				var buyNums = [];
+				$("input[name=skuIds]").each(function(){
+					skuIds.push($(this).val());
+				});
+				$("input[name=buyNums]").each(function(){
+					buyNums.push($(this).val());
+				});
+				
+				$.ajax({
+					url:"${link.contextPath}/product/check-limit-count",
+					dataType:"JSON",
+					data:{"skuIds":skuIds,"buyNums":buyNums},
+					success:function(ret){
+						if(ret && ret.limit){
+							limit=true;
+							alert("您有商品超过限购数量,无法进行购买");
+						}else {
+							
+							switch(payType){
+								case "union":
+									$("input[name=payType]").val("UNI");
+									$("#placeOrder").submit();
+									break;
+								case "ali":
+									$("#myModal").modal("hide");
+									$("input[name=payType]").val("ALI");
+									$("#placeOrder").submit();
+									break;
+								case "wx":
+									$("input[name=payType]").val("WXS");
+									$("#placeOrder").submit();
+									break;
+								case "paypal":
+									break;
+								case "remain":
+									
+									//如果还没有设置支付密码
+									
+									var hasPayment = $("input[name=hasPaymentPassword]").val();
+									if(hasPayment=='0'){
+										$(".modal-content").empty().addClass("modal-cartProduct").append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">关注</h4></div><div class="modal-body"><div class="message"><a href="javascritp:;" class="fl"><img src="/images/icon/icon-error.png" /></a><div class="fr"><p class="order">您还没有设置支付密码哦！</p><p><a href="javascript:;" class="add">立即设置</a></p></div></div></div>');
+									}else{
+										$("input[name=payType]").val("SUM");
+										$("#placeOrder").submit();
+									}
+									break;
+							}
+							
+						}
+					}
+				});
+				
+				
+			});
+			
+			$(".jq-openAddress").click(function(){
+				$(".row").show();
+				$(this).hide();
+				$(".jq-closeAddress").show();
+			});
+			
+			$(".jq-closeAddress").click(function(){
+				$(".jq-address:gt(0)").hide();
+				$(this).hide();
+				$(".jq-openAddress").show();
+			});
+			
+			$(".jq-address div").click(function(){
+				$(".jq-address div").removeClass("active");
+				$(this).addClass("active");	
+				$("input[name=receaddID]").val($(this).data("id"));
+				
+			});
+			
+			$(".modal-content").on("click",".add",function(){
+				
+				var mode = $("input[name=mode]").val();
+				var param = "mode="+mode;
+				$("input[name=skuIds]").each(function(){
+					param += "&skuIds="+$(this).val();
+				});
+				$("input[name=buyNums]").each(function(){
+					param += "&buyNums="+$(this).val();
+				});
+				#if(${storeId})
+					param += "&storeId=${storeId}";	
+				#end
+				
+				param = "/order/previewOrder?"+param;
+				
+				var params = [];
+				params.push($("<input>",{name:"location",value:param}));
+				params.push($("<input>",{name:"fromPay",value:1}));
+				$('<form>', {
+				    method: 'post',
+				    action: '/user/paymentPassword'
+				}).append(params).submit();
+				
+			});
+			
+		});
+	</script>
+	
+</body>
+</html>

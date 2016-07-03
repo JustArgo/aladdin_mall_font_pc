@@ -34,6 +34,8 @@
 		
 		<input type="hidden" name="pFee" value="$!{totalPostFee}"/>
 		<input type="hidden" name="pSum" value="$!{totalPrice}"/>
+		<input type="hidden" name="hasPaymentPassword" value="1"/>
+		<input type="hidden" name="storeId" value="$!{storeId}"/>
 	
 		<header class="header">
 			<!-- navbar -->
@@ -100,6 +102,7 @@
 				<div class="container">
 					<div class="row">
 						<input type="hidden" name="receaddID" value="$!{receaddID}"/>
+						<input type="hidden" name="mode" value="$!{mode}"/>
 						<h3 class="title">选择收货地址</h3>
 					</div>
 					<div class="row jq-address">
@@ -297,6 +300,61 @@
         </div>
     </section>
 	</form>
+	
+	<div class="form-box payment" style="display:none;">
+		<form>
+			<h2>支付密码设置</h2>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>登录密码：
+				</label>
+				<input type="password" id="password" class="form-control" placeholder="请输入您的登录密码" />
+				<span class="error" id="passwordTip" style="display:none;">输入登录密码错误</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>设置支付密码：
+				</label>
+				<div class="item">
+					<i class="icon-eye"></i>
+					<input type="password" id="paymentPassword" class="form-control" placeholder="请设置您的支付密码" />
+				</div>
+				<span class="error" id="paymentPasswordTip" style="display:none;">密码长度只能在6-20个字符之间</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>确认支付密码：
+				</label>
+				<div class="item">
+					<i class="icon-eye"></i>
+					<input type="password" id="rePaymentPassword" class="form-control" placeholder="确认密码" />
+				</div>    
+				<span class="error" id="rePaymentPasswordTip" style="display:none;">两次输入密码不一致</span>
+			</div>
+			<div class="form-group">
+				<label class="control-label">
+					<span>*</span>验证码：
+				</label>
+				<input type="text" class="form-control code" placeholder="验证码" id="captcha" />
+				<a href="javascript:;" class="code">
+					<img id="captchaImg" style="width:90px;height:32px;">
+				<a/>
+				<a href="javascript:;" class="update" id="chgImg">换一张</a>
+				<span class="error" id="captchaTip" style="display:none;padding-left: 30px;">验证码输入错误</span>
+			</div>
+			<div class="checkbox">
+			  <label>
+				<input type="checkbox" value="" id="readed">
+				我已同意并阅读<a href="javascript:;">《用户注册协议》</a>
+			  </label>
+			</div>
+			<button type="button" id="submit" class="btn btn-register">完成设置</button>
+			<p  class="accout">
+				<a href="forget-password.html">忘记登录密码？</a>
+			</p>
+		</form> 
+	</div>
+	
     <!-- footer -->
     <footer class="footer">
         <div class="footer-service">
@@ -378,7 +436,7 @@
             </div>
         </div>
     </footer>
-	
+	<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>
 	<script type="text/javascript">
 		$(function(){
 			
@@ -410,20 +468,33 @@
 							alert("您有商品超过限购数量,无法进行购买");
 						}else {
 							
-							
-							
 							switch(payType){
 								case "union":
+									$("input[name=payType]").val("UNI");
+									$("#placeOrder").submit();
 									break;
 								case "ali":
+									$("#myModal").modal("hide");
+									$("input[name=payType]").val("ALI");
+									$("#placeOrder").submit();
 									break;
 								case "wx":
+									$("input[name=payType]").val("WXS");
+									$("#placeOrder").submit();
 									break;
 								case "paypal":
 									break;
 								case "remain":
-									$("input[name=payType]").val("SUM");
-									$("#placeOrder").submit();
+									
+									//如果还没有设置支付密码
+									
+									var hasPayment = $("input[name=hasPaymentPassword]").val();
+									if(hasPayment=='0'){
+										$(".modal-content").empty().addClass("modal-cartProduct").append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">关注</h4></div><div class="modal-body"><div class="message"><a href="javascritp:;" class="fl"><img src="/images/icon/icon-error.png" /></a><div class="fr"><p class="order">您还没有设置支付密码哦！</p><p><a href="javascript:;" class="add">立即设置</a></p></div></div></div>');
+									}else{
+										$("input[name=payType]").val("SUM");
+										$("#placeOrder").submit();
+									}
 									break;
 							}
 							
@@ -450,6 +521,32 @@
 				$(".jq-address div").removeClass("active");
 				$(this).addClass("active");	
 				$("input[name=receaddID]").val($(this).data("id"));
+				
+			});
+			
+			$(".modal-content").on("click",".add",function(){
+				
+				var mode = $("input[name=mode]").val();
+				var param = "mode="+mode;
+				$("input[name=skuIds]").each(function(){
+					param += "&skuIds="+$(this).val();
+				});
+				$("input[name=buyNums]").each(function(){
+					param += "&buyNums="+$(this).val();
+				});
+				#if(${storeId})
+					param += "&storeId=${storeId}";	
+				#end
+				
+				param = "/order/previewOrder?"+param;
+				
+				var params = [];
+				params.push($("<input>",{name:"location",value:param}));
+				params.push($("<input>",{name:"fromPay",value:1}));
+				$('<form>', {
+				    method: 'post',
+				    action: '/user/paymentPassword'
+				}).append(params).submit();
 				
 			});
 			

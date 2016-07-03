@@ -73,6 +73,38 @@
 			<artifactId>spring-aop</artifactId>
 			<version>3.2.9.RELEASE</version>
 		</dependency>
+	
+		    <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>my-jar</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/alljsonserializer.jar</systemPath>
+		    </dependency>
+		    
+		     <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>alljsonserializer</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/alljsonserializer.jar</systemPath>
+		    </dependency>
+		    
+		     <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>commons-codec</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/commons-codec-1.6.jar</systemPath>
+		    </dependency>
+
+			 <dependency>
+		      <groupId>org.richard</groupId>
+		      <artifactId>sessionLoginUser</artifactId>
+		      <version>1.0</version>
+		      <scope>system</scope>
+		      <systemPath>${project.basedir}/lib/sessionLoginUser.jar</systemPath>
+		    </dependency>
 
 		<!-- aop -->
 		<dependency>
@@ -187,32 +219,10 @@
 			<version>1.6.1</version>
 		</dependency>
 
-		<!-- 支付宝sdk -->
 		<dependency>
-			<groupId>net.sinofool</groupId>
-			<artifactId>alipay-java-sdk</artifactId>
-			<version>1.2.1</version>
-		</dependency>
-
-		<!-- http://mvnrepository.com/artifact/me.hao0/alipay-api -->
-		<dependency>
-			<groupId>me.hao0</groupId>
-			<artifactId>alipay-api</artifactId>
-			<version>1.0.9</version>
-		</dependency>
-
-		<!-- http://mvnrepository.com/artifact/me.hao0/alipay-core -->
-		<dependency>
-			<groupId>me.hao0</groupId>
-			<artifactId>alipay-core</artifactId>
-			<version>1.0.9</version>
-		</dependency>
-
-		<!-- http://mvnrepository.com/artifact/com.pentahohub.nexus/alipay-sdk-java -->
-		<dependency>
-			<groupId>com.pentahohub.nexus</groupId>
-			<artifactId>alipay-sdk-java</artifactId>
-			<version>20150820220052</version>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.6</version>
 		</dependency>
 
 

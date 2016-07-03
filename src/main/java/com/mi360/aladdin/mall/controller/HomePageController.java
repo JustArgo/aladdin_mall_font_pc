@@ -62,8 +62,8 @@ public class HomePageController {
 			System.out.println("not exists");
 		}
 		
-		Principal principal = WebUtil.getCurrentPrincipal();
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		List<Map<String, String>> order = new ArrayList<>();
 		Map<String, String> map = new HashMap<>();

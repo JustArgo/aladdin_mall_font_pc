@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,19 +8,26 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <!-- css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
     <!-- js -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/theme.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
-    <script src="js/html5shiv-printshiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>阿拉丁--邮件成功</title>
+    <title>商品管理</title>
 </head>
 <body>
     <!-- header -->
@@ -55,7 +61,7 @@
                             <a href="collection.html">我的收藏</a>
                         </li> 
                         <li>
-                            <a href="link.html">联系客服</a>
+                            <a href="javascript:;">联系客服</a>
                         </li>   
                     </ul>
                 </div>
@@ -68,14 +74,14 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
                             <div class="search-box">
                                 <form class="search-form">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="">
+                                        <input type="text" class="form-control" placeholder="" />
                                         <span class="input-group-addon">
                                             <i class="icon icon-search"></i>
                                         </span>
@@ -83,8 +89,29 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
@@ -92,200 +119,194 @@
         </div>
     </header>
 
-    <!-- category-bar -->
-    <section class="category-bar">
-        <div class="category list">
+    <!-- main -->
+    <section class="main">
+        <div class="list">
             <div class="container">
                 <div class="row">
-                    <div class="store-introduce">
-                        <p class="pull-left">
-                            <a href="javascript:;" class="shop">
-                                <img src="images/shop/shop-01.png" />
-                            </a>
-                            <span>店铺2016488235</span>
-                        </p>
-                        <p class="pull-right">店铺简介：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="javascript:;">店铺中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="store-search.html">店铺浏览</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="store-setting.html">店铺设置</a>
+                                </li>
+                                <li>
+                                    <a href="product-sales.html" class="active">商品管理</a>
+                                </li>
+                                <li>
+                                    <a href="order-manage.html">订单管理</a>
+                                </li>
+                                <li>
+                                    <a href="statistical-income.html">统计管理</a>
+                                </li>
+                                <li>
+                                    <a href="magic.html">魔法页面</a>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="button-group">
-                        <a href="javascript:;" class="prev">上一页</a>
-                        <a href="javascript:;" class="num active">1</a>
-                        <a href="javascript:;" class="num">2</a>
-                        <a href="javascript:;" class="num">3</a>
-                        <span>...</span>
-                        <a href="javascript:;" class="num">18</a>
-                        <a href="javascript:;" class="prev">下一页</a>
+                    <div class="col-md-10">
+                        <div class="content">
+                            <div class="title nav-tabs">
+                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont sale-tab">销售中</a>
+                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont history-tab">历史纪录</a>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="page-1">
+                                    <div class="list-page">
+                                        <h3>
+                                            <label>
+                                                <input type="checkbox" class="jq-selectAll" />全选
+                                            </label>
+                                            <span class="batch-recommend">店长推荐</span>
+                                            <span class="batch-cancel-proxy">取消代理</span>
+                                        </h3>
+										#foreach($product in $productList)
+											<ul class="order-list sales" data-id="$product.productId">
+												<li>
+													<div class="detail">
+														<div class="pull-left">
+															<input type="checkbox" class="fl jq-select" />
+																<a href="javascript:;" class="img">
+																	<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																		<img src="$!qiniu.getDownloadUrl($!{product.imgPath})" style="width:121px;height:120px;"/>
+																	</div>
+																</a>
+															<div class="prod">
+																<p>$!{product.productName}</p>
+																<p>
+																	<span>价格 ¥$!number.format("#0.00",$math.div($!{product.price},100))</span>
+																	<span>数量 x100</span>
+																</p>
+															</div>
+														</div>
+														<div class="pull-right">
+															<span class="price">价格：￥$!number.format("#0.00",$math.div($!{product.price},100))</span>
+														</div>
+													</div>
+												</li>
+											</ul>
+											<div class="btn-group" data-id="$product.productId">
+												<a href="/product/produce_detail?productID=$!{product.productId}">
+													<i class="icon-detail"></i>商品详情
+												</a>
+												<a href="javascript:;" class="top-products" data-id="$!{product.productId}">
+													<i class="icon-product"></i>置顶商品
+												</a>
+												<a href="javascript:;" class="recommend" data-id="$!{product.productId}">
+													<i class="icon-recommend"></i>店长推荐
+												</a>
+												<a href="javascript:;" class="cancel-proxy" data-id="$!{product.productId}">
+													<i class="icon-proxy"></i>取消代理
+												</a>
+											</div>
+										#end
+                                    </div>
+									#if($productCount!=0)
+                                    <div class="button-group">
+										#set($total = $productCount)
+										#if($tab=='history')
+											#set($page=1)
+										#end
+										#if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+										#if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($page - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$page - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($page);" class="num active">$page</a>
+										#foreach($item in [1,2])
+											#set($p=$page + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($page+3<$total)
+											<span>...</span>
+										#end
+										#if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
+                                </div>
+                                <div class="tab-pane fade" id="page-2">
+                                    <div class="list-page">
+                                        <ul class="order-list">
+											#foreach($product in $histProductList)
+												<li>
+													<div class="detail">
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																	<img src="$!qiniu.getDownloadUrl($product.imgPath)" />
+																</div>
+															</a>
+															<div class="prod">
+																<p>$!{product.productName}</p>
+																<p>
+																	<span>价格 ¥$!number.format("#0.00",$math.div($!{product.price},100))</span>
+																	<span>数量 x100</span>
+																</p>
+															</div>
+														</div>
+														<div class="pull-right">
+															<span class="price">价格：￥$!number.format("#0.00",$math.div($!{product.price},100))</span>
+														</div>
+													</div>
+												</li>
+											#end
+                                        </ul>
+                                    </div>
+                                    
+									#if($histProductCount!=0)
+                                    <div class="button-group">
+										#set($total = $histProductCount)
+										#if($tab=='sale')
+											#set($page=1)
+										#end
+										#if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+										#if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($page - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$page - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($page);" class="num active">$page</a>
+										#foreach($item in [1,2])
+											#set($p=$page + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($page+3<$total)
+											<span>...</span>
+										#end
+										#if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页$histProductCount</a>#end
+			                        </div>
+									#end
+                                </div>
+                            </div>        
+                        </div>
                     </div>
                 </div>
             </div>
@@ -349,22 +370,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>
@@ -373,5 +394,157 @@
             </div>
         </div>
     </footer>
+    <script type="text/javascript">
+    	$(function(){
+    		
+			$(".imgLiquidNotFill").imgLiquid({
+				fill: false,
+				horizontalAlign: "center",
+				verticalAlign: "center"
+			});
+			
+			#if($tab=='sale')
+				$(".sale-tab").trigger("click");
+			#else
+				$(".history-tab").trigger("click");
+			#end
+			
+			//点击置顶商品
+			$(".top-products").click(function(){
+				var productId = $(this).data("id");
+				$.ajax({
+					url:"/store/top-products",
+					data:{"productIds":[productId]},
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+						if(ret && ret.errcode==0){
+							alert("置顶成功");
+						}
+					}
+				});
+			});
+			
+			//点击店长推荐
+			$(".recommend").click(function(){
+				var productId = $(this).data("id");
+				$.ajax({
+					url:"/store/recommend",
+					data:{"productIds":[productId]},
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+						if(ret && ret.errcode==0){
+							alert("推荐成功");
+						}
+					}
+				});
+			});
+			
+			//点击取消代理
+			$(".cancel-proxy").click(function(){
+				var productId = $(this).data("id");
+				var _this = $(this);
+				if(confirm("确定取消代理该商品?")){
+					$.ajax({
+						url:"/store/cancel-proxy",
+						data:{"productIds":[productId]},
+						dataType:"json",
+						success:function(ret){
+							console.log(ret);
+							if(ret && ret.errcode==0){
+								alert("取消代理成功");
+								_this.closest(".btn-group").remove();
+								$(".sales").each(function(){
+									if($(this).data("id")==productId){
+										$(this).remove();
+									}
+								});
+							}
+						}
+					});
+				}
+			});
+			
+			//批量店长推荐
+			$(".batch-recommend").click(function(){
+				var productIds = [];
+				$(".jq-select").each(function(){
+					if($(this).prop("checked")==true){
+						productIds.push($(this).closest(".sales").data("id"));
+					}
+				});
+				if(productIds.length==0){
+					alert("请选择要推荐的商品");
+					return;
+				}
+				$.ajax({
+					url:"/store/recommend",
+					data:{"productIds":[productIds]},
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+						if(ret && ret.errcode==0){
+							alert("批量推荐成功");
+						}
+					}
+				});
+				
+			});
+			
+			//批量取消代理
+			$(".batch-cancel-proxy").click(function(){
+				var productIds = [];
+				$(".jq-select").each(function(){
+					if($(this).prop("checked")==true){
+						productIds.push($(this).closest(".sales").data("id"));
+					}
+				});
+				if(productIds.length==0){
+					alert("请选择要取消代理的商品");
+					return;
+				}
+				if(confirm("确定取消代理所选商品?")){
+					$.ajax({
+						url:"/store/cancel-proxy",
+						data:{"productIds":[productIds]},
+						dataType:"json",
+						success:function(ret){
+							console.log(ret);
+							if(ret && ret.errcode==0){
+								alert("取消代理成功");
+								//_this.closest(".btn-group").remove();
+								$(".sales").each(function(){
+									if($.inArray($(this).data("id"),productIds)!=-1){
+										$(this).remove();
+									}
+								});
+								
+								$(".btn-group").each(function(){
+									if($.inArray($(this).data("id"),productIds)!=-1){
+										$(this).remove();
+									}
+								});
+							}
+						}
+					});
+				}
+				
+			});
+			
+			
+    	});
+		
+		function toPage(i){
+			
+			var tab = "sale";
+			if($("#page-2").hasClass("in")){
+				tab = "history";
+			}
+			
+			location.href="/store/products?page="+i+"&tab="+tab;
+		}
+		
+    </script>
 </body>
-</html>
+</html>    

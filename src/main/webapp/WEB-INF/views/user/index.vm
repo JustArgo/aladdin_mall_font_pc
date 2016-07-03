@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/owl.carousel.css" />
+    <link rel="stylesheet" href="/css/owl.theme.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/owl.carousel.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <script src="/js/echarts.min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>个人中心</title>
+    <script>
+    $(function(){
+    	var chart1 = echarts.init(document.getElementById('chart1'));
+    	// 指定图表的配置项和数据
+    	var option = {
+    		    title: {
+    		        text: '近5天我的销售收入'
+    		    },
+    		    tooltip: {
+    		        trigger: 'axis'
+    		    },
+    		    grid: {
+    		        left: '3%',
+    		        right: '4%',
+    		        bottom: '3%',
+    		        containLabel: true
+    		    },
+    		    xAxis: {
+    		        type: 'category',
+    		        boundaryGap: false,
+    		        data: [
+    		               #foreach($item in $dailySales)
+    		               	'$item.dateMonth'#if($velocityCount!=$dailySales.size()),#end
+    		               #end
+    		               ]
+    		    },
+    		    yAxis: {
+    		    	type : 'value',
+    		    	axisLabel : {
+    		    		formatter: function(value){
+    		    			return value+"元";
+    		    		}
+    		    	}
+    		    },
+    		    series: [
+    		        {
+    		            name:'佣金',
+    		            type:'line',
+    		            stack: '总量',
+    		            data:[
+    		                  #foreach($item in $dailySales)
+    		                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
+    		                  #end
+    		                  ]
+    		        }
+    		    ]
+    		};
+        // 使用刚指定的配置项和数据显示图表。
+        chart1.setOption(option);
+        
+
+    	var chart2 = echarts.init(document.getElementById('chart2'));
+    	// 指定图表的配置项和数据
+        var option2 = {
+            title: {
+                text: '今日平台销售排行榜'
+            },
+            tooltip: {},
+            grid: {
+		        left: '3%',
+		        right: '4%',
+		        bottom: '3%',
+		        containLabel: true
+		    },
+            yAxis: {
+		    	type : 'value',
+		    	axisLabel : {
+		    		formatter: function(value){
+		    			return value+"元";
+		    		}
+		    	}
+		    },
+            xAxis: {
+                data: [
+                       #foreach($item in $dailyTopSales)
+	                  	'$!item.nickname'#if($velocityCount!=$dailySales.size()),#end
+	                   #end
+                       ]
+            },
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [
+                       #foreach($item in $dailyTopSales)
+	                  	'$number.format("#0.00",$math.div($item.remainReward,100))'#if($velocityCount!=$dailySales.size()),#end
+	                   #end
+                       ]
+            }]
+        };
+
+        // 使用刚指定的配置项和数据显示图表。
+        chart2.setOption(option2);
+    })
+    </script>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="javascript:;">账户中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person.html" class="active">我的账户</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person-info.html">个人信息</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="level.html">会员等级</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="address.html">收货地址</a>
+                                </li class="sub">
+                                <li class="sub">
+                                    <a href="my-card.html">我的银行卡</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-sales.html">我的销售</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="alipay-binding.html">我要提现</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-code.html">我要推广</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="javascript:;">订单中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-order.html">我的订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">团购订单</a>
+                                </li>
+                                <li liclass="sub">
+                                    <a href="javascript:;" >砍价订单</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">一元购订单</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="advertise.html">参与活动</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">我的团购</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">我的一元购</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="wealth.html">我的财富</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="my-team.html">我的团队</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="collection.html">我的收藏</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content alipay-content">
+                            <div class="wealth person-center">
+                                <div class="col-sm-3 head">
+                                    <a href="javascript:;" class="fl">
+                                        <img src="$userInfo.headImage" />
+                                    </a>
+                                    <div class="fr">
+                                        <p>$userInfo.nickname</p>
+                                        #if($userInfo.isGoldType==1)
+                                        <a href="javascript:;">
+                                            <i class="icon-gold"></i>金牌用户
+                                        </a>
+                                        #end
+                                        #if($userInfo.isChannelType==1)
+                                        <a href="javascript:;">
+                                            <i class="icon-method"></i>渠道用户
+                                        </a>
+                                        #end
+                                        #if($userInfo.isCashBackType==1)
+                                        <a href="javascript:;">
+                                            <i class="icon-return"></i>全返用户
+                                        </a>
+                                        #end
+                                    </div>
+                                </div>
+                                <div class="col-sm-3">
+                                    <ul>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <i class="icon-pay"></i>待付款
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <i class="icon-pass"></i>待发货
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <i class="icon-assess"></i>待评价
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="javascript:;">
+                                                <i class="icon-money"></i>退款
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>我的财富</p>
+                                    <p class="money">¥$number.format("#0.00",$math.div($remainingSum,100))</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>我的会员</p>
+                                    <p>$countMemberAll</p>
+                                </div>
+                            </div>
+                            <div class="report">
+                                <div class="col-sm-6">
+                                    <div id="chart1" style="width:450px;height:300px;"></div>
+                                    <!--<div class="report-data">
+                                        <a href="javascript:;" class="left">
+                                            <img src="/images/report/report-01.png" />
+                                        </a>
+                                    </div>-->
+                                </div>
+                                <div class="col-sm-6">
+                                    <div id="chart2" style="width:450px;height:300px;"></div>
+                                    <!--<div class="report-data">
+                                        <a href="javascript:;" class="right">
+                                            <img src="/images/report/report-02.png" />
+                                        </a>
+                                    </div>-->
+                                </div>
+                            </div>
+                            <div class="store">
+                                <h1>我的收藏</h1>
+                                <div class="owl-carousel jq-carousel">
+                                	#foreach($item in $productCollects)
+                                	<div class="owl-item">
+                                        <a href="/product/product_detail?productID=$item.productId">
+                                            <img src="$item.imgPath" />
+                                        </a>
+                                        <p>￥$number.format("#0.00",$math.div($item.price,100))</p>
+                                    </div>
+                                	#end
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+ 
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
+<script>
+$(function(){
+    $('.jq-carousel').owlCarousel({
+        items: 5,
+        autoPlay: true,
+        navigation : true,
+        navigationText: [
+            "<i class='glyphicon glyphicon-chevron-left'></i>",
+            "<i class='glyphicon glyphicon-chevron-right'></i>"
+        ],
+        slideSpeed : 300
+    });
+});    
+</script>

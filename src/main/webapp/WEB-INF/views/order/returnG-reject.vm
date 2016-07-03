@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>拒绝退货申请</title>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!--  refund-bar -->   
+    <section class="refund-bar">
+        <div class="refund">
+            <div class="container">
+                <div class="row">
+                    <ul class="refund-list">
+                        <li>
+                            <a href="javascript:;">
+                                <p>买家申请退货</p>
+                                <em>1</em>  
+                             </a>
+                        </li>
+                        <li class="active">
+                            <a href="javascript:;">
+                               <p>商家审核不通过</p>
+                               <em>2</em> 
+                             </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <p>等待商家收货</p>
+                                <em>3</em> 
+                             </a>
+                        </li>
+                        <li>
+                            <a href="javascript:;">
+                                <p>退货完成</p>
+                                <em>4</em> 
+                             </a>
+                        </li>
+                    </ul>
+                </div>    
+            </div>
+        </div>
+    </section>
+
+    <!-- content-bar -->
+    <section class="cartbar">
+        <div class="cart content return">
+            <div class="container">
+                <div class="row">
+                    <div class="return-item failed">
+                        <div class="col-md-3">
+                            <h2>订单信息</h2>
+                            <div class="information">
+                                <p>收货地址: $!{orderRecName}  $!{orderRecMobile}  $!{address}</p>
+                                <p>订单编号：$!{orderCode}</p>
+                                <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
+                                <p>总    计：$!number.format("#0.00",$!math.div($!{orderSum},100))元</p>
+                                <p>发票抬头：$!{invoiceName}</p>
+                                <p>支付方式：$!{payChannel}</p>
+                            </div>
+                            <h2>退货信息</h2>
+                            <div class="information">
+                                <p>退款金额  ¥$!number.format("#0.00",$math.div($!{goodsReturn.applySum},100))</p>
+                                <p>退货原因  $!{returnReason}</p>
+                                <p>退货说明  $!{goodsReturn.returnDesc}</p>
+                                <p>退货编号  $!{goodsReturn.returnCode}</p>
+                                <p>申请时间  $!date.format("yyyy-MM-dd HH:mm",$!{goodsReturn.applyTime})</p>
+                            </div>
+                        </div>
+                        <div class="col-md-9 message">
+                            <div class="return-autid"> 
+                                <p>
+                                    <a href="/order/modify-return-goods?goodsReturnID=$!{goodsReturn.ID}" class="audit">修改退货申请</a>
+                                </p> 
+                                <h2>商家审核不通过</h2>
+                                <p>商家拒绝了您的退货申请</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

@@ -70,9 +70,8 @@ public class CommentController{
 	@RequestMapping("/commentlist")
 	public String getCommentList(String requestId,Integer productID,Integer pageIndex,Integer pageSize,Model model){
 		
-		Principal principal = WebUtil.getCurrentPrincipal();
-// if(principal==null)principal = new Principal("2","");
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String) principal.get("mqId");
 		
 		if(productID==null){
 			return "404";
@@ -179,9 +178,8 @@ public class CommentController{
 	@RequestMapping("/comment")
 	public String comment(String requestId, Integer orderProductID, Integer sendGoodsScore, Integer descScore, Integer serveScore, String commentStr, String[] imgs){
 		
-		Principal principal = WebUtil.getCurrentPrincipal();
-//if(principal==null)principal = new Principal("2", "");
-		String mqID = principal.getMqId();
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
 		
 		OrderProduct orderProduct = orderProductService.getOrderProductByID(orderProductID, requestId);
 		
