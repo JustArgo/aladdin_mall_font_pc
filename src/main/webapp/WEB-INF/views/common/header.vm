@@ -6,24 +6,24 @@
                 <div class="row">
                     <ul class="nav navbar-nav navbar-left"> 
                         <li>
-                            <a href="login.html">登录</a>
+                            <a href="/login">登录</a>
                         </li>
                         <li>    
-                            <a href="register.html">免费注册</a>
+                            <a href="/register">免费注册</a>
                         </li>
                         <li>    
-                            <a href="store.html">我的店铺</a>
-                        </li>   
+                            <a href="/store">我的店铺</a>
+                        </li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right"> 
                         <li>
-                            <a href="person.html">个人中心</a>
+                            <a href="/user">个人中心</a>
                         </li>
                         <li>
-                            <a href="cart.html">购物车</a>
+                            <a href="/shop_car">购物车</a>
                         </li> 
                         <li>
-                            <a href="order.html">我的订单</a>
+                            <a href="/order/order-index">我的订单</a>
                         </li> 
                         <li>
                             <a href="collection.html">我的收藏</a>
@@ -68,10 +68,10 @@
                         <div class="col-md-10">
                             <ul class="menu-list">
                                 <li>
-                                    <a href="index.html">首页</a>
+                                    <a href="/index">首页</a>
                                 </li>
                                 <li>
-                                    <a href="javascript:;">一元购</a>
+                                    <a href="http://1yg.fengniao.info">一元购</a>
                                 </li>
                             </ul>
                         </div>

@@ -127,7 +127,9 @@
             </div>
         </div>
     </section>
-    
+    <script type="text/javascript">
+		
+	</script>
     #parse("./common/viewed.vm")
     #parse("./common/footer.vm")
     
