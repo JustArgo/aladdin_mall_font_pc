@@ -18,7 +18,6 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
-    <script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -27,15 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>阿拉丁</title>
-    <style>
-    	p.name a{
-    		text-decoration: none;
-		    overflow: hidden;
-		    white-space: nowrap;
-		    text-overflow: ellipsis;
-    	}
-    </style>
+    <title>等待付款订单详情</title>
 </head>
 <body>
     <!-- header -->
@@ -86,16 +77,6 @@
                             </a>
                         </div>
                         <div class="pull-right">
-                            <div class="search-box">
-                                <form class="search-form">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="">
-                                        <span class="input-group-addon">
-                                            <i class="icon icon-search"></i>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
                             <a href="javascript:;">
                                 <img src="/images/code.png" />
                             </a>
@@ -105,75 +86,161 @@
             </div>
         </div>
     </header>
+    
+    <!-- orderbar -->
+    <section class="orderbar">
+        <div class="order">
+            <div class="container">
+                <div class="row">
+                    <div class="branch">
+                        <span>我的阿拉丁</span><span>></span>
+                        <span>订单中心</span><span>></span>
+                        <span class="num">订单$!{orderCode}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <h3 class="title">订单状态</h3>
+                    <div class="order-status">
+                        <p>订单状态：待发货</p>
+                        <p>
+                            <a href="javascript:;" class="link">联系客服</a>
+                            <a href="/order/return-money?orderCode=$!{orderCode}" class="return">退款</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row order-message">
+                    <div class="col-md-4">
+                        <h3 class="title">订单信息</h3>
+                        <div class="order-status">
+                            <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
+                            <p>订单编号：$!{orderCode}</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
+                            <p>发票抬头：$!{invoiceName}</p>
+                            <p>支付方式：$!{payChannel}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="title">物流信息</h3>
+                        <div class="order-status">
+                            <div class="box">
+                                <p>暂无物流信息</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- cartbar -->
+    <section class="cartbar apply-menu">
+        <div class="cart order-status">
+            <div class="container">
+                <div class="row">
+                    <table class="table order-table table-bordered table-responsive">
+                        <thead>
+                            <th>商品</th>
+                            <th>单价(元)</th>
+                            <th>数量</th>
+                            <th>实付款(元)</th>
+                            <th>状态</th>
+                            <th>运费</th>
+                        </thead>
+                        <tbody>
+								<tr class="status">
+									<td colspan="6" class="text-left">
+										<span>$!date.format("yyyy-MM-dd",$!{createTime})</span>
+										<span>订单编号：$!{orderCode}</span>
+										<span>供应商：$!{supName}</span>
+									</td>
+								</tr>
+								#foreach($orderProduct in $childOrderProductVo)
+									<tr>
+										<td class="text-left">
+											<a href="javascript:;" class="fl">
+												<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+											</a>
+											<div class="fr">
+												<p>
+													<a href="javascript:;">$!{orderProduct.productName}</a>
+												</p>
+												<p>
+													#foreach($skuStr in $orderProduct.skuStrs)
+														<span>$skuStr</span>
+													#end
+												</p>
+											</div>
+										</td>
+										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
+										<td>$!{orderProduct.buyNum}</td>
+										#if($velocityCount==1)
+											#set($size = $childOrder.childOrdreProductVo.size())
+											<td rowspan="$size">
+												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
+												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee},100))）</p>
+											</td>
+											<td rowspan="$size">待发货</td>
+											<td rowspan="$size">￥$!number.format("#0.00",$math.div($!{postFee},100))</td>
+										#end
+									</tr>
+								#end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
     <!-- category-bar -->
     <section class="category-bar">
         <div class="category list">
             <div class="container">
                 <div class="row">
-                    <div class="store-introduce">
-                        <p class="pull-left">
-								<span class="imgLiquidNotFill" style="width:77px;height:77px;display:inline-block;vertical-align:middle;">
-									<a href="javascript:;" class="shop">
-										<img src="$!qiniu.getDownloadUrl($!{store.logoPath})"/>
-									</a>
-								</span>
-								<span>$!{store.title}</span>
-							
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
                         </p>
-                        <p class="pull-right">店铺简介：$!{store.abstraction}</p>
+                        <p>1524人购买</p>
                     </div>
-                </div>
-                <div class="row">
-                    #foreach($product in ${productList})
-	                    <div class="col-md-3">
-							<div class="imgLiquidNotFill" style="width:285px;height:238px;display:inline-block;">
-								<a href="/product/product_detail?productID=$!{product.productId}&storeId=$!{storeId}">
-									<img src="$!qiniu.getDownloadUrl($!{product.imgPath})" />
-								</a>
-							</div>
-	                        <p class="price">￥$number.format("#0.00",$!{product.price})<span>$!{product.commentCount}人评价</span></p>
-	                        <p class="name">
-	                            <a href="/product/product_detail?productID=$!{product.productId}&storeId=$!{storeId}">$!{product.productName}</a>
-	                        </p>
-	                        <p>$!{product.supName}</p>
-	                        <p>
-	                            <a href="javascript:;" class="collect">收藏</a>
-	                            <a href="javascript:;" class="addToCart">加入购物车</a>
-	                        </p>
-	                    </div>
-                    #end
-                </div>
-                <div class="row">
-                	#if($total!=0)
-	                    <div class="button-group">
-	                        #if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
-	                        #if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
-	                        #if($page - 3>1)
-	                        	<span>...</span>
-	                        #end
-	                        #foreach($item in [2,1])
-	                    	#set($p=$page - $item)
-	                    		#if($p>1)
-	                    			<a href="javascript:toPage($p);" class="num">$p</a>
-	                    		#end
-	                    	#end
-	                        <a href="javascript:toPage($page);" class="num active">$page</a>
-	                        #foreach($item in [1,2])
-	                        	#set($p=$page + $item)
-	                        	#if($p<$total)
-	                        	<a href="javascript:toPage($p);" class="num">$p</a>
-	                        	#else
-	                        		#break
-	                        	#end
-	                        #end
-	                        #if($page+3<$total)
-	                        	<span>...</span>
-	                        #end
-	                        #if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
-	                        #if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
-	                    </div>
-                   	#end
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -260,17 +327,5 @@
             </div>
         </div>
     </footer>
-	<script type="text/javascript">
-		$(".imgLiquidNotFill").imgLiquid({
-			fill: false,
-			horizontalAlign: "center",
-			verticalAlign: "center"
-		});
-		
-		function toPage(i){
-			location.href="/store/view?storeId=$!{storeId}&page="+i;
-		}
-		
-	</script>
 </body>
 </html>

@@ -1,0 +1,789 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme2.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>已发货</title>
+	<style>
+	
+		#ordertrack td {
+            vertical-align: top;
+        }
+ 
+        table {
+            empty-cells: show;
+        }
+ 
+        #odlist, #orderstate, #process, #ordertrack, #orderinfo {
+            color: #333;
+        }
+ 
+ 
+        body {
+            color: #666;
+            font: 12px/150% Arial,Verdana,"宋体";
+        }
+ 
+        #mohe-kuaidi_new .mh-icon-new {
+            background-position: 0 -58px;
+            height: 18px;
+            left: -20px;
+            margin-left: -41px;
+            margin-top: -9px;
+            position: absolute;
+            top: 1.5em;
+            width: 41px;
+        }
+ 
+        #mohe-kuaidi_new .mh-icon {
+            background: url("http://p9.qhimg.com/d/inn/f2e20611/kuaidi_new.png") no-repeat scroll 0 0 rgba(0, 0, 0, 0);
+        }
+ 
+        h1, h2, h3, h4, h5, h6, input, textarea, select, cite, em, i, b, strong, th {
+            font-size: 100%;
+            font-style: normal;
+        }
+ 
+        #mohe-kuaidi_new .mh-list-wrap .mh-list li.first {
+            color: #3eaf0e;
+        }
+ 
+        #mohe-kuaidi_new .mh-list-wrap .mh-list li {
+            color: #666;
+        }
+ 
+        p, form, ol, ul, li, h3, menu {
+            list-style: outside none none;
+        }
+ 
+        .result .res-list, .result-d .res-d-list {
+            font-size: 13px;
+            line-height: 20px;
+        }
+ 
+ 
+        body, th, td {
+            font-family: arial;
+            color: #333;
+        }
+		
+		.except-add{
+			border-bottom: 2px solid gray;
+			margin: 5px 15px 5px 15px;
+			min-height: 70px;
+			padding-bottom: 5px;
+			position: relative
+		}
+		.except-add div:last-child{
+			height: 40px;
+			line-height: 40px;
+			width: 100%;
+			position: absolute;
+			bottom:0px;
+		}
+		
+		 
+        /*#mohe-kuaidi_new ::-webkit-scrollbar {
+            width: 10px;
+        }
+ 
+        #mohe-kuaidi_new ::-webkit-scrollbar-track-piece {
+            background-color: #eee;
+        }
+ 
+        #mohe-kuaidi_new ::-webkit-scrollbar-thumb {
+            background-color: #ccc;
+            border: 1px solid #ccc;
+        }*/
+ 
+        #mohe-kuaidi_new .mh-wrap {
+            margin: 6px 0;
+        }
+ 
+            #mohe-kuaidi_new .mh-wrap a {
+                text-decoration: none;
+            }
+ 
+                #mohe-kuaidi_new .mh-wrap a:hover {
+                    text-decoration: underline;
+                }
+ 
+        #mohe-kuaidi_new .mh-form-wrap {
+            padding: 5px 15px;
+        }
+ 
+            #mohe-kuaidi_new .mh-form-wrap p {
+                margin: 10px 0;
+            }
+ 
+                #mohe-kuaidi_new .mh-form-wrap p label {
+                    margin-right: 10px;
+                    vertical-align: middle;
+                    padding: 6px 0;
+                }
+ 
+                #mohe-kuaidi_new .mh-form-wrap p input, #mohe-kuaidi_new .mh-form-wrap p select {
+                    width: 186px;
+                    line-height: normal;
+                    border: 1px solid #ccc;
+                    padding: 6px;
+                    box-sizing: border-box;
+                    margin: 0;
+                }
+ 
+                #mohe-kuaidi_new .mh-form-wrap p button {
+                    width: 80px;
+                    height: 28px;
+                    border: 1px solid #ccc;
+                    margin-left: 10px;
+                    text-align: center;
+                    color: #333;
+                    font-family: "Microsoft Yahei";
+                    font-size: 14px;
+                    cursor: pointer;
+                    background: #f7f7f7;
+                    background: -moz-linear-gradient(top,#f7f7f7,#ececec);
+                    background: -webkit-gradient(linear,left top,left bottom,color-stop(#f7f7f7),color-stop(#ececec));
+                    background: -ms-linear-gradient(top,#f7f7f7,#ececec);
+                    background: linear-gradient(to bottom,#f7f7f7,#ececec);
+                    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f7f7f7',endColorstr='#ececec',GradientType=0);
+                }
+ 
+                    #mohe-kuaidi_new .mh-form-wrap p button:hover {
+                        background: -moz-linear-gradient(top,#ececec,#f7f7f7);
+                        background: -webkit-gradient(linear,left top,left bottom,color-stop(#ececec),color-stop(#f7f7f7));
+                        background: -ms-linear-gradient(top,#ececec,#f7f7f7);
+                        background: linear-gradient(to bottom,#ececec,#f7f7f7);
+                        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ececec',endColorstr='#f7f7f7',GradientType=0);
+                    }
+ 
+                    #mohe-kuaidi_new .mh-form-wrap p button:active {
+                        background: -moz-linear-gradient(top,#f3f3f3,#fff);
+                        background: -webkit-gradient(linear,left top,left bottom,color-stop(#f3f3f3),color-stop(#fff));
+                        background: -ms-linear-gradient(top,#f3f3f3,#fff);
+                        background: linear-gradient(to bottom,#f3f3f3,#fff);
+                        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3f3f3',endColorstr='#ffffff',GradientType=0);
+                    }
+ 
+            #mohe-kuaidi_new .mh-form-wrap form.mh-loading p button {
+                position: relative;
+                color: transparent;
+                pointer-events: none;
+            }
+ 
+                #mohe-kuaidi_new .mh-form-wrap form.mh-loading p button::after {
+                    background: url(http://p1.qhimg.com/d/inn/1b1cc057/loading_s.gif) no-repeat center;
+                    content: '';
+                    display: inline-block;
+                    width: 4em;
+                    height: 20px;
+                    position: absolute;
+                    left: 50%;
+                    top: 50%;
+                    margin-left: -2em;
+                    margin-top: -10px;
+                }
+ 
+            #mohe-kuaidi_new .mh-form-wrap .mh-error {
+                display: none;
+                color: #c00;
+            }
+ 
+                #mohe-kuaidi_new .mh-form-wrap .mh-error label {
+                    visibility: hidden;
+                }
+ 
+        #mohe-kuaidi_new .mh-list-wrap {
+            max-height: 0;
+            _height: 0;
+            --overflow: hidden;
+        }
+ 
+            #mohe-kuaidi_new .mh-list-wrap.mh-unfold {
+                max-height: 281px;
+                _height: 281px;
+            }
+ 
+            #mohe-kuaidi_new .mh-list-wrap .mh-list {
+                border-top: 1px solid #eee;
+                margin: 0 15px;
+                padding: 15px 0;
+            }
+ 
+                #mohe-kuaidi_new .mh-list-wrap .mh-list ul {
+                    max-height: 255px;
+                    _height: 255px;
+                    padding-left: 75px;
+                    padding-right: 20px;
+                    --overflow: auto;
+                    height: 626px;
+                }
+ 
+                #mohe-kuaidi_new .mh-list-wrap .mh-list li {
+                    position: relative;
+                    border-bottom: 1px solid #f5f5f5;
+                    margin-bottom: 8px;
+                    padding-bottom: 8px;
+                    color: #666;
+                }
+ 
+                    #mohe-kuaidi_new .mh-list-wrap .mh-list li.first {
+                        color: #3eaf0e;
+                    }
+ 
+                    #mohe-kuaidi_new .mh-list-wrap .mh-list li p {
+                        line-height: 20px;
+                    }
+ 
+                    #mohe-kuaidi_new .mh-list-wrap .mh-list li .before {
+                        position: absolute;
+                        left: -13px;
+                        top: 2.2em;
+                        height: 82%;
+                        width: 0;
+                        border-left: 2px solid #ddd;
+                    }
+ 
+                    #mohe-kuaidi_new .mh-list-wrap .mh-list li .after {
+                        position: absolute;
+                        left: -16px;
+                        top: 1.2em;
+                        width: 8px;
+                        height: 8px;
+                        background: #ddd;
+                        border-radius: 6px;
+                    }
+ 
+                    #mohe-kuaidi_new .mh-list-wrap .mh-list li.first .after {
+                        background: #3eaf0e;
+                    }
+ 
+        #mohe-kuaidi_new .mh-kd-wrap {
+            position: relative;
+            border-top: 1px solid #eee;
+            padding: 15px;
+            padding-bottom: 25px;
+            background: #fafafa;
+        }
+ 
+            #mohe-kuaidi_new .mh-kd-wrap li {
+                display: none;
+            }
+ 
+                #mohe-kuaidi_new .mh-kd-wrap li.mh-selected {
+                    display: block;
+                }
+ 
+            #mohe-kuaidi_new .mh-kd-wrap .mh-img-wrap {
+                float: left;
+                width: 50px;
+                height: 50px;
+                margin-right: 10px;
+                overflow: hidden;
+            }
+ 
+                #mohe-kuaidi_new .mh-kd-wrap .mh-img-wrap img {
+                    width: 50px;
+                }
+ 
+            #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap {
+                font-size: 13px;
+                margin-left: 60px;
+            }
+ 
+                #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap p {
+                    margin-bottom: 8px;
+                }
+ 
+                #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap .mh-info-name {
+                    font-family: "Microsoft Yahei";
+                    font-size: 14px;
+                }
+ 
+                #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap .mh-info-link a {
+                    text-decoration: none;
+                    margin-right: 10px;
+                    padding: 2px 10px;
+                    border: 1px solid #ccc;
+                    color: #333;
+                }
+ 
+                    #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap .mh-info-link a:hover {
+                        background: white;
+                    }
+ 
+                    #mohe-kuaidi_new .mh-kd-wrap .mh-info-wrap .mh-info-link a:active {
+                        background: -moz-linear-gradient(top,#f3f3f3,#fff);
+                        background: -webkit-gradient(linear,left top,left bottom,color-stop(#f3f3f3),color-stop(#fff));
+                        background: -ms-linear-gradient(top,#f3f3f3,#fff);
+                        background: linear-gradient(to bottom,#f3f3f3,#fff);
+                        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#f3f3f3',endColorstr='#ffffff',GradientType=0);
+                    }
+ 
+        #mohe-kuaidi_new .mh-slogan {
+            position: absolute;
+            right: 20px;
+            bottom: 0;
+            cursor: pointer;
+        }
+ 
+        #mohe-kuaidi_new .mh-slogan-hover {
+            color: #3eaf0e;
+        }
+ 
+        #mohe-kuaidi_new .mh-slogan span {
+            vertical-align: middle;
+        }
+ 
+        #mohe-kuaidi_new .mh-qrcode-wrap {
+            position: absolute;
+            right: 0;
+            bottom: -1px;
+            width: 96px;
+            margin-right: -110px;
+            border: 1px solid #d6d6d6;
+            color: #999;
+            padding: 6px;
+            box-shadow: 0 1px 1px #efefef;
+        }
+ 
+        #mohe-kuaidi_new .mh-icon {
+            background: url(http://p9.qhimg.com/d/inn/f2e20611/kuaidi_new.png) no-repeat 0 0;
+        }
+ 
+        #mohe-kuaidi_new .mh-icon-qr {
+            background-position: 0 -17px;
+            display: inline-block;
+            *zoom: 1;
+            width: 13px;
+            height: 13px;
+            vertical-align: middle;
+            margin-left: 10px;
+        }
+ 
+        #mohe-kuaidi_new .mh-slogan-hover .mh-icon-qr {
+            background-position: 0 0;
+        }
+ 
+        #mohe-kuaidi_new .mh-icon-t {
+            position: absolute;
+            left: -9px;
+            bottom: 14px;
+            width: 10px;
+            height: 16px;
+            background-position: 0 -34px;
+            background-color: white;
+        }
+ 
+        #mohe-kuaidi_new .mh-icon-new {
+            position: absolute;
+            left: -20px;
+            top: 1.5em;
+            width: 41px;
+            height: 18px;
+            margin-left: -41px;
+            margin-top: -9px;
+            background-position: 0 -58px;
+        }
+ 
+        #mohe-kuaidi_new .mh-wrap .mb-search {
+            text-decoration: underline;
+            margin-left: 20px;
+        }
+ 
+            #mohe-kuaidi_new .mh-wrap .mb-search .mh-new {
+                display: inline-block;
+                width: 21px;
+                height: 9px;
+                margin: -1px 0 0 3px;
+                background: url(http://p0.qhimg.com/t01a3bd62f6db66463c.png) no-repeat;
+            }
+ 
+        #mohe-kuaidi_new .mh-identcode {
+            border-top: 1px solid #f5f5f5;
+            padding: 10px 15px;
+            display: none;
+        }
+ 
+            #mohe-kuaidi_new .mh-identcode .mh-img-wrap {
+                float: left;
+                width: 54px;
+                height: 54px;
+                padding: 6px;
+                border: 1px solid #ccc;
+                overflow: hidden;
+            }
+ 
+                #mohe-kuaidi_new .mh-identcode .mh-img-wrap img {
+                    width: 54px;
+                }
+ 
+            #mohe-kuaidi_new .mh-identcode .mh-img-tip {
+                margin-left: 78px;
+            }
+ 
+            #mohe-kuaidi_new .mh-identcode .mh-tip-txt {
+                font-size: 13px;
+                line-height: 38px;
+                color: #666;
+            }
+ 
+            #mohe-kuaidi_new .mh-identcode .mh-btn-install {
+                text-decoration: none;
+                margin-right: 10px;
+                padding: 2px 10px;
+                border: 1px solid #ccc;
+                color: #333;
+            }
+ 
+                #mohe-kuaidi_new .mh-identcode .mh-btn-install:hover {
+                    text-decoration: none;
+                }
+		
+		
+	</style>
+</head>
+<body>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- orderbar -->
+    <section class="orderbar">
+        <div class="order">
+            <div class="container">
+                <div class="row">
+                    <div class="branch">
+                        <span>我的阿拉丁</span><span>></span>
+                        <span>订单中心</span><span>></span>
+                        <span class="num">订单$!{orderCode}</span>
+                    </div>
+                </div>
+                <div class="row">
+                    <h3 class="title">订单状态</h3>
+                    <div class="order-status">
+                        <p>订单状态：已发货</p>
+                        <p>
+                            <a href="javascript:;" class="link">联系客服</a>
+                        </p>
+                    </div>
+                </div>
+                <div class="row order-message">
+                    <div class="col-md-4">
+                        <h3 class="title">订单信息</h3>
+                        <div class="order-status">
+                            <p>收货地址：$!{recName}  $!{recMobile} $!{address}</p>
+                            <p>订单编号：$!{orderCode}</p>
+                            <p>成交时间：$!date.format("yyyy-MM-dd HH:mm",$!{payTime})</p>
+                            <p>发票抬头：$!{invoiceName}</p>
+                            <p>支付方式：$!{payChannel}</p>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                        <h3 class="title">物流信息</h3>
+                        <div class="order-status" style="overflow:scroll;padding:0px;">
+                            <div data-mohe-type="kuaidi_new" class="g-mohe " id="mohe-kuaidi_new">
+        <div id="mohe-kuaidi_new_nucom">
+            <div class="mohe-wrap mh-wrap">
+                <div class="mh-cont mh-list-wrap mh-unfold">
+                    <div class="mh-list">
+                        <ul>
+							
+							#foreach($logisticsInfo in ${logisticsFormVo.logisticsInfos})
+								#if($velocityCount==1)
+									<li class="first">
+								#else
+									<li>
+								#end
+										<p>$!{logisticsInfo.time}</p>
+										<p>$!{logisticsInfo.context}</p>
+										<span class="before"></span><span class="after"></span>
+								</li>
+							#end
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- cartbar -->
+    <section class="cartbar apply-menu">
+        <div class="cart order-status">
+            <div class="container">
+                <div class="row">
+                    <table class="table order-table table-bordered table-responsive">
+                        <thead>
+                            <th>商品</th>
+                            <th>单价(元)</th>
+                            <th>数量</th>
+                            <th>实付款(元)</th>
+                            <th>状态</th>
+                            <th>运费</th>
+                        </thead>
+                        <tbody>
+								<tr class="status">
+									<td colspan="6" class="text-left">
+										<span>$!date.format("yyyy-MM-dd",$!{payTime})</span>
+										<span>订单编号：$!{orderCode}</span>
+										<span>供应商：$!{supName}</span>
+									</td>
+								</tr>
+								#foreach($orderProduct in $childOrderProductVo)
+									<tr>
+										<td class="text-left">
+											<a href="javascript:;" class="fl">
+												<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;" />
+											</a>
+											<div class="fr">
+												<p>
+													<a href="javascript:;">$!{orderProduct.productName}</a>
+												</p>
+												<p>
+													#foreach($skuStr in $orderProduct.skuStrs)
+														<span>$skuStr</span>
+													#end
+												</p>
+											</div>
+										</td>
+										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
+										<td>$!{orderProduct.buyNum}</td>
+										#if($velocityCount==1)
+											#set($size = $childOrdreProductVo.size())
+											<td rowspan="$size">
+												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
+												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee}))）</p>
+											</td>
+											<td rowspan="$size">已发货</td>
+											<td rowspan="$size">￥$!number.format("#0.00",$math.div($!{postFee},100))</td>
+										#end
+									</tr>
+								#end
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>
