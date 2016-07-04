@@ -601,4 +601,18 @@ public class ProductController {
 		return retMap;
 		
 	}
+	
+	@RequestMapping("/recommend")
+	@ResponseBody
+	public List<Map> getRecommend(String requestId, Integer pageSize){
+		
+		List<Map> resultMap = productService.selectByKeyWordWithPagination("", 0, pageSize, "sellCount", requestId);
+		
+		for(int i=0;i<resultMap.size();i++){
+			resultMap.get(i).put("imgPath",QiNiuUtil.getDownloadUrl((String)resultMap.get(i).get("imgPath")));
+		}
+		
+		return resultMap;
+		
+	}
 }
