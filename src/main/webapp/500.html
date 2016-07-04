@@ -118,7 +118,7 @@
                         <i class="icon-info-error"></i>
                         <div class="detail">
                             <p>系统错误！</p>
-                            <p>点击<a href="index.html">返回首页！</a></p>
+                            <p>点击<a href="/">返回首页！</a></p>
                         </div>
                     </div>
                 </div>
@@ -227,11 +227,11 @@
     		
 			$.ajax({
 				url:"/product/recommend",
-				data:{"page":8},
+				data:{"pageSize":8},
 				dataType:"json",
 				success:function(ret){
 					for(var i=0;i<ret.length;i++){
-						$("#recommend").append('<div class="col-md-3"><a href="javascript:;"><div class="imgLiquidNotFill" style="width:280px;height:280px;display:inline-block;"><img src="'+ret[i].imgPath+'" /></div></a><p class="price">￥'+(ret[i].price/100.0).toFixed(2)+'</p><p class="name"><a href="javascript:;">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'购买</p></div>');
+						$("#recommend").append('<div class="col-md-3"><a href="/product/product_detail?productID='+ret[i].ID+'"><div class="imgLiquidNotFill" style="width:280px;height:280px;display:inline-block;"><img src="'+ret[i].imgPath+'" /></div></a><p class="price">￥'+(ret[i].price/100.0).toFixed(2)+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'" style="overflow: hidden;white-space: nowrap;text-overflow: ellipsis;padding-right:5px;">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
 						$(".imgLiquidNotFill").imgLiquid({
 							fill: false,
 							horizontalAlign: "center",
