@@ -19,6 +19,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -154,195 +155,165 @@
                     <div class="col-md-10">
                         <div class="content">
                             <div class="title nav-tabs">
-                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont">收入统计</a>
-                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont">订单量</a>
+                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont income">收入统计</a>
+                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont order">订单量</a>
                             </div>
                             <div class="tab-content">
                                 <div class="tab-pane fade active in" id="page-1">
-                                    <div class="list-page">
-                                        <h3>
-                                            <span>2016-03-28</span>
-                                            <span class="price">¥20.00</span>
-                                        </h3>
-                                        <ul class="order-list">
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>通过代销XXXX获得佣金</p>
-                                                            <p class="date">2016-03-28</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <span>¥10.00</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>通过代销XXXX获得佣金</p>
-                                                            <p class="date">2016-03-28</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <span>¥10.00</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
-                                    <div class="list-page">
-                                        <h3>
-                                            <span>2016-03-28</span>
-                                            <span class="price">¥20.00</span>
-                                        </h3>
-                                        <ul class="order-list">
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>通过代销XXXX获得佣金</p>
-                                                            <p class="date">2016-03-28</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <span>¥10.00</span>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+									#foreach($listPage in $listPageList)
+										<div class="list-page">
+											<h3>
+												<span>$!date.format("yyyy-MM-dd",$!{listPage.completeTime})</span>
+												<span class="price">¥$!number.format("#0.00",$!math.div($!{listPage.money},100))</span>
+											</h3>
+											<ul class="order-list">
+												#foreach($orderProduct in $listPage.data)
+												<li>
+													<div class="detail">
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																	<img src="$!qiniu.getDownloadUrl($orderProduct.skuImg)" />
+																</div>
+															</a>
+															<div class="prod">
+																<p>通过代销 $!{orderProduct.productName}获得佣金</p>
+																<p class="date">$!date.format("yyyy-MM-dd",$!{listPage.completeTime})</p>
+															</div>
+														</div>
+														<div class="pull-right">
+															<span>¥$!number.format("#0.00",$!math.div($!{orderProduct.distributionUserReward},100))</span>
+														</div>
+													</div>
+												</li>
+												#end
+											</ul>
+										</div>
+									#end
+                                    
+									#set($inPage=1)
+									#set($ordPage=1)
+									
+                                    #if($incomePage!=0)
                                     <div class="button-group">
-                                        <a href="javascript:;" class="prev">上一页</a>
-                                        <a href="javascript:;" class="num active">1</a>
-                                        <a href="javascript:;" class="num">2</a>
-                                        <a href="javascript:;" class="num">3</a>
-                                        <span>...</span>
-                                        <a href="javascript:;" class="num">18</a>
-                                        <a href="javascript:;" class="prev">下一页</a>
-                                    </div>
+										#set($total = $incomePage)
+										#if($tab=='income')
+											#set($inPage=$page)
+										#end
+										#if($inPage>1)<a href="javascript:toPage(#set($prev=$inPage - 1)$prev);" class="prev">上一页</a>#end
+										#if($inPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($inPage - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$inPage - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($inPage);" class="num active">$inPage</a>
+										#foreach($item in [1,2])
+											#set($p=$inPage + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($inPage+3<$total)
+											<span>...</span>
+										#end
+										#if($inPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($inPage<$total)<a href="javascript:toPage(#set($next=$inPage+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
                                 </div>
                                 <div class="tab-pane fade" id="page-2">
+									#foreach($orderPage in $orderPageList)
                                     <div class="list-page">
                                         <h3>
-                                            <span>2016-03-28</span>
-                                            <span>(共2单)</span>
+                                            <span>$date.format("yyyy-MM-dd",$!{orderPage.createTime})</span>
+                                            <span>(共$!{orderPage.data.size()}单)</span>
                                         </h3>
                                         <ul class="order-list">
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                            <p>
-                                                                <span>价格 ¥1</span>
-                                                                <span>数量 x100</span>
-                                                            </p>
-                                                            <p class="color">颜色：墨蓝</p>
-                                                            <p class="size">尺寸：XL</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                            <p>
-                                                                <span>价格 ¥1</span>
-                                                                <span>数量 x100</span>
-                                                            </p>
-                                                            <p class="color">颜色：墨蓝</p>
-                                                            <p class="size">尺寸：XL</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-search">查看订单详情</button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                            <p>
-                                                                <span>价格 ¥1</span>
-                                                                <span>数量 x100</span>
-                                                            </p>
-                                                            <p class="color">颜色：墨蓝</p>
-                                                            <p class="size">尺寸：XL</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-search">查看订单详情</button>
-                                                    </div>
-                                                </div>
-                                            </li>
+											#foreach($childOrder in $orderPage.data)
+												<li>
+													<div class="detail">
+														#foreach($orderProduct in $childOrder.orderProductList)
+															<div class="pull-left">
+																<a href="javascript:;" class="img">
+																	<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																		<img src="$!qiniu.getDownloadUrl($!{orderProduct.skuImg})" />
+																	</div>
+																</a>
+																<div class="prod">
+																	<p>$!{orderProduct.productName}</p>
+																	<p>
+																		<span>价格 ¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</span>
+																		<span>数量 x$!{orderProduct.buyNum}</span>
+																	</p>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<p>$skuStr</p>
+																	#end
+																</div>
+															</div>
+														#end
+														<div class="pull-right">
+															#if($!{childOrder.status}=='COM')
+																<a href="/store/order-detail-com?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='CAN')
+																<a href="/store/order-detail-can?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='DFK')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='YFH')
+																<a href="/store/order-detail-yfh?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='DFH')
+																<a href="/store/order-detail-dfh?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='STK' or $!{childOrder.status}=='TKZ' or $!{childOrder.status}=='TKB' or $!{childOrder.status}=='TKS' or $!{childOrder.status}=='TKC')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='TH')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#end
+														</div>
+													</div>
+												</li>
+											#end
                                         </ul>
                                     </div>
-                                    <div class="list-page">
-                                        <h3>
-                                            <span>2016-03-28</span>
-                                            <span>(共1单)</span>
-                                        </h3>
-                                        <ul class="order-list">
-                                            <li>
-                                                <div class="detail">
-                                                    <div class="pull-left">
-                                                        <a href="javascript:;" class="img">
-                                                            <img src="/images/shoe/shoe.png" />
-                                                        </a>
-                                                        <div class="prod">
-                                                            <p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-                                                            <p>
-                                                                <span>价格 ¥1</span>
-                                                                <span>数量 x100</span>
-                                                            </p>
-                                                            <p class="color">颜色：墨蓝</p>
-                                                            <p class="size">尺寸：XL</p>
-                                                        </div>
-                                                    </div>
-                                                    <div class="pull-right">
-                                                        <button class="btn btn-search">查看订单详情</button>
-                                                    </div>
-                                                </div>
-                                            </li>
-                                        </ul>
-                                    </div>
+									#end
+                                    #if($orderPage!=0)
                                     <div class="button-group">
-                                        <a href="javascript:;" class="prev">上一页</a>
-                                        <a href="javascript:;" class="num active">1</a>
-                                        <a href="javascript:;" class="num">2</a>
-                                        <a href="javascript:;" class="num">3</a>
-                                        <span>...</span>
-                                        <a href="javascript:;" class="num">18</a>
-                                        <a href="javascript:;" class="prev">下一页</a>
-                                    </div>
+										#set($total = $orderPage)
+										#if($tab=='order')
+											#set($ordPage=$page)
+										#end
+										#if($ordPage>1)<a href="javascript:toPage(#set($prev=$ordPage - 1)$prev);" class="prev">上一页</a>#end
+										#if($ordPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($ordPage - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$ordPage - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($ordPage);" class="num active">$ordPage</a>
+										#foreach($item in [1,2])
+											#set($p=$ordPage + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($ordPage+3<$total)
+											<span>...</span>
+										#end
+										#if($ordPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($ordPage<$total)<a href="javascript:toPage(#set($next=$ordPage+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
                                 </div>
                             </div> 
                         </div>
@@ -360,7 +331,7 @@
                     <ul class="service">
                         <li>
                             <i class="icon icon-service-one"></i>
-                            <span>品类齐全</span>
+                            <span>品类齐全$orderPageList</span>
                             <span>轻松购物</span>
                         </li>
                         <li>
@@ -433,5 +404,36 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		
+		var curTab="income";
+		
+		$(".income").click(function(){
+			curTab = "income";
+		});
+		
+		$(".order").click(function(){
+			curTab = "order";
+		});
+		
+		#if(${tab}=='order')
+			$("#page-1").removeClass("in").removeClass("active");
+			$("#page-2").addClass("in").addClass("active");
+			$(".income").removeClass("active");
+			$(".order").addClass("active");
+			curTab = "order";
+		#end
+		
+		$(".imgLiquidNotFill").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+		function toPage(i){
+			location.href="/store/sale-calc?page="+i+"&tab="+curTab;
+		}
+		
+	</script>
 </body>
 </html>
