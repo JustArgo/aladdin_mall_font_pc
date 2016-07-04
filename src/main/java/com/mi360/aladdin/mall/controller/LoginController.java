@@ -2,6 +2,7 @@ package com.mi360.aladdin.mall.controller;
 
 import java.util.Map;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import com.mi360.aladdin.util.MapUtil.MapData;
 @Controller
 @RequestMapping(value = "/login")
 public class LoginController {
+	private Logger logger=Logger.getLogger(this.getClass());
 	@Autowired
 	private PcUserService userService;
 
@@ -60,6 +62,7 @@ public class LoginController {
 				loginUserInfo.put("userId", String.valueOf(userId));
 				loginUserInfo.put("mqId", mqId);
 				loginUserInfo.put("luckNum", luckNum);
+				logger.info("登录用户信息："+loginUserInfo);
 				WebUtil.login(loginUserInfo);
 				return "success";
 			}

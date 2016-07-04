@@ -69,3 +69,13 @@
   width: auto;
   height: 356px;
 }
+.banner .category-list > li .category-menu {
+  left: 223px;
+  width: 736px;
+}
+.banner .category-menu dd a {
+  padding: 0 10px;
+}
+.banner .category-menu dd {
+  width: 606px;
+}

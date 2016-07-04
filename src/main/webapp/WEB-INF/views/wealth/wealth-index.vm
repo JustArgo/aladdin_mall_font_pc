@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+	#parse("./common/resources.vm")
+    <!-- title -->
+    <title>我的财富-收支明细</title>
+<body>
+    <!-- header -->
+    #parse("./common/header.vm")
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="javascript:;">账户中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person.html">首页</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="person-info.html">个人信息</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="level.html">会员等级</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="address.html">收货地址</a>
+                                </li class="sub">
+                                <li class="sub">
+                                    <a href="my-card.html">我的银行卡</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-sales.html">我的销售</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="alipay-binding.html">我要提现</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-code.html">我要推广</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="javascript:;">订单中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="my-order.html">我的订单</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="advertise.html">参与活动</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="javascript:;">我的一元购</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="wealth.html" class="active">我的财富</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="my-team.html">我的团队</a>
+                                </li>
+                                <li class="bold">
+                                    <a href="collection.html">我的收藏</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content alipay-content">
+                            <div class="wealth">
+                                <div class="col-sm-3">
+                                    <p>可用余额：$number.format("#0.00",$math.div($remainingSum,100))</p>
+                                    <p>
+                                        <a href="/wealth/off-recharge-index">充值</a>
+                                        <a href="alipay-binding.html">提现</a>
+                                    </p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>累计收入</p>
+                                    <p>¥$number.format("#0.00",$math.div($totalEaring,100))</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>已提现</p>
+                                    <p>¥$number.format("#0.00",$math.div($totalWithdraw,100))</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>冻结余额</p>
+                                    <p>¥$number.format("#0.00",$math.div($frozenSum,100))</p>
+                                </div>
+                            </div>
+                            <p class="record">
+                                <span>近一个月的收支明细</span>| <a href="/wealth/recharge-list">充值记录</a>| <a href="/wealth/frozen-list">冻结余额记录</a>
+                            </p>
+                            <table class="table wealth-order table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>时间</th>
+                                        <th>收入</th>
+                                        <th>支出</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                	#foreach($cash in $cashList)
+									#if($cash.flowDirection=='IN#')                                	
+                                    <tr>
+                                        <td>$!{cash.insertTime}</td>
+                                        <td>¥$number.format("#0.00",$math.div($cash.sum,100))</td>
+                                        <td>-</td>
+                                        <td>$!{cash.remark}</td>
+                                    </tr>
+                                    #else
+                                    <tr>
+                                        <td>$!{cash.insertTime}</td>
+                                        <td>-</td>
+                                        <td>¥$number.format("#0.00",$math.div($cash.sum,100))</td>
+                                        <td>$!{cash.remark}</td>
+                                    </tr>
+                                    #end
+                                    #end
+                                </tbody>
+                            </table>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script type="text/javascript">
+		
+	</script>
+    #parse("./common/viewed.vm")
+    #parse("./common/footer.vm")
+    
+</body>
+</html>

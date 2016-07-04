@@ -27,6 +27,11 @@
     <![endif]-->
     <!-- title -->
     <title>我的销售</title>
+    <script>
+    function toPage(i){
+    	location.href="/user/sales?page="+i;
+    }
+    </script>
 </head>
 <body>
     <!-- header -->
@@ -202,46 +207,45 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>￥188.00</td>
+                                	#foreach($item in $sales)
+                                	<tr>
+                                        <td>￥$number.format("#0.00",$math.div($item.orderSum,100))</td>
                                         <td>5325425256</td>
-                                        <td>￥9.00</td>
+                                        <td>￥$number.format("#0.00",$math.div($item.remainReward,100))</td>
                                         <td>交易成功</td>
-                                        <td>2016-03-30  17:00:16</td>
+                                        <td>$item.completeTime</td>
                                     </tr>
-                                    <tr>
-                                        <td>￥188.00</td>
-                                        <td>5325425256</td>
-                                        <td>￥9.00</td>
-                                        <td>交易成功</td>
-                                        <td>2016-03-30  17:00:16</td>
-                                    </tr>
-                                    <tr>
-                                        <td>￥188.00</td>
-                                        <td>5325425256</td>
-                                        <td>￥9.00</td>
-                                        <td>交易成功</td>
-                                        <td>2016-03-30  17:00:16</td>
-                                    </tr>
-                                    <tr>
-                                        <td>￥188.00</td>
-                                        <td>5325425256</td>
-                                        <td>￥9.00</td>
-                                        <td>交易成功</td>
-                                        <td>2016-03-30  17:00:16</td>
-                                    </tr>
+                                	#end
                                 </tbody>
                             </table>
                         </div>
                         <div class="button-group">
-                        <a href="javascript:;" class="prev">上一页</a>
-                        <a href="javascript:;" class="num active">1</a>
-                        <a href="javascript:;" class="num">2</a>
-                        <a href="javascript:;" class="num">3</a>
-                        <span>...</span>
-                        <a href="javascript:;" class="num">18</a>
-                        <a href="javascript:;" class="prev">下一页</a>
-                    </div> 
+                        #if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+                        #if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+                        #if($page - 3>1)
+                        	<span>...</span>
+                        #end
+                        #foreach($item in [2,1])
+                    	#set($p=$page - $item)
+                    		#if($p>1)
+                    			<a href="javascript:toPage($p);" class="num">$p</a>
+                    		#end
+                    	#end
+                        <a href="javascript:toPage($page);" class="num active">$page</a>
+                        #foreach($item in [1,2])
+                        	#set($p=$page + $item)
+                        	#if($p<$total)
+                        	<a href="javascript:toPage($p);" class="num">$p</a>
+                        	#else
+                        		#break
+                        	#end
+                        #end
+                        #if($page+3<$total)
+                        	<span>...</span>
+                        #end
+                        #if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+                        #if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
+                        </div> 
                     </div>
                 </div>
             </div>

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.PcAccountService;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
+import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.product.service.IProductCollectService;
 import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.util.MapUtil;
@@ -41,7 +42,7 @@ public class UserController {
 
 	@RequestMapping()
 	public String index(String requestId, ModelMap modelMap) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
+		// String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
@@ -130,7 +131,8 @@ public class UserController {
 	 *            支付密码
 	 */
 	@RequestMapping("/paymentPassword")
-	public String paymentPassword(String requestId, String loginPassword, String paymentPassword, Integer fromPay, String location, ModelMap modelMap) {
+	public String paymentPassword(String requestId, String loginPassword, String paymentPassword, Integer fromPay,
+			String location, ModelMap modelMap) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
@@ -139,7 +141,7 @@ public class UserController {
 			return "redirect:/user";
 		}
 		modelMap.addAttribute("fromPay", fromPay);
-		modelMap.addAttribute("location",location);
+		modelMap.addAttribute("location", location);
 		return "user/first-set-payment-password";
 	}
 
@@ -187,16 +189,42 @@ public class UserController {
 		MapData serviceData = MapUtil.newInstance(verticalSettlementService.findSales(requestId, mqId, page, pageSize));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("sales", serviceData.getObject("result"));
+		MapData serviceData2 = MapUtil.newInstance(verticalSettlementService.countSales(requestId, mqId));
+		logger.info(serviceData2.dataString());
+		modelMap.addAttribute("total", (int) Math.ceil(serviceData2.getDouble("result") / pageSize));
+		modelMap.addAttribute("page", page);
 		return "user/sales";
 	}
 
 	@RequestMapping("/collects")
-	public String collects(String requestId) {
+	public String collects(String requestId, ModelMap modelMap, Integer page, Integer pageSize) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (pageSize == null || pageSize < 1) {
+			pageSize = 15;
+		}
+		String mqId = "d9afefcc54ec4a2ca6ca099e8cbd2413";
+		modelMap.addAttribute("productCollects",
+				productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15, page * 15, requestId));
 		return "user/collects";
 	}
 
 	@RequestMapping("/team")
 	public String team(String requestId) {
 		return "user/team";
+	}
+	
+	@RequestMapping("/team/query")
+	@ResponseBody
+	public String teamQuery(String requestId) {
+		return "user/team";
+	}
+
+	@RequestMapping("/logout")
+	@ResponseBody
+	public String logout(String requestId) {
+		WebUtil.login(null);
+		return "success";
 	}
 }
