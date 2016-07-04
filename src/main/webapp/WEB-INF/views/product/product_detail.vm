@@ -179,36 +179,20 @@
                     <div class="col-md-2">
                         <div class="content">
                             <ul class="slide-area">
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
+								#foreach($product in $recommendList)
+									<li>
+										<a href="/product/product_detail?productID=$!{product.ID}">
+											<div class="imgLiquidNotFill" style="width:143px;height:143px;display:inline-block">
+												<img src="$!qiniu.getDownloadUrl($!{product.imgPath})">
+											</div>
+										</a>
+										<p class="name">
+											<a href="/product/product_detail?productID=$!{product.ID}">$!{product.productName}</a>
+										</p>
+										<p class="price">¥$number.format("#0.00",$!math.div(${product.price},100))</p>
+										<p>$!{product.supName}</p>
+									</li>
+								#end
                             </ul>
                         </div>
                     </div>
@@ -220,8 +204,8 @@
 						<div class="assessment" style="display:none;">
                             <div class="top">
                                 <div class="col-sm-4">
-                                    <p>97%</p>
-                                    <p>好评度</p>
+                                    <p>#if(!${averageScore}) 0.0 #else ${averageScore} #end</p>
+                                    <p>平均分</p>
                                 </div>
                                 <div class="col-sm-8">
                                     <p>
@@ -285,7 +269,7 @@
 												</div>
 												<div class="col-sm-6">
 													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
-													<p class="photo">
+													<p class="photo" style="height:90px;">
 														#foreach($img in ${commentVo.comment.imgs})
 														<span class="imgLiquidNotFill" style="width:90px;height:77px;display:inline-block;">
 															<a href="javascript:;">
@@ -326,8 +310,8 @@
 													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
 												</div>
 												<div class="col-sm-6">
-													<p>$!{commentVo.comment.commentDesc}</p>
-													<p class="photo">
+													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
+													<p class="photo" style="height:90px;">
 														#foreach($img in ${commentVo.comment.imgs})
 														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
 															<a href="javascript:;">
@@ -339,9 +323,11 @@
 												</div>
 												<div class="col-sm-3">
 													<p>
-														<a href="javascript:;">
-															<img src="$!{commentVo.userHeadImg}">
-														</a>
+														<span class="imgLiquidNotFill" style="width:112px;height:112px;display:inline-block;">
+															<a href="javascript:;">
+																<img src="$!{commentVo.userHeadImg}">
+															</a>
+														</span>
 													</p>
 													<p class="name">$!{commentVo.userName}</p>
 												</div>
