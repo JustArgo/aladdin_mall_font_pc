@@ -606,7 +606,7 @@ public class ProductController {
 	@ResponseBody
 	public List<Map> getRecommend(String requestId, Integer pageSize){
 		
-		List<Map> resultMap = productService.selectByKeyWordWithPagination("", 0, pageSize, "sellCount", requestId);
+		List<Map> resultMap = productService.selectByKeyWordWithPaginationAddSupplier("", 0, pageSize, "sellCount", DEFAULT_PLATFORM, requestId);
 		
 		for(int i=0;i<resultMap.size();i++){
 			resultMap.get(i).put("imgPath",QiNiuUtil.getDownloadUrl((String)resultMap.get(i).get("imgPath")));
