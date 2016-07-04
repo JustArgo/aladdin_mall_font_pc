@@ -27,6 +27,65 @@
     <![endif]-->
     <!-- title -->
     <title>我的财富-充值记录</title>
+    <script>
+    function teamQuery(target,e){
+    	var nextLevel=$('#'+target).attr('nextLevel');
+    	if(nextLevel==undefined){
+        	var nextTier=parseInt($('#'+target).attr('tier'))+1;
+        	var mqId=$('#'+target).attr('mqId');
+       		$.ajax({ 
+    			url: '/user/team/query',
+    			data:{mqId:mqId},
+    			type:"post",
+    			success: function(data){
+    				var divId=target+"_n";
+    				var html='<div id="'+divId+'" style="display:none;">';
+    				for(var i=0;i<data.length;i++){
+    					var id='tier'+nextTier+''+i;
+						html+='<h3 style="text-indent:'+15*(nextTier-1)+'px;" onclick=\'teamQuery("'+id+'",event);\' id="'+id+'" tier="'+nextTier+'""'+i+'" mqid="'+data[i].mqId+'">\
+									<span class="glyphicon glyphicon-triangle-right"></span>\
+									<span>第'+nextTier+'级</span>\
+									<span>\
+										<a href="javascript:;">\
+											<img style="width:40px;height:40px;" src="'+data[i].headImage+'" />\
+										</a>'+data[i].nickname+'\
+									</span>\
+								</h3>';
+    				}
+
+    				html+='</div>';
+    				$('#'+target).after(html);
+    				$('#'+divId).slideToggle('slow');
+    	    		var arrow = $('#'+target).find('.glyphicon');
+    	    		if(arrow.hasClass('glyphicon-triangle-right')) {
+    	    			arrow.addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-right');
+    	    		} else {
+    	    			arrow.addClass('glyphicon-triangle-right').removeClass('glyphicon-triangle-bottom');
+    	    		}
+    				$('#'+target).attr('nextLevel',divId);
+    			},
+    			error:function(){
+    				alert('系统繁忙，请稍后再试');
+    				submitAble=true;
+    			}
+    		});
+    	}else{
+    		$('#'+nextLevel).slideToggle('slow');
+    		var arrow = $('#'+target).find('.glyphicon');
+    		if(arrow.hasClass('glyphicon-triangle-right')) {
+    			arrow.addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-right');
+    		} else {
+    			arrow.addClass('glyphicon-triangle-right').removeClass('glyphicon-triangle-bottom');
+    		}
+    	}
+   		if (e || e.stopPropagation) { 
+    		e.stopPropagation(); 
+    	} 
+    	else { 
+    		window.event.CancelBubble = true; 
+    	} 
+   	}
+    </script>
 </head>
 <body>
     <!-- header -->
@@ -73,7 +132,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
@@ -88,7 +147,7 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
                         </div>
                     </div>
@@ -207,107 +266,17 @@
                                     <span>级数</span>
                                     <span>用户</span>
                                 </h3>
-                                <ul>
-                                    <li>
-                                        <h3 class="jq-firstLevel">
-                                            <span class="glyphicon glyphicon-triangle-right"></span>
-                                            <span>第一级</span>
-                                            <span>
-                                                <a href="javascript:;">
-                                                    <img src="images/people.png" />
-                                                </a>昵称
-                                            </span>
-                                        </h3>
-                                        <div class="first-menu jq-fistMenu">
-                                            <h3 class="jq-secondLevel">
-                                                <span class="glyphicon glyphicon-triangle-right"></span>
-                                                <span>第二级</span>
-                                                <span>
-                                                    <a href="javascript:;">
-                                                        <img src="images/people.png" />
-                                                    </a>昵称
-                                                </span>
-                                            </h3>
-                                            <div class="second-menu jq-secondMenu">
-                                                <h3>
-                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                    <span>第三级</span>
-                                                    <span>
-                                                        <a href="javascript:;">
-                                                            <img src="images/people.png" />
-                                                        </a>昵称
-                                                    </span>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <h3 class="jq-secondLevel">
-                                            <span class="glyphicon glyphicon-triangle-right"></span>
-                                            <span>第二级</span>
-                                            <span>
-                                                <a href="javascript:;">
-                                                    <img src="images/people.png" />
-                                                </a>昵称
-                                            </span>
-                                        </h3>
-                                        <div class="second-menu jq-secondMenu">
-                                            <h3>
-                                                <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                <span>第三级</span>
-                                                <span>
-                                                    <a href="javascript:;">
-                                                        <img src="images/people.png" />
-                                                    </a>昵称
-                                                </span>
-                                            </h3>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <h3>
-                                            <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                            <span>第三级</span>
-                                            <span>
-                                                <a href="javascript:;">
-                                                    <img src="images/people.png" />
-                                                </a>昵称
-                                            </span>
-                                        </h3>
-                                    </li>
-                                    <li>
-                                        <h3 class="jq-firstLevel">
-                                            <span class="glyphicon glyphicon-triangle-right"></span>
-                                            <span>第一级</span>
-                                            <span>
-                                                <a href="javascript:;">
-                                                    <img src="images/people.png" />
-                                                </a>昵称
-                                            </span>
-                                        </h3>
-                                        <div class="first-menu jq-fistMenu">
-                                            <h3 class="jq-secondLevel">
-                                                <span class="glyphicon glyphicon-triangle-right"></span>
-                                                <span>第二级</span>
-                                                <span>
-                                                    <a href="javascript:;">
-                                                        <img src="images/people.png" />
-                                                    </a>昵称
-                                                </span>
-                                            </h3>
-                                            <div class="second-menu jq-secondMenu">
-                                                <h3>
-                                                    <span class="glyphicon glyphicon-triangle-bottom"></span>
-                                                    <span>第三级</span>
-                                                    <span>
-                                                        <a href="javascript:;">
-                                                            <img src="images/people.png" />
-                                                        </a>昵称
-                                                    </span>
-                                                </h3>
-                                            </div>
-                                        </div>
-                                    </li>
-                                </ul>
+                                #foreach($item in $directlyMembers)
+                                <h3 onclick='teamQuery("tier$velocityCount",event);' id="tier1" tier="1" mqid="$item.mqId">
+                            		<span class="glyphicon glyphicon-triangle-right"></span>
+                                    <span>第1级</span>
+                                    <span>
+                                        <a href="javascript:;">
+                                            <img style="width:40px;height:40px;" src="$!item.headImage" />
+                                        </a>$!item.nickname
+                                    </span>
+                                </h3>	
+                                #end
                             </div>
                         </div>    
                     </div>
@@ -328,7 +297,7 @@
                 <div class="row">
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="images/product/product-01.png">
+                            <img src="/images/product/product-01.png">
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -338,7 +307,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="images/product/product-01.png">
+                            <img src="/images/product/product-01.png">
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -348,7 +317,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="images/product/product-01.png">
+                            <img src="/images/product/product-01.png">
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -358,7 +327,7 @@
                     </div>
                     <div class="col-md-3">
                         <a href="javascript:;">
-                            <img src="images/product/product-01.png">
+                            <img src="/images/product/product-01.png">
                         </a>
                         <p class="price">￥25.00</p>
                         <p class="name">
@@ -428,22 +397,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>

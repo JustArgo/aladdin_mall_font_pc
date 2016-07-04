@@ -211,14 +211,20 @@ public class UserController {
 	}
 
 	@RequestMapping("/team")
-	public String team(String requestId) {
+	public String team(String requestId, ModelMap modelMap) {
+		String mqId = "6313b50f20754261846c10fb23c6d33b";
+		modelMap.addAttribute("mqId",mqId);
+		MapData serviceData=MapUtil.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
+		logger.info(serviceData.dataString());
+		modelMap.addAttribute("directlyMembers", serviceData.getObject("result"));
 		return "user/team";
 	}
 	
 	@RequestMapping("/team/query")
 	@ResponseBody
-	public String teamQuery(String requestId) {
-		return "user/team";
+	public Object teamQuery(String requestId,String mqId) {
+		MapData serviceData=MapUtil.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
+		return serviceData.getObject("result");
 	}
 
 	@RequestMapping("/logout")
