@@ -18,6 +18,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -27,6 +28,21 @@
     <![endif]-->
     <!-- title -->
     <title>商品搜索</title>
+	<style>
+		.imgLiquidNotFill{
+			display:inline-block;
+			width:246px;
+		}
+		.imgLiquidNotFill2{
+			display:inline-block;
+			width:165px;
+		}
+		.name{
+			overflow:hidden;
+			text-overflow:ellipsis;
+			white-space:nowrap;
+		}
+	</style>
 </head>
 <body>
     <!-- header -->
@@ -80,7 +96,8 @@
                             <div class="search-box">
                                 <form class="search-form">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" />
+                                        <input type="text" class="form-control" placeholder="" name="keyWord" value="$!{keyWord}"/>
+										<input type="hidden" name="orderBy" value="sellCount"/>
                                         <span class="input-group-addon">
                                             <i class="icon icon-search"></i>
                                         </span>
@@ -129,26 +146,15 @@
                         </div>
                         <div class="content">
                             <ul class="slide-area">
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/list/list-01.png" />
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/list/list-02.png" />
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/list/list-03.png" />
-                                    </a>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/list/list-04.png" />
-                                    </a>
-                                </li>
+								#foreach($product in $promoteList)
+									<li>
+										<div class="imgLiquidNotFill2" style="height:248px;">
+											<a href="/product/product_detail?productID=$!{product.ID}">
+												<img src="$!qiniu.getDownloadUrl($!{product.imgPath})" />
+											</a>
+										</div>
+									</li>
+								#end
                             </ul>
                         </div>
                     </div>
@@ -156,13 +162,13 @@
                         <div class="head">
                             <ul class="fl">
                                 <li>
-                                   <a href="javascript:;" class="red">热销</a>
+                                   <a href="javascript:;" class="hotsell red">热销</a>
                                 </li>
                                 <li>
-                                   <a href="javascript:;">新品</a>
+                                   <a href="javascript:;" class="newest">新品</a>
                                 </li> 
                                 <li>
-                                   <a href="javascript:;">价格</a>
+                                   <a href="javascript:;" class="price">价格</a>
                                 </li> 
                                 <li>
                                    <a href="javascript:;">
@@ -182,128 +188,25 @@
                                 </a>
                             </div>
                         </div>
-                        <div class="content">
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png" />
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
+                        <div class="content share-product">
+							#foreach($product in $productList)
+								<div class="item">
+									<div class="imgLiquidNotFill" style="height:280px;">
+										<a href="javascript:;">
+											<img src="$!qiniu.getDownloadUrl($!product.imgPath)" />
+										</a>
+									</div>
+									<p class="price">¥$!number.format("#0.00",$!math.div($!{product.price},100))</p>
+									<p class="name">
+										<a href="javascript:;">$!{product.productName}</a>
+									</p>
+									<p>$!{product.sellCount}人购买</p>
+								</div>
+							#end
                         </div>
+						
+						
+						
                         <div class="button-group">
                             <a href="javascript:;" class="prev">上一页</a>
                             <a href="javascript:;" class="num active">1</a>
@@ -400,5 +303,165 @@
             </div>
         </div>
     </footer>
+	<script>
+		$(".imgLiquidNotFill").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+		$(".imgLiquidNotFill2").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+		$(".hotsell").click(function(){
+			
+			var keyWord = $("input[name=keyWord]").val();
+			
+			if($(this).hasClass("red")){
+				return;
+			}else{
+				
+				$.ajax({
+				  	url:"/product/ajaxSearch",
+				  	type:"POST",
+				  	data:"startIndex=0&pageSize=12&orderBy=sellCount&keyWord="+keyWord,
+				  	dataType:"json",
+				  	success:function(ret){
+				  		$("input[name=orderBy]").val("sellCount");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+					        fill: false,
+					        horizontalAlign: "center",
+					        verticalAlign: "center"
+					    });
+				  	}
+				});
+				
+				$(".red").removeClass("red");
+				$(this).addClass("red");
+				
+			}
+		});
+		$(".newest").click(function(){
+			
+			var keyWord = $("input[name=keyWord]").val();
+		
+			if($(this).hasClass("red")){
+				return;
+			}else{
+				$.ajax({
+				  	url:"/product/ajaxSearch",
+				  	type:"POST",
+				  	data:"startIndex=0&pageSize=12&orderBy=createTime&keyWord="+keyWord,
+				  	dataType:"json",
+				  	success:function(ret){
+				  		$("input[name=orderBy]").val("createTime");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+					        fill: false,
+					        horizontalAlign: "center",
+					        verticalAlign: "center"
+					    });
+				  	}
+				});
+				
+				$(".red").removeClass("red");
+				$(this).addClass("red");
+			}
+		});
+		$(".price").click(function(){
+			
+			var keyWord = $("input[name=keyWord]").val();
+		
+			if($(this).hasClass("red")){
+					
+				var orderBy = $("input[name=orderBy]").val();
+				if(orderBy=='asc'){
+					$.ajax({
+						url:"/product/ajaxSearch",
+						type:"POST",
+						data:"startIndex=0&pageSize=12&orderBy=desc&keyWord="+keyWord,
+						dataType:"json",
+						success:function(ret){
+							$("input[name=orderBy]").val("desc");
+							$(".share-product").empty();
+							for(var i=0;i<ret.length;i++){
+								  
+								  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
+								  
+							}	
+							$(".imgLiquidNotFill").imgLiquid({
+								fill: false,
+								horizontalAlign: "center",
+								verticalAlign: "center"
+							});
+						}
+					});
+					
+				}else{
+					$.ajax({
+						url:"/product/ajaxSearch",
+						type:"POST",
+						data:"startIndex=0&pageSize=12&orderBy=asc&keyWord="+keyWord,
+						dataType:"json",
+						success:function(ret){
+							$("input[name=orderBy]").val("asc");
+							$(".share-product").empty();
+							for(var i=0;i<ret.length;i++){
+								  
+								  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
+								  
+							}	
+							$(".imgLiquidNotFill").imgLiquid({
+								fill: false,
+								horizontalAlign: "center",
+								verticalAlign: "center"
+							});
+						}
+					});
+				}		
+					
+					
+				
+			}else{
+				$.ajax({
+				  	url:"/product/ajaxSearch",
+				  	type:"POST",
+				  	data:"startIndex=0&pageSize=12&orderBy=asc&keyWord="+keyWord,
+				  	dataType:"json",
+				  	success:function(ret){
+				  		$("input[name=orderBy]").val("asc");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+					        fill: false,
+					        horizontalAlign: "center",
+					        verticalAlign: "center"
+					    });
+				  	}
+				});
+				
+				$(".red").removeClass("red");
+				$(this).addClass("red");
+			}
+		});
+	</script>
 </body>
 </html>

@@ -260,4 +260,10 @@ $(document).ready(function(){
             }
         }
     });
+
+    $('.jq-category > li').on('mouseenter', function(){
+        $(this).find('.category-menu').show();
+    }).on('mouseleave', function(){
+        $(this).find('.category-menu').hide();
+    });
 });

@@ -26,7 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>等待付款订单详情</title>
+    <title>待发货订单</title>
 </head>
 <body>
     <!-- header -->
@@ -174,7 +174,7 @@
 										<td>¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</td>
 										<td>$!{orderProduct.buyNum}</td>
 										#if($velocityCount==1)
-											#set($size = $childOrder.childOrdreProductVo.size)
+											#set($size = $childOrderProductVo.size())
 											<td rowspan="$size">
 												<p>¥$!number.format("#0.00",$math.div($!{orderSum},100))</p>
 												<p>（含运费¥$!number.format("#0.00",$math.div($!{postFee},100))）</p>

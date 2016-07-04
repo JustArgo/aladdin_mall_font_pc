@@ -157,30 +157,108 @@
                             <div class="list-page">
                                 <ul class="order-list">
 									<div class="order-info-all">
-										<li>
-											<div class="detail">
-												#foreach($orderProduct in $childOrder.orderProductList)
-												<div class="pull-left">
-													<a href="javascript:;" class="img">
-														<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
-													</a>
-													<div class="prod">
-														<p>$orderProduct.productName</p>
-														<p>
-															<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
-															<span>数量 x${orderProduct.buyNum}</span>
-														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+										#foreach($childOrder in $allOrder)
+											#if($childOrder.status=='TH')
+												<li>
+													<div class="detail">
+														#foreach($orderProduct in $childOrder.orderProductList)
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+															</a>
+															<div class="prod">
+																<p>$orderProduct.productName</p>
+																<p>
+																	<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+																	<span>数量 x${orderProduct.buyNum}</span>
+																</p>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																<p>$skuStr</p>
+																#end
+															</div>
+														</div>
+														<div class="pull-right status">
+															<span>$!{orderProduct.statuStr}</span>
+															
+															#if(${orderProduct.statuStr})
+																<a class="btn btn-search" href="/store/return-goods-detail-orderproductid?orderProductID=$!{orderProduct.ID}">查看退货详情</a>
+															#end
+															
+														</div>
+														
+														#end
+														
 													</div>
-												</div>
-												#end
-												<div class="pull-right status">
-													<span>全部</span>
-													<a class="btn btn-search" href="/order/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
-												</div>
-											</div>
-										</li>
+												</li>
+											#else
+												<li>
+													<div class="detail">
+														#foreach($orderProduct in $childOrder.orderProductList)
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;"/>
+															</a>
+															<div class="prod">
+																<p>$orderProduct.productName</p>
+																<p>
+																	<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+																	<span>数量 x${orderProduct.buyNum}</span>
+																</p>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																<p>$skuStr</p>
+																#end
+															</div>
+														</div>
+														#end
+														<div class="pull-right status">
+															#if($childOrder.status=='COM')
+																<span>已完成</span>
+															#elseif($childOrder.status=='CAN')
+																<span>已取消</span>
+															#elseif($childOrder.status=='DFK')
+																<span>待付款</span>
+															#elseif($childOrder.status=='DFH')
+																<span>待发货</span>
+															#elseif($childOrder.status=='YFH')
+																<span>已发货</span>
+															#elseif($childOrder.status=='STK')
+																<span>退款审核中</span>
+															#elseif($childOrder.status=='TKZ')
+																<span>退款中</span>
+															#elseif($childOrder.status=='TKB')
+																<span>退款审核不通过</span>
+															#elseif($childOrder.status=='TKC')
+																<span>退款成功</span>
+															#elseif($childOrder.status=='TKS')
+																<span>退款失败</span>
+															#end
+															
+															#if($childOrder.status=='COM')
+																<a class="btn btn-search" href="/store/order-detail-com?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='CAN')
+																<a class="btn btn-search" href="/store/order-detail-can?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='DFK')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.parentCode}">查看订单详情</a>
+															#elseif($childOrder.status=='DFH')
+																<a class="btn btn-search" href="/store/order-detail-dfh?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='YFH')
+																<a class="btn btn-search" href="/store/order-detail-yfh?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='STK')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='TKZ')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='TKB')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='TKC')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#elseif($childOrder.status=='TKS')
+																<a class="btn btn-search" href="/store/order-detail?orderCode=${childOrder.orderCode}">查看订单详情</a>
+															#end
+														</div>
+													</div>
+												</li>
+											#end
+										#end
 									</div>
 									<div class="order-info-dfk">
 										#foreach($childOrder in $noPayOrder)
@@ -197,8 +275,9 @@
 															<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
 															<span>数量 x${orderProduct.buyNum}</span>
 														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+														#foreach($skuStr in $orderProduct.skuStrs)
+															<p>$skuStr</p>
+														#end
 													</div>
 												</div>
 												#end
@@ -414,18 +493,23 @@
     </footer>
 	<script type="text/javascript">
 		$(function(){
+	
+			
+		
 			$(".title a").click(function(){
 				$(".title a").removeClass("active");
 				$(this).addClass("active");
 			});
 			
+			$("[class^='order-info']").hide();
+			$(".order-info-all").show();
 			var curTab = "all";
 			
 			$(".all").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-all").show();
-				curTab = "menu-all";
+				curTab = "all";
 			});
 			$(".dfk").click(function(){
 				

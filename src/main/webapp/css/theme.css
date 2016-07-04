@@ -205,13 +205,21 @@ body {
 }
 .category-list {
     padding: 2.5px 0;
+<<<<<<< HEAD
+    position: relative;
+=======
+>>>>>>> 7023620f921b0cce8ec3090e4b4e140512dc3f8d
     background-color: #333333;
 }
 .category-list > li {
     padding: 0 20px;
     text-align: center;
 }
+<<<<<<< HEAD
+.category-list > li > a {
+=======
 .category-list > li a {
+>>>>>>> 7023620f921b0cce8ec3090e4b4e140512dc3f8d
     color: #fff;
     font-size: 16px;
     display: block;
@@ -229,6 +237,61 @@ body {
     width: 500px;
     height: 400px;
 }
+<<<<<<< HEAD
+.category-list > li .category-menu {
+    top: 0;
+    left: 228px;
+    z-index: 999;
+    width: 744px;
+    height: 394px;
+    padding: 20px;
+    text-align: left;
+    position: absolute;
+    display: none;
+    background-color: #f7f7f7;
+}
+.category-menu .fore {
+    width: 100%;
+    overflow: hidden;
+    padding-bottom: 10px;
+}
+.category-menu dt {
+    float: left;
+    width: 86px;
+    font-weight: 600;
+    padding: 8px 30px 0 0;
+    position: relative;
+}
+.category-menu dd {
+    float: left;
+    width: 618px;
+    padding: 6px 0;
+}
+.category-menu dt a {
+    color: #666;
+    text-decoration: none;
+}
+.category-menu dt i {
+    position: absolute;
+    top: 10px;
+    right: 18px;
+    width: 4px;
+    height: 14px;
+    font: 400 9px/14px consolas;
+}
+.category-menu dd a {
+    color: #666;
+    float: left;
+    padding: 0 10px;
+    margin: 4px 0;
+    line-height: 16px;
+    height: 16px;
+    text-decoration: none;
+    border-left: 1px solid #e0e0e0;
+    white-space: nowrap;
+}
+=======
+>>>>>>> 7023620f921b0cce8ec3090e4b4e140512dc3f8d
 
 /** category **/
 .category-bar .category {
@@ -3897,7 +3960,6 @@ ul.service .icon {
 .footer .middle ul:last-child li {
     padding-right: 5px;
 }
-
 .btn-simple{
 	color:#323333;
 	background-color:#F7F7F7;

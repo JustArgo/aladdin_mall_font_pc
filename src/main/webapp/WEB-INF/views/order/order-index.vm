@@ -351,10 +351,10 @@
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
 																待付款
 																<a href="/order/order-detail?orderCode=$childOrder.parentCode">订单详情</a>
-																<a href="javascript:;" data-toggle="modal" data-target="#myModal" data-href="/Aladdin/orderCancel-popup.html" data-class="modal-orderCancel" class="jq-orderCancel">取消订单</a>
+																<a href="/order/cancel?orderCode=$!{childOrder.parentCode}">取消订单</a>
 															</td>
 															<td rowspan="$childOrder.orderProductList.size()" class="status">
-																#if($childOrder.remainTime!='OUT_OF_DATE')<a href="javascript:;" class="pay-money">付款</a>#end
+																#if($childOrder.remainTime!='OUT_OF_DATE')<a href="/order/pay-again?orderCode=$!{childOrder.parentCode}" class="pay-money">付款</a>#end
 															</td>
 														#end
 													</tr>
@@ -685,7 +685,9 @@
 															$!{orderProduct.statuStr}
 														</td>
 														<td class="status">
-															<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
+															#if(!${orderProduct.statuStr})
+																<a href="/order/rg?o=$childOrder.orderCode&p=$orderProduct.ID" class="pay-money">退货</a>
+															#end
 														</td>
 													</tr>
 												#end
@@ -855,6 +857,58 @@
 								</table>
 							</div>
 							
+							<div class="order-info-dsk">
+								<table class="table table-bordered table-hover table-responsive">
+									<tbody>
+										#foreach($childOrder in $sendOrderList)
+											<tr class="status">
+												<td colspan="6" class="text-left">
+													<span>$!date.format("yyyy-MM-dd",$!{childOrder.createTime})</span>
+													<span>订单编号：${childOrder.orderCode}</span>
+													<span>供应商：$!{childOrder.supName}</span>
+												</td>
+											</tr>
+											#foreach($orderProduct in $childOrder.orderProductList)
+												<tr>
+													<td class="text-left">
+														<a href="javascript:;" class="fl">
+															<img src="$qiniu.getDownloadUrl($!{orderProduct.skuImg})" style="width:121px;height:120px;">
+														</a>
+														<div class="fr">
+															<p>
+																<a href="javascript:;">$!{orderProduct.productName}</a>
+															</p>
+															<p>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																		<span>$skuStr</span>
+																#end
+															</p>
+														</div>
+													</td>
+													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.skuPrice},100))</td>
+													<td>$!{orderProduct.buyNum}</td>
+													#if($velocityCount==1)
+														#set($size = $childOrder.orderProductList.size())
+														<td rowspan="$size">
+															<p>¥$!number.format("#0.00",$math.div($!{childOrder.orderSum},100))</p>
+															<p>（含运费¥$!number.format("#0.00",$math.div($!{childOrder.postFee},100))）</p>
+														</td>
+														<td rowspan="$size">
+															待收款
+															<a style="display:block;" href="/order/order-detail-yfh?orderCode=$childOrder.orderCode">订单详情</a>
+														</td>
+														<td rowspan="$size">
+															
+														</td>
+													#end
+												</tr>
+											#end
+										#end
+									
+									</tbody>
+								</table>
+							</div>
+
 							<div class="order-info-dpl">
 								<table class="table table-bordered table-hover table-responsive">
 									<tbody>
@@ -985,14 +1039,14 @@
 													<td>¥$!number.format("#0.00",$math.div($!{orderProduct.sellPrice},100))</td>
 													<td>$!{orderProduct.buyNum}</td>
 													
-													<td class="status">
+													<td>
 														<p>¥$number.format("#0.00",$math.mul($math.div($!{orderProduct.sellPrice},100),$!{orderProduct.buyNum}))</p>
 														<p></p>
 													</td>
-													<td class="status">
+													<td>
 														$orderProduct.returnGoodsStr
 													</td>
-													<td class="status">
+													<td>
 														#if(${orderProduct.returnGoodsStatus}=='NO#'||${orderProduct.returnGoodsStatus}=='JTK')
 															<a href="/order/r2?p=$orderProduct.orderProductID" class="pay-money">重新申请</a>
 														#else
@@ -1001,8 +1055,6 @@
 													</td>
 													
 												</tr>
-											
-											
 										#end
 									</tbody>
 								</table>
@@ -1015,9 +1067,9 @@
                             <a href="javascript:;" class="num active">1</a>
                             <a href="javascript:;" class="num">2</a>
                             <a href="javascript:;" class="num">3</a>
-                            <span>...</span>
+                            <span class="etc">...</span>
                             <a href="javascript:;" class="num">18</a>
-                            <a href="javascript:;" class="prev">下一页</a>
+                            <a href="javascript:;" class="next">下一页</a>
                         </div>    
                     </div>
                 </div>
@@ -1109,7 +1161,23 @@
 			
 			var curTab = "all";
 			
+			#if($!{orderListCount}==0)
+				
+			#elseif($!{orderListCount}<5)
+				var pages = [];
+				for(var i=0;i<$!{orderListCount};i++){
+					pages.push(i+1);
+				}
+				$(".button-group").empty().append(paginationDefined(pages));
+				
+			#else
+				$(".button-group").empty().append(paginationDefined([1,2,3,0,$!{orderListCount}]));
+			#end
+			$(".num:eq(0)").addClass("active");
+			
+			
 			$(function(){
+					
 				
 			
 				$(".alipay-content a").click(function(){
@@ -1124,6 +1192,7 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-all").show();
 					curTab="all";
+					$(".button-group").empty().append(pagination($!{orderListCount}));
 				});
 				
 				//点击待付款
@@ -1131,6 +1200,7 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-dfk").show();
 					curTab="dfk";
+					$(".button-group").empty().append(pagination($!{noPayedOrderListCount}));
 				});
 				
 				//点击待发货
@@ -1138,6 +1208,15 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-dfh").show();
 					curTab="dfh";
+					$(".button-group").empty().append(pagination($!{noSendOrderListCount}));
+				});
+				
+				//点击待收款
+				$(".dsk").click(function(){
+					$("[class^='order-info']").hide();
+					$(".order-info-dsk").show();
+					curTab="dsk";
+					$(".button-group").empty().append(pagination($!{sendOrderListCount}));	
 				});
 				
 				//点击待评价
@@ -1145,6 +1224,7 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-dpl").show();
 					curTab="dpl";
+					$(".button-group").empty().append(pagination($!{waitForCommentListCount}));	
 				});
 				
 				//点击退款
@@ -1152,6 +1232,7 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-tk").show();
 					curTab="tk";
+					$(".button-group").empty().append(pagination($!{returnMoneyListCount}));	
 				});
 				
 				//点击退货
@@ -1159,23 +1240,304 @@
 					$("[class^='order-info']").hide();
 					$(".order-info-th").show();
 					curTab="th";
+					$(".button-group").empty().append(pagination($!{returnGoodsListCount}));	
 				});
 			});
 			
 			$(".num").click(function(){
 				
 				var pageNum = $(this).text();
+				console.log("pageNum:"+pageNum);
 				
 				var curPageNum = $(".num.active").text();
+				/*
+				var lastPage = $(".num:last-child").text();
+				var firstPage = $(".num:first-child").text();
 				
+				$(".button-group").empty();
 				
-				if(curPageNum!=pageNum){
+				if(lastPage>4){
+			
+					if(pageNum==lastPage){
+						
+					}else if(pageNum==firstPage){
+						
+					}else if(pageNum-firstPage==1){
+						
+					}else if(pageNum-firstPage==2){
+						if(lastPage==5 && firstPage==1){
+							$(".button-group").append(paginationDefined([2,3,4,5]));
+							$(".num:eq(1)").addClass("active");
+						}else if(lastPage==5 && firstPage==2){
+							firstPage = pageNum-1;
+						}else{
+							
+						}
+						
+					}
 					
+				}else{
+					$(".num").removeClass("active");
+					$(this).addClass("active");
+				}
+				*/
+				
+				
+				
+				
+				
+				
+				
+			});
+			
+			$(".button-group").on("click",".num",function(){
+			
+				var spanIndex = $(".etc").index()-1;
+				var curIndex  = $(this).index()-1;
+				var activeIndex = -1;
+				
+				var choosedIndex = $(".active").index()-1;
+				if(choosedIndex==curIndex){
+					return;
+				}
+				
+				var firstPage = parseInt($(".num:eq(0)").text());
+				var lastPage = parseInt($(".num:eq(3)").text());
+
+				var pageNum = 0;
+				var pageStr = "";
+			
+				if(curTab=='all'){
+					pageNum = $!{orderListCount};
+				}else if(curTab=='dfk'){
+					pageNum = $!{noPayedOrderListCount};
+				}else if(curTab=='dfh'){
+					pageNum = $!{noSendOrderListCount};
+				}else if(curTab=='dsk'){
+					pageNum = $!{sendOrderListCount};
+				}else if(curTab=='dpl'){
+					pageNum = $!{waitForCommentListCount};
+				}else if(curTab=='tk'){
+					pageNum = $!{returnMoneyListCount};
+				}else if(curTab=='th'){
+					pageNum = $!{returnGoodsListCount};
+				}
+				
+				console.log("pageNum:"+pageNum);
+				console.log("spanIndex:"+spanIndex);
+				console.log("curIndex:"+curIndex);
+				console.log("lastPage:"+$(".num:eq(3)").text());
+				
+				
+				
+				if(spanIndex==1){
+					if(curIndex<spanIndex){
+						if(firstPage!=1){
+							pageStr = paginationDefined([firstPage-1,firstPage,0,lastPage-2,lastPage-1]);
+							activeIndex = 1;
+						}else{
+							pageStr = paginationDefined([firstPage,firstPage+1,0,lastPage-1,lastPage]);	
+							activeIndex = 0;
+						}
+					}
+					if(curIndex==4){
+						if(lastPage<pageNum){
+							pageStr = paginationDefined([firstPage+1,0,lastPage-1,lastPage,lastPage+1]);
+							activeIndex = 2;
+						}
+					}
+				}else if(spanIndex==2){
+					if(curIndex==0){
+						if(firstPage!=1){
+							pageStr = paginationDefined([firstPage-1,firstPage,firstPage+1,0,lastPage-1]);
+							activeIndex = 1;
+						}
+					}else if(curIndex==1){
+						pageStr = paginationDefined([firstPage,firstPage+1,firstPage+2,0,lastPage]);
+						activeIndex = 1;
+					}else if(curIndex==3){
+						pageStr = paginationDefined([firstPage,0,lastPage-2,lastPage-1,lastPage]);
+						activeIndex = 2;
+					}else if(curIndex==4){
+						if(lastPage<pageNum){
+							pageStr = paginationDefined([firstPage+1,0,lastPage-1,lastPage,lastPage+1]);
+							activeIndex = 2;
+						}
+					}
+				}else if(spanIndex==3){
+					if(curIndex==0){
+						if(firstPage!=1){
+							pageStr = paginationDefined([firstPage-1,firstPage,firstPage+1,0,lastPage]);
+							activeIndex = 1;
+						}
+					}else if(curIndex==2){
+						if(firstPage+3<lastPage){
+							pageStr = paginationDefined([firstPage+1,firstPage+2,firstPage+3,0,lastPage]);
+							activeIndex = 1;
+						}
+					}else if(curIndex==4){
+						if(lastPage==pageNum){
+							if(lastPage-1>firstPage+2){
+								pageStr = paginationDefined([firstPage+1,firstPage+2,0,lastPage-1,lastPage]);
+								activeIndex = 3;
+							}
+						}else{
+							if(lastPage-1>firstPage+2){
+								pageStr = paginationDefined([firstPage+2,0,lastPage-1,lastPage,lastPage+1]);
+								activeIndex = 2;
+							}else{
+								pageStr = paginationDefined([lastPage-3,0,lastPage-1,lastPage,lastPage+1]);
+								activeIndex = 2;
+							}
+						}
+					}
+				}
+				
+				$(".num").removeClass("active");
+				
+				if(activeIndex!=-1){
+					$(".button-group").empty().append(pageStr);
+					$(".num:eq("+activeIndex+")").addClass("active");
+				}else{
+					$(this).addClass("active");
+				}
+			
+				//页面数据加载
+				var targetPage = parseInt((activeIndex!=-1)?$(".num:eq("+activeIndex+")").text():$(this).text());
+				
+				
+					
+				
+				$(".button-group").on("click",".prev",function(){
+				
+					var firstPage = parseInt($(".num:eq(0)").text());
+					var curPage = parseInt($(".num.active").text());
+					var curIndex = $(".num.active").index();
+					var spanIndex = $(".etc").index();
+					var spanBeforePage = parseInt($(".etc").prev().text());
+					if(curPage==1){
+						return;
+					}
+					
+					var pages = [];
+					var isNeedChange = true;
+					
+					
+					console.log(firstPage+" "+curPage+" "+curIndex+" "+spanIndex+" "+spanBeforePage);
+					
+					$(".num").each(function(){
+						if(curPage-1==parseInt($(this).text())){
+							isNeedChange = false;
+						}
+					});
+					if(!isNeedChange){
+						$(".num").removeClass("active");
+						$(this).addClass("active");
+						return;
+					}
+					
+					if(curIndex<spanIndex && firstPage!=1){
+						$(".num").each(function(){
+							$(this).text(parseInt($(this).text())-1);
+						});
+						toTargetPage(curPage-1);
+						return;
+					}
+					
+					if(spanIndex!=-1 && curIndex-spanIndex==1){
+						if(firstPage!=1){
+							$(".num").each(function(){
+								$(this).text(parseInt($(this).text())-1);
+							});
+							toTargetPage(curPage-1);
+							return;
+						}else{
+							if(spanIndex==2){
+								if(curPage==3){
+									$(".button-group").empty().append(paginationDefined([1,2,0,4,5]));
+									$(".num:eq(1)").addClass("active");
+									toTargetPage(2);
+									return;
+								}else{
+									$(".button-group").empty().append(paginationDefined([1,0,curPage-1,curPage,curPage+1]));
+									$(".num:eq(1)").addClass("active");
+									toTargetPage(curPage-1);
+									return;
+								}
+							}else if(spanIndex==3){
+								if(curPage==4){
+									$(".button-group").empty().append(paginationDefined([1,2,3,0,5]));
+									$(".num:eq(2)").addClass("active");
+									toTargetPage(3);
+									return;
+								}else{
+									$(".button-group").empty().append(paginationDefined([1,2,0,curPage-1,curPage]));
+									$(".num:eq(1)").addClass("active");
+									toTargetPage(curPage-1);
+									return;
+								}
+							}else if(spanIndex==4){
+								if(curPage==5){
+									$(".button-group").empty().append(paginationDefined([1,2,0,4,5]));
+									$(".num:eq(2)").addClass("active");
+									toTargetPage(4);
+									return;
+								}else{
+									$(".button-group").empty().append(paginationDefined([1,2,3,0,curPage-1]));
+									$(".num:eq(3)").addClass("active");
+									toTargetPage(curPage-1);
+									return;
+								}
+							}
+						}
+					}
+					
+					
+				});
+				
+				$(".button-group").on("click",".next",function(){
+					
+					var firstPage = parseInt($(".num:eq(0)").text());
+					var curPage = parseInt($(".active").text());
+					var curIndex = $(".active").index();
+					var spanIndex = $(".etc").index();
+					var pageNum = 0;
+					
+					if(curTab=='all'){
+						pageNum = $!{orderListCount};
+					}else if(curTab=='dfk'){
+						pageNum = $!{noPayedOrderListCount};
+					}else if(curTab=='dfh'){
+						pageNum = $!{noSendOrderListCount};
+					}else if(curTab=='dsk'){
+						pageNum = $!{sendOrderListCount};
+					}else if(curTab=='dpl'){
+						pageNum = $!{waitForCommentListCount};
+					}else if(curTab=='tk'){
+						pageNum = $!{returnMoneyListCount};
+					}else if(curTab=='th'){
+						pageNum = $!{returnGoodsListCount};
+					}
+					
+					if(curPage==pageNum){
+						return;
+					}
+					
+					
+					
+					
+				});
+				
+			
+			});
+			
+			
+			function toTargetPage(targetPage){
 					if(curTab=='all'){
 						$.ajax({
 							url:'${link.contextPath}/order/more-order',
 							type:'POST',
-							data:{"pageIndex":pageNum},
+							data:{"pageIndex":targetPage},
 							dataType:'json',
 							success:function(ret){
 								console.log(ret);
@@ -1195,26 +1557,146 @@
 							}
 						});
 					}else if(curTab=='dfk'){
-						
+						$.ajax({
+							url:"/order/more-nopay-order",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-dfk").empty();
+								
+								if(ret.length!=0){
+									$(".order-info-dfk").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									ret[i].status='DFK';
+									$(".order-info-dfk tbody").append(getItemStr(ret[i]));
+								}
+								
+							}
+						});
 					}else if(curTab=='dfh'){
 						
+						$.ajax({
+							url:"/order/more-nosend-order",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-dfh").empty();
+								if(ret.length!=0){
+									$(".order-info-dfh").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									ret[i].status='DFH';
+									$(".order-info-dfh tbody").append(getItemStr(ret[i]));
+								}
+								
+							}
+						});
+						
+					}else if(curTab=='dsk'){
+					
+						$.ajax({
+							url:"/order/more-send-order",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-dsk").empty();
+								if(ret.length!=0){
+									$(".order-info-dsk").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									ret[i].status='YFH';
+									$(".order-info-dsk tbody").append(getItemStr(ret[i]));
+								}
+								
+							}
+						});
+						
+					}else if(curTab=='dpl'){
+						$.ajax({
+							url:"/order/more-comments",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-dpl").empty();
+								if(ret.length!=0){
+									$(".order-info-dpl").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									ret[i].status='DPL';
+									$(".order-info-dpl tbody").append(getItemStr(ret[i]));
+								}
+								
+							}
+						});
 					}else if(curTab=='tk'){
+						
+						$.ajax({
+							url:"/order/more-returnmoney",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-tk").empty();
+								if(ret.length!=0){
+									$(".order-info-tk").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									$(".order-info-tk tbody").append(getItemStr(ret[i]));
+								}
+								
+							}
+						});
 						
 					}else if(curTab=='th'){
 						
+						$.ajax({
+							url:"/order/more-returngoods",
+							type:"POST",
+							data:{"pageIndex":targetPage},
+							dataType:"json",
+							success:function(ret){
+								$(".order-info-th").empty();
+								if(ret.length!=0){
+									$(".order-info-th").append('<table class="table table-bordered table-hover table-responsive"><tbody></tbody></table>');
+								}
+								
+								for(var i=0;i<ret.length;i++){
+									
+									var orderProduct = ret[i];
+									var tmpStr = "";
+									
+									tmpStr += '<tr><td class="text-left"><a href="javascript:;" class="fl"><img src="'+orderProduct.skuImg+'" style="width:121px;height:120px;"></a><div class="fr"><p><a href="javascript:;">'+orderProduct.productName+'</a></p><p>';
+									
+									for(var j=0;j<orderProduct.skuStrs.length;j++){
+										tmpStr += '<span>'+orderProduct.skuStrs[j]+'</span>';
+									}
+									
+									tmpStr += '</p></div></td><td>¥'+(orderProduct.sellPrice/100.0).toFixed(2)+'</td><td>'+orderProduct.buyNum+'</td><td><p>¥'+((orderProduct.buyNum*orderProduct.sellPrice)/100).toFixed(2)+'</p><p></p></td><td>'+orderProduct.returnGoodsStr+'</td><td>';
+									
+									if(orderProduct.returnGoodsStatus=='NO#'||orderProduct.returnGoodsStatus=='JTK'){
+										tmpStr += '<a href="/order/r2?p='+orderProduct.orderProductID+'" class="pay-money">重新申请</a>';
+									}else{
+										tmpStr += '<a href="/order/return-goods-detail-orderproductid?orderProductID='+orderProduct.orderProductID+'">退货详情</a>';
+									}
+									tmpStr += '</td></tr>';
+									$(".order-info-th tbody").append(tmpStr);
+								}
+								
+							}
+						});
+						
 					}
-					
-				}
-				
-				
-				
-				
-				
-				
-			});
-			
-			
-			
+			}
 			
 		</script>
     </footer>

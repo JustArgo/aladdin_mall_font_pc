@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 import java.util.Map.Entry;
 import java.util.Random;
 import java.util.Set;
@@ -73,6 +72,7 @@ import com.mi360.aladdin.shopcar.service.IShopCarService;
 import com.mi360.aladdin.supplier.domain.Supplier;
 import com.mi360.aladdin.supplier.service.ISupplierService;
 import com.mi360.aladdin.unionpay.service.UnionpayService;
+import com.mi360.aladdin.user.service.PcUserService;
 import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
@@ -151,9 +151,12 @@ public class OrderController {
 	@Autowired
 	private PcIOrderService pcOrderService;
 	
+	@Autowired
+	private PcUserService pcUserService;
+	
 	@RequestMapping("/placeOrder")
 	public String placeOrder(String requestId, String orderCode, String payType, Integer[] skuIds, Integer[] buyNums, Long[] skuPrices, Long[] supplierAmounts,
-			Long pFee, Long pSum, String invoiceName, Integer invoiceID, Integer receaddID, String notes, Model model) {
+			Long pFee, Long pSum, String invoiceName, Integer invoiceID, Integer receaddID, String notes, Integer storeId, Model model) {
 
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqID = (String)principal.get("mqId");
@@ -174,7 +177,13 @@ public class OrderController {
 		}
 
 		if (orderCode == null || "".equals(orderCode.trim())) {
-			orderCode = orderService.placeOrder(mqID, "NOR", skuIds, buyNums, skuPrices, pFee, pSum, invoiceName, invoiceID, notes, receaddID, requestId);
+			
+			if(storeId!=null){
+				orderCode = pcOrderService.placeOrderFromStore(mqID, "NOR", skuIds, buyNums, pFee, pSum, invoiceName, invoiceID, notes, receaddID, storeId, requestId);
+			}else{
+				orderCode = orderService.placeOrder(mqID, "NOR", skuIds, buyNums, skuPrices, pFee, pSum, invoiceName, invoiceID, notes, receaddID, requestId);
+			}
+			
 			// 清除购物车中的某些商品
 			shopCarService.removeShopCarProduct(mqID, skuIds, requestId);
 		}
@@ -465,7 +474,7 @@ public class OrderController {
 		
 		model.addAttribute("alipayHtml",alipayHtml);
 		
-		pcOrderService.finishedPay(requestId, orderCode, "ALI", UUID.randomUUID().toString().replace("-", ""), new Date());
+		//pcOrderService.finishedPay(requestId, orderCode, "ALI", UUID.randomUUID().toString().replace("-", ""), new Date());
 		
 		return "order/alipay";
 		
@@ -487,7 +496,7 @@ public class OrderController {
 	}
 	
 	@RequestMapping("/previewOrder")
-	public String previewOrder(String requestId, String orderCode, String mode, Integer[] skuIds, Integer[] buyNums, Integer receaddID, Model model,
+	public String previewOrder(String requestId, String orderCode, String mode, Integer[] skuIds, Integer[] buyNums, Integer receaddID, Integer storeId, Model model,
 			HttpServletResponse response) {
 
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
@@ -503,6 +512,15 @@ public class OrderController {
 		// 2 在该供应商下购买的商品Vo的集合
 		List<Map<String, Object>> supplierProducts = new ArrayList<Map<String, Object>>();
 
+		MapData serviceData = MapUtil.newInstance(pcUserService.existPaymentPassword(requestId, mqID));
+		logger.info(serviceData.dataString());
+		if (serviceData.getBoolean("result")) {
+			model.addAttribute("hasPaymentPassword",1);
+		}else{
+			model.addAttribute("hasPaymentPassword",0);
+		}
+		
+		
 		if (mode == null || "".equals(mode.trim())) {
 			supplierProducts = this.getShopCarProducts(skuIds, buyNums, requestId);
 		} else if (mode.equals("buyNow")) {
@@ -648,7 +666,11 @@ public class OrderController {
 				model.addAttribute("remainNotEnough", "not enough");
 			}
 		}
-
+		
+		if(storeId!=null){
+			model.addAttribute("storeId",storeId);
+		}
+		
 		return "order-generate";
 
 	}
@@ -1653,9 +1675,11 @@ public class OrderController {
 		OrderPayment orderPayment = orderService.getOrderPaymentByOrderCode(order.getParentCode(), requestId);
 		List<Order> childOrderList = new ArrayList<Order>();
 		childOrderList.add(order);
-		model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
-		model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
-		model.addAttribute("postFee",order.getPostFee());
+		if(orderPayment!=null){
+			model.addAttribute("childOrder",orderService.wrapperOrder(requestId, childOrderList));
+			model.addAttribute("payChannel",PayChannel.valueOf(orderPayment.getPayChannel()).getName());
+			model.addAttribute("postFee",order.getPostFee());
+		}
 		
 		
 		model.addAttribute("orderCode",order.getOrderCode());
@@ -1861,6 +1885,7 @@ public class OrderController {
 				orderProductMap.put("skuPrice", op.getSellPrice());
 				List<String> skuStrs = productSkuService.getSkuStr(sku.getID(), requestId);
 				orderProductMap.put("skuStrs", skuStrs);
+				orderProductMap.put("skuId", sku.getID());
 				orderProductMap.put("productID", sku.getProductID());
 				orderProductMap.put("buyNum", op.getBuyNum());
 				childOrderProductVo.add(orderProductMap);
@@ -1899,6 +1924,21 @@ public class OrderController {
 			}
 			if (!remainTime.equals("1分钟内")) {
 				remainTime = "剩" + remainTime;
+			}
+			
+			Map<String, Object> remainingMap = accountService.getRemainingSum(requestId, parentOrder.getMqID());
+
+			if ((Integer) remainingMap.get("errcode") != 0) {
+				logger.info(remainingMap);
+			} else {
+				logger.info("remainingMap-->" + remainingMap);
+				Long remainingSum = (Long) remainingMap.get("result");
+				
+				model.addAttribute("remainingSum",remainingSum==null?0L:remainingSum);
+				
+				if (remainingSum.compareTo(parentOrder.getpSum()) < 0) {
+					model.addAttribute("remainNotEnough", "not enough");
+				}
 			}
 			
 			model.addAttribute("remainTime",remainTime);
@@ -2600,7 +2640,9 @@ public class OrderController {
 		} else {
 			logger.info("remainingMap-->" + remainingMap);
 			Long remainingSum = (Long) remainingMap.get("result");
-
+			
+			model.addAttribute("remainingSum",remainingSum==null?0L:remainingSum);
+			
 			if (remainingSum.compareTo(parentOrder.getpSum()) < 0) {
 				model.addAttribute("remainNotEnough", "not enough");
 			}
@@ -2751,6 +2793,25 @@ public class OrderController {
 
 	}
 
+	@RequestMapping("/more-send-order")
+	@ResponseBody
+	public List<Map<String, Object>> moreSendOrder(String requestId, Integer pageIndex, Model model) {
+
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
+
+		List<Map<String, Object>> sendOrderList = orderService.selectSendOrder(mqID, (pageIndex - 1) * DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE, requestId);
+		for (int i = 0; i < sendOrderList.size(); i++) {
+			List<Map<String, Object>> orderProductList = (List<Map<String, Object>>) sendOrderList.get(i).get("orderProductList");
+			for (int j = 0; j < orderProductList.size(); j++) {
+				orderProductList.get(j).put("skuImg", QiNiuUtil.getDownloadUrl((String) (orderProductList.get(j).get("skuImg"))));
+			}
+		}
+
+		return sendOrderList;
+
+	}
+	
 	/**
 	 * 退货列表 查看订单详情专用 orderID 必须为子订单ID
 	 * 
@@ -2889,6 +2950,7 @@ public class OrderController {
 			for (int j = 0; j < orderProductList.size(); j++) {
 				orderProductList.get(j).put("skuImg", QiNiuUtil.getDownloadUrl((String) (orderProductList.get(j).get("skuImg"))));
 			}
+			noPayOrderList.get(i).put("remainTime", remainTime((Date) noPayOrderList.get(i).get("createTime"), requestId));
 		}
 
 		return noPayOrderList;

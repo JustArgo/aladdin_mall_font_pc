@@ -8,19 +8,26 @@
     <meta name="description" content="" />
     <meta name="author" content="" />
     <!-- css -->
-    <link rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/reset.css" />
-    <link rel="stylesheet" href="css/theme.css" />
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
     <!-- js -->
-    <script src="js/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-    <script src="js/theme.js"></script>
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+    <script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
-    <script src="js/html5shiv-printshiv.js"></script>
-    <script src="js/respond.min.js"></script>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
     <![endif]-->
     <!-- title -->
     <title>店铺浏览</title>
+    <style>
+    	.recommend-list p.name{
+    		width:280px;
+    		height:52px;
+    	}
+    </style>
 </head>
 <body>
     <!-- header -->
@@ -67,7 +74,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
@@ -82,7 +89,7 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
                         </div>
                     </div>
@@ -147,146 +154,83 @@
                     <div class="col-md-10">
                         <div class="store-introduce">
                             <p class="pull-left">
-                                <a href="javascript:;" class="shop">
-                                    <img src="images/shop/shop-01.png" />
-                                </a>
-                                <span>店铺2016488235</span>
+                            	<span class="imgLiquidNotFill" style="width:77px;height:77px;display:inline-block;vertical-align:middle;">
+	                                <a href="javascript:;" class="shop">
+	                                    <img src="$!qiniu.getDownloadUrl($!{store.logoPath})" />
+	                                </a>
+                                </span>
+                                <span>$!{store.title}</span>
                             </p>
-                            <p class="pull-right">店铺简介：xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx</p>
+                            <p class="pull-right">店铺简介：$!{store.abstraction}</p>
                         </div>
                         <div class="content">
+                        	#if($recommendProductList.size()>0)
                             <div class="list-page">
                                 <h3>
                                     <span>店长推荐</span>
                                 </h3>
                                 <ul class="recommend-list">
-                                    <li>
-                                        <div class="item">
-                                            <a href="javascript:;">
-                                                <img src="images/product/product-01.png">
-                                            </a>
-                                            <p class="price">¥25.00</p>
-                                            <p class="name">
-                                                <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                            </p>
-                                            <p>1524人购买</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="item">
-                                            <a href="javascript:;">
-                                                <img src="images/product/product-01.png">
-                                            </a>
-                                            <p class="price">¥25.00</p>
-                                            <p class="name">
-                                                <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                            </p>
-                                            <p>1524人购买</p>
-                                        </div>
-                                    </li>
-                                    <li>
-                                        <div class="item">
-                                            <a href="javascript:;">
-                                                <img src="images/product/product-01.png">
-                                            </a>
-                                            <p class="price">¥25.00</p>
-                                            <p class="name">
-                                                <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                            </p>
-                                            <p>1524人购买</p>
-                                        </div>
-                                    </li>
+                                	#foreach($recommendProduct in $recommendProductList)
+                                		<li>
+	                                        <div class="item">
+	                                        	<div class="imgLiquidNotFill" style="width:280px;height:280px;display:inline-block;">
+		                                            <a href="/product/product_detail?productID=$!{recommendProduct.productId}">
+		                                                <img src="$!qiniu.getDownloadUrl($!{recommendProduct.imgPath})">
+		                                            </a>
+	                                            </div>
+	                                            <p class="price">¥$!number.format("#0.00",$!math.div($!{recommendProduct.price},100))</p>
+	                                            <p class="name">
+	                                                <a href="/product/product_detail?productID=$!{recommendProduct.productId}">$!{recommendProduct.productName}</a>
+	                                            </p>
+	                                            <p>$!{recommendProduct.sellCount}人购买</p>
+	                                        </div>
+	                                    </li>
+                                	#end
                                 </ul>
                             </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="images/list/list-05.png">
-                                </a>
-                                <p class="price">¥25.00</p>
-                                <p class="name">
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                                </p>
-                                <p>1524人购买</p>
-                            </div>
+                            #end
+							#foreach($notRecommendProduct in $notRecommendProductList)
+								<div class="item">
+									<div class="imgLiquidNotFill" style="width:246px;height:280px;display:inline-block;">
+										<a href="javascript:;">
+											<img src="$qiniu.getDownloadUrl($!{notRecommendProduct.imgPath})">
+										</a>
+									</div>
+									<p class="price">¥$!number.format("#0.00",$!math.div($!notRecommendProduct.price,100))</p>
+									<p class="name" style="height:52px;">
+										<a href="javascript:;">$!{notRecommendProduct.productName}</a>
+									</p>
+									<p>$!{notRecommendProduct.sellCount}人购买</p>
+								</div>                   
+							#end
+                           
                         </div>
                         <div class="button-group">
-                            <a href="javascript:;" class="prev">上一页</a>
-                            <a href="javascript:;" class="num active">1</a>
-                            <a href="javascript:;" class="num">2</a>
-                            <a href="javascript:;" class="num">3</a>
-                            <span>...</span>
-                            <a href="javascript:;" class="num">18</a>
-                            <a href="javascript:;" class="prev">下一页</a>
+                        #if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+                        #if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+                        #if($page - 3>1)
+                        	<span>...</span>
+                        #end
+                        #foreach($item in [2,1])
+                    	#set($p=$page - $item)
+                    		#if($p>1)
+                    			<a href="javascript:toPage($p);" class="num">$p</a>
+                    		#end
+                    	#end
+                        <a href="javascript:toPage($page);" class="num active">$page</a>
+                        #foreach($item in [1,2])
+                        	#set($p=$page + $item)
+                        	#if($p<$total)
+                        	<a href="javascript:toPage($p);" class="num">$p</a>
+                        	#else
+                        		#break
+                        	#end
+                        #end
+                        #if($page+3<$total)
+                        	<span>...</span>
+                        #end
+                        #if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+                        #if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
                         </div>
                     </div>
                 </div>
@@ -351,22 +295,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>
@@ -375,5 +319,17 @@
             </div>
         </div>
     </footer>
+    <script type="text/javascript">
+		$(".imgLiquidNotFill").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+	    function toPage(i){
+	    	location.href="/store/browse?page="+i;
+	    }
+		
+	</script>
 </body>
 </html>    

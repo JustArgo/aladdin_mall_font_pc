@@ -96,7 +96,7 @@ public class ProductController {
 	 * @return
 	 */
 	@RequestMapping("/product_detail")
-	public String productDetail(String requestId, Integer productID, Model model) {
+	public String productDetail(String requestId, Integer productID, Integer storeId, Model model) {
 
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqID = "d9afefcc54ec4a2ca6ca099e8cbd2413";//(String)principal.get("mqId");
@@ -125,6 +125,9 @@ public class ProductController {
 			return "404";
 		}
 
+		if(storeId!=null){
+			model.addAttribute("storeId",storeId);
+		}
 		model.addAttribute("status", p.getStatus());
 		model.addAttribute("limitCount", p.getLimitCount()==null?0:p.getLimitCount());
 
@@ -212,6 +215,8 @@ public class ProductController {
 		model.addAttribute("commentVoListAll",commentVoListAll);
 		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
 		
+		//添加商品浏览历史记录
+		productService.addBrowseHistory(requestId, mqID, productID, "NOR");
 		
 		return "product/product_detail";
 	}
