@@ -152,11 +152,11 @@
                         <div class="prod-number">
                             <p>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</p>
                             <p class="change">
-                                <input type="type" class="form-control num jq-prodNum" value="1" />
+                                <input type="type" class="form-control num jq-prodNum" readonly="readonly" value="1" />
                                 <a href="javascritp:;" class="prod-add jq-prodAdd">+</a>
                                 <a href="javascritp:;" class="prod-sub jq-prodSub">-</a>
                             </p>
-                            <span class="store">（库存：$!{productStock}件）</span>
+                            <span class="store">（库存：<span class="stock">0</span>件）</span>
                         </div>
                         <div class="prod-operate">
                             <a href="javascript:;" class="prod-love">
@@ -481,12 +481,12 @@
 						
 						if(ret.errcode==0){
 							
-							$(".store").text("（库存："+ret.skuStock+"件）");
+							$(".stock").text(ret.skuStock);
 							
 							$(".skuID").val(ret.skuID);
 							
 						}else{
-							$(".store").text("（库存：0件）");
+							$(".stock").text("0");
 						}
 					}
 					
@@ -497,7 +497,9 @@
 			
 			$(".prod-add").click(function(){
 				var num = parseInt($(".num").val());
-				$(".num").val(num+1);
+				if(num<parseInt($(".stock").text())){
+					$(".num").val(num+1);
+				}
 			});
 			
 			$(".prod-sub").click(function(){
@@ -523,12 +525,12 @@
 					if(ret.errcode==0){
 						var numPattern = new RegExp("[0-9]+");
 						
-						$(".store").text("（库存："+ret.skuStock+"件）");
+						$(".stock").text(ret.skuStock);
 						
 						$(".skuID").val(ret.skuID);
 						//curSkuStock = ret.skuStock;
 					}else{
-						$(".store").text("（库存：0件）");
+						$(".stock").text("0");
 					}
 				}
 				
@@ -626,6 +628,15 @@
 				}
 			});
 			
+			$(".jq-choosen span").click(function(){
+				if($(this).hasClass("active")){
+					return;
+				}else{
+					$(this).closest(".jq-choosen").find("span").removeClass("active");
+					$(this).addClass("active");
+				}
+				
+			});
 			
 		});
 	</script>

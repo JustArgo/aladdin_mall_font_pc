@@ -123,11 +123,6 @@ $(document).ready(function(){
         });
     });
 
-    $('.jq-address').on('click', '.col-md-3', function(){
-        $(this).toggleClass('active');
-        $(this).siblings().removeClass('active');
-    });
-
     $('.jq-slider').on('click', '> li', function(){
         var url = $(this).find('img').attr('src');
         $(this).toggleClass('active');
