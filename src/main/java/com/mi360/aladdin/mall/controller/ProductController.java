@@ -203,6 +203,19 @@ public class ProductController {
 		
 		if(commentVoListAll!=null && commentVoListAll.size()>0){
 			model.addAttribute("commentStatistics",commentVoListAll.get(0).getCommentStatistics());
+			
+			if(commentVoListAll.get(0).getCommentStatistics()!=null){
+				double descScore = commentVoListAll.get(0).getCommentStatistics().getDescConform().intValue()/100.0;
+				double speedScore = commentVoListAll.get(0).getCommentStatistics().getSpeed().intValue()/100.0;
+				double serviceScore = commentVoListAll.get(0).getCommentStatistics().getService().intValue()/100.0;
+				
+				model.addAttribute("averageScore",String.format("%.1f", Double.sum(serviceScore, Double.sum(descScore, speedScore))/3));
+			}else{
+				model.addAttribute("averageScore","0.0");
+			}
+			
+		}else{
+			model.addAttribute("averageScore","0.0");
 		}
 		
 		//评论vo列表  有图片
@@ -214,6 +227,10 @@ public class ProductController {
 		
 		model.addAttribute("commentVoListAll",commentVoListAll);
 		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
+		
+		//查询最新的商品
+		List<Map> recommendList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, 3, "createTime", DEFAULT_PLATFORM, requestId);
+		model.addAttribute("recommendList",recommendList);
 		
 		//添加商品浏览历史记录
 		productService.addBrowseHistory(requestId, mqID, productID, "NOR");

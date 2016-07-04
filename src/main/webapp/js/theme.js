@@ -139,11 +139,6 @@ $(document).ready(function(){
         $(this).siblings().removeClass('active');
     });
 
-    $('.jq-choosen').on('click', 'span', function(){
-        $(this).toggleClass('active');
-        $(this).siblings().removeClass('active');
-    });
-
     $('.jq-slider').on('click', '> li', function(){
         var url = $(this).find('img').attr('src');
         $(this).toggleClass('active');
