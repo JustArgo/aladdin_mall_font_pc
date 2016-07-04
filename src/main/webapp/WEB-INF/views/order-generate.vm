@@ -27,6 +27,12 @@
     <![endif]-->
     <!-- title -->
     <title>生成订单</title>
+	<style>
+		.error{
+			margin-left:10px;
+			color:#ff2327;
+		}
+	</style>
 </head>
 <body>
     <!-- header -->
@@ -129,7 +135,6 @@
 								</div>
 							#end
 						#end
-						
 						
 						
 					</div>
@@ -293,7 +298,7 @@
                                 <span>账户余额（￥$number.format("#0.00",$math.div($!{remainingSum},100))）</span>
                             </a>
                         </p>
-                        <button type="button" class="btn btn-pay jq-orderError" data-toggle="modal" data-target="#myModal" data-href="/Aladdin/order-popup.html" data-class="modal-cartProduct">立即支付</button>
+                        <button type="button" class="btn btn-pay jq-orderError">立即支付</button>
                     </div>    
                 </div>
             </div>
@@ -436,13 +441,56 @@
             </div>
         </div>
     </footer>
-	<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>
+	<!--<div class="modal fade in" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"></div></div></div>-->
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="confirmPayment" tabindex="-1" role="dialog" 
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+	   <div class="modal-dialog">
+		  <div class="modal-content">
+			 <div class="modal-header">
+				<button type="button" class="close" 
+				   data-dismiss="modal" aria-hidden="true">
+					  &times;
+				</button>
+				<h4 class="modal-title" id="myModalLabel">
+				   验证支付密码
+				</h4>
+			 </div>
+			 <div class="modal-body">
+							<div class="form-group">
+								<label class="control-label">
+									支付密码：
+								</label>
+								<input type="text" class="form-control" name="payPassword" placeholder="" style="width:300px;display:inline-block;">
+								<span class="error"></span>
+							</div>
+			 </div>
+			 <div class="modal-footer">
+				<button type="button" class="btn btn-default" 
+				   data-dismiss="modal">关闭
+				</button>
+				<button type="button" class="btn btn-primary sure-pay">
+				   确定付款
+				</button>
+			 </div>
+		  </div><!-- /.modal-content -->
+	</div><!-- /.modal -->
+	
 	<script type="text/javascript">
 		$(function(){
 			
 			$.ajaxSettings.traditional=true;
 			
 			$(".btn-pay").click(function(){
+				
+				//检查是否有收货地址
+				var addressNum = $(".jq-address div").length;
+				if(addressNum==0){
+					alert("您还没有收获地址,马上去添加吧");
+					return;
+				}
+				
 				
 				var payType = $("input[name=method]:checked").data("paytype");
 				console.log("payType:"+payType);
@@ -488,8 +536,10 @@
 									break;
 								case "remain":
 									
-									//如果还没有设置支付密码
+									$("#confirmPayment").modal("toggle");
 									
+									//如果还没有设置支付密码
+									/*
 									var hasPayment = $("input[name=hasPaymentPassword]").val();
 									if(hasPayment=='0'){
 										$(".modal-content").empty().addClass("modal-cartProduct").append('<div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">×</span></button><h4 class="modal-title">关注</h4></div><div class="modal-body"><div class="message"><a href="javascritp:;" class="fl"><img src="/images/icon/icon-error.png" /></a><div class="fr"><p class="order">您还没有设置支付密码哦！</p><p><a href="javascript:;" class="add">立即设置</a></p></div></div></div>');
@@ -497,7 +547,7 @@
 										$("input[name=payType]").val("SUM");
 										$("#placeOrder").submit();
 									}
-									break;
+									break;*/
 							}
 							
 						}
@@ -552,7 +602,41 @@
 				
 			});
 			
+			$(".sure-pay").click(function(){
+				/*
+				$.ajax({
+					"url":"",
+					data:{"password":password},
+					dataType:"json",
+					success:function(){
+						
+					}
+				});
+				*/
+				
+				if(validate()){
+					$(".error").text("支付密码错误，请重新输入");
+				}
+				
+				
+				
+			});
+			
+			$("input").focus(function(){
+				$(".error").text("");
+			});
+			
+			
 		});
+		
+		function validate(){
+			if($("input[name=payPassword]").val().trim()==''){
+				$(".error").text("支付密码不能为空");
+				return false;
+			}	
+			return true;
+		}
+		
 	</script>
 	
 </body>
