@@ -33,6 +33,7 @@ import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.order.service.IOrderProductService;
 import com.mi360.aladdin.order.service.IOrderService;
 import com.mi360.aladdin.product.domain.ProductSku;
+import com.mi360.aladdin.product.service.IProductService;
 import com.mi360.aladdin.product.service.IProductSkuService;
 import com.mi360.aladdin.store.service.IStoreService;
 import com.mi360.aladdin.supplier.service.ISupplierService;
@@ -76,6 +77,9 @@ public class StoreController {
 	@Autowired
 	private ILogisticsService logisticsService;
 	
+	@Autowired
+	private IProductService productService;
+	
 	@RequestMapping("")
 	public String index(String requestId, Model model){
 		
@@ -105,7 +109,7 @@ public class StoreController {
 				model.addAttribute("monthSellCount",monthSellCountMap.get("result")==null?0:monthSellCountMap.get("result"));
 				model.addAttribute("todayVisit",0);
 				
-				return "store/index";
+				return "redirect:/store/browse";
 			}else{
 				return "store/no-store";
 			}
@@ -129,7 +133,7 @@ public class StoreController {
 		if((Integer)map.get("errcode")==0){
 			Map<String,Object> store = (Map<String,Object>)map.get("result");
 			if(store!=null){
-				return "store/index";
+				return "redirect:/store/browse";
 			}else{
 
 				return "store/open-store";
@@ -207,7 +211,7 @@ public class StoreController {
 			model.addAttribute("storeId",storeId);
 		}
 		
-		return "store/index";
+		return "redirect:/store/browse";
 		
 	}
 	
@@ -581,6 +585,17 @@ public class StoreController {
 		String mqId = (String)principal.get("mqId");
 		
 		return storeService.recommendProducts(requestId, mqId, productIds);
+		
+	}
+	
+	@RequestMapping("/proxy")
+	@ResponseBody
+	public Map<String,Object> proxy(String requestId, Integer[] productIds){
+		
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
+		
+		return storeService.addProductsIntoStore(requestId, mqId, productIds);
 		
 	}
 	
@@ -1358,6 +1373,54 @@ public class StoreController {
 		}
 
 		return retStr;
+	}
+	
+	/**
+	 * 店铺的货源推荐
+	 * @return
+	 * 2016年7月4日
+	 */
+	@RequestMapping("/supply")
+	public String supply(String requestId, String tab, String orderBy, Integer page, Model model){
+		
+		final int SUPPLY_PAGE_SIZE = 12;
+		
+		if(tab==null||"".equals(tab.trim())){
+			tab = "newest";
+		}
+		if(page==null){
+			page = 1;
+		}
+		
+		List<Map> newestProductList = new ArrayList<Map>();
+		List<Map> priceProductList = new ArrayList<Map>();
+		
+		int productCount = productService.getProductCountByKeyWordAndPlatform(requestId,"","PC#");
+		model.addAttribute("total",(productCount+SUPPLY_PAGE_SIZE-1)/SUPPLY_PAGE_SIZE);
+		
+		if("newest".equals(tab)){
+			newestProductList = productService.selectByKeyWordWithPaginationAddSupplier("", (page-1)*SUPPLY_PAGE_SIZE, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}else{
+			newestProductList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}
+		
+		if("price".equals(tab)){
+			priceProductList = productService.selectByKeyWordWithPaginationAddSupplier("", (page-1)*SUPPLY_PAGE_SIZE, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}else{
+			priceProductList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}
+		
+		logger.info("newestProductList:"+newestProductList);
+		logger.info("priceProductList"+priceProductList);
+		
+		model.addAttribute("newestProductList",newestProductList);
+		model.addAttribute("priceProductList",priceProductList);
+		
+		model.addAttribute("tab",tab);
+		model.addAttribute("page",page);
+		
+		return "store/supply";
+		
 	}
 	
 }

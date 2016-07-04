@@ -483,6 +483,8 @@
 									$("#placeOrder").submit();
 									break;
 								case "paypal":
+									$("input[name=payType]").val("PAL");
+									$("#placeOrder").submit();
 									break;
 								case "remain":
 									

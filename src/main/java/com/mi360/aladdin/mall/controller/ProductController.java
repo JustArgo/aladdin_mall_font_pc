@@ -399,7 +399,7 @@ public class ProductController {
 		List<ProductSearchRecord> searchRecordList = productService.selectPopularSearchRecord(mqID, requestId);
 		model.addAttribute("searchRecordList", searchRecordList);
 		
-		int count = productService.getProductCount(requestId, DEFAULT_PLATFORM);
+		int count = productService.getProductCountByKeyWordAndPlatform(requestId, keyWord==null?"":keyWord, DEFAULT_PLATFORM);
 		model.addAttribute("pageCount",(count+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
 		
 		if (productList.size() == 0) {

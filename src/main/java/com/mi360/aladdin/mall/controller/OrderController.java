@@ -50,7 +50,6 @@ import com.mi360.aladdin.logistics.domain.ExpressCompany;
 import com.mi360.aladdin.logistics.service.ILogisticsService;
 import com.mi360.aladdin.logistics.vo.LogisticsFormVo;
 import com.mi360.aladdin.logistics.vo.LogisticsInfoVo;
-import com.mi360.aladdin.mall.Principal;
 import com.mi360.aladdin.mall.controller.BankCardController.AddType;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
@@ -58,6 +57,7 @@ import com.mi360.aladdin.mq.service.MqService;
 import com.mi360.aladdin.order.service.IOrderProductService;
 import com.mi360.aladdin.order.service.IOrderService;
 import com.mi360.aladdin.order.service.PcIOrderService;
+import com.mi360.aladdin.paypal.service.IPaypalService;
 import com.mi360.aladdin.product.domain.Product;
 import com.mi360.aladdin.product.domain.ProductSku;
 import com.mi360.aladdin.product.service.IPostFeeService;
@@ -154,6 +154,9 @@ public class OrderController {
 	@Autowired
 	private PcUserService pcUserService;
 	
+	@Autowired
+	private IPaypalService paypalService;
+	
 	@RequestMapping("/placeOrder")
 	public String placeOrder(String requestId, String orderCode, String payType, Integer[] skuIds, Integer[] buyNums, Long[] skuPrices, Long[] supplierAmounts,
 			Long pFee, Long pSum, String invoiceName, Integer invoiceID, Integer receaddID, String notes, Integer storeId, Model model) {
@@ -198,7 +201,9 @@ public class OrderController {
 			return "redirect:unionPay?orderCode=" + orderCode;
 		} else if(payType.equals(OrderPayment.PayChannel.ALI.toString())){
 			return "redirect:alipay?orderCode=" + orderCode;
-		}
+		} else if(payType.equals(OrderPayment.PayChannel.PAL.toString())){
+			return "redirect:paypal?orderCode=" + orderCode;
+		} 
 
 		return "redirect:unionPay?orderCode=" + orderCode;
 
@@ -480,6 +485,30 @@ public class OrderController {
 		
 	}
 	
+	@RequestMapping("/paypal")
+	public void paypal(String requestId, String orderCode, HttpServletResponse resp) throws IOException{
+		
+		Map<String,String> params = new HashMap<String,String>();
+		
+		Order order = orderService.getOrderByOrderCode(orderCode, requestId);
+		
+		
+		params.put("total_fee", String.format("%.2f", order.getpSum()/100.0));
+		params.put("out_trade_no", orderCode);
+		params.put("subject", "阿拉丁商品购买");
+		params.put("body", "贝宝支付");
+		
+		Map<String,Object> payResult = paypalService.directPayUrl(params, requestId);
+		if((Integer)payResult.get("errcode")==0){
+			String redirectUrl = (String) payResult.get("result");
+			resp.sendRedirect(redirectUrl);
+		}else{
+			resp.sendRedirect("/order/pay-fail?orderCode="+orderCode);
+		}
+		
+	
+	}
+	
 	@RequestMapping("/pay-success")
 	public String paySuccess(String requestId, String orderCode, Model model){
 		
@@ -492,6 +521,15 @@ public class OrderController {
 		}
 		
 		return "order/pay-success";
+		
+	}
+	
+	@RequestMapping("/pay-fail")
+	public String payFail(String requestId, String orderCode, Model model){
+		
+		model.addAttribute("orderCode",orderCode);
+		
+		return "order/pay-fail";
 		
 	}
 	
