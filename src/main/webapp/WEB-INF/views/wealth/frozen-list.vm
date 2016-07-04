@@ -15,6 +15,7 @@
             <div class="container">
                 <div class="row">
                     <!-- left menu -->
+                    #parse("./common/left-menu.vm")
                     <div class="col-md-10">
                         <div class="content alipay-content">
                             <div class="wealth">
@@ -51,22 +52,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                	#foreach($frozen in $frozenList)
-									#if($frozen.flowDirection=='IN#')                                	
-                                    <tr>
-                                        <td>$!{frozen.insertTime}</td>
-                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
-                                        <td>-</td>
-                                        <td>$!{frozen.remark}</td>
+                                	#if($null.isNull($frozenList)||$frozenList.size()==0) 
+                                	<tr>
+                                		<td colspan="4">暂无记录!</td>
                                     </tr>
                                     #else
-                                    <tr>
-                                        <td>$!{frozen.insertTime}</td>
-                                        <td>-</td>
-                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
-                                        <td>$!{frozen.remark}</td>
-                                    </tr>
-                                    #end
+	                                	#foreach($frozen in $frozenList)
+										#if($frozen.flowDirection=='IN#')                                	
+	                                    <tr>
+	                                        <td>$!{frozen.insertTime}</td>
+	                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
+	                                        <td>-</td>
+	                                        <td>$!{frozen.remark}</td>
+	                                    </tr>
+	                                    #else
+	                                    <tr>
+	                                        <td>$!{frozen.insertTime}</td>
+	                                        <td>-</td>
+	                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
+	                                        <td>$!{frozen.remark}</td>
+	                                    </tr>
+	                                    #end
+	                                    #end
                                     #end
                                 </tbody>
                             </table>
