@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="/css/bootstrap.min.css" />
     <link rel="stylesheet" href="/css/reset.css" />
     <link rel="stylesheet" href="/css/theme.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
     <!-- js -->
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
@@ -19,111 +22,11 @@
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
     <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
     <!-- title -->
-    <title>我的收藏</title>
-    <script>
-    function toPage(i){
-    	location.href="/user/collects?page="+i;
-    }
-    
-    var addCartAble=true;
-    function addCart(productId){
-    	if(addCartAble){
-        	$.ajax({ 
-    			url: '/shop_car/add_to_shopcar',
-    			data:{productID:productId,collect:1},
-    			type:"post",
-    			success: function(data){
-    				if(data.errcode=0){
-    					alert('加入购物车成功');
-    				}
-    				addCartAble=true;
-    			},
-    			error:function(){
-    				alert('系统繁忙，请稍后再试');
-    				addCartAble=true;
-    			}
-    		});
-    	}
-    }
-    function removeCollect(productId){
-    	if(addCartAble){
-        	$.ajax({ 
-    			url: '/product/collect',
-    			data:{productID:productId,collect:0},
-    			type:"post",
-    			success: function(data){
-    				if(data.errcode=0){
-    					$('#'+productId).remove();
-    				}
-    				addCartAble=true;
-    			},
-    			error:function(){
-    				alert('系统繁忙，请稍后再试');
-    				addCartAble=true;
-    			}
-    		});
-    	}
-    }
-    
-    var batchAddCartAble=true;
-    function batchAddCart(){
-    	if(batchAddCartAble){
-    		var inputs=$('input[productid]');
-    		var productIds=[];
-    		for(var i=0;i<inputs.length;i++){
-    			if(inputs[i].checked==true){
-    				productIds.push(inputs.eq(i).attr("productid"));
-    			}
-    		}
-    		$.ajax({ 
-    			url: '/shop_car/batch_add_to_shopcar',
-    			data:{productIds:productIds},
-    			type:"post",
-    			success: function(data){
-    				if(data.errcode=0){
-    					alert('加入购物车成功');
-    				}
-    				addCartAble=true;
-    			},
-    			error:function(){
-    				alert('系统繁忙，请稍后再试');
-    				addCartAble=true;
-    			}
-    		});
-    	}
-    }
-    
-    var batchRemoveCollectAble=true;
-    function batchRemoveCollect(){
-    	if(batchRemoveCollectAble){
-    		var inputs=$('input[productid]');
-    		var productIds=[];
-    		var selectedInputs=[];
-    		for(var i=0;i<inputs.length;i++){
-    			if(inputs[i].checked==true){
-    				productIds.push(inputs.eq(i).attr("productid"));
-    				selectedInputs.push(inputs.eq(i));
-    			}
-    		}
-    		$.ajax({ 
-    			url: '/product/batchRemoveCollect',
-    			data:{productIds:productIds},
-    			type:"post",
-    			success: function(data){
-    				for(var i=0;i<selectedInputs.length;i++){
-    					selectedInputs[i].remove();
-    				}
-    	    		batchRemoveCollectAble=true;
-    			},
-    			error:function(){
-    				alert('系统繁忙，请稍后再试');
-    	    		batchRemoveCollectAble=true;
-    			}
-    		});
-    	}
-    }
-    </script>
+    <title>我的财富-收支明细</title>
 </head>
 <body>
     <!-- header -->
@@ -157,7 +60,7 @@
                             <a href="collection.html">我的收藏</a>
                         </li> 
                         <li>
-                            <a href="link.html">联系客服</a>
+                            <a href="javascript:;">联系客服</a>
                         </li>   
                     </ul>
                 </div>
@@ -224,13 +127,13 @@
                         <div class="content">
                             <ul class="nav-category">
                                 <li class="bold">
-                                    <a href="account-center.html">账户中心</a>
+                                    <a href="javascript:;">账户中心</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="my-account.html">我的账户</a>
+                                    <a href="person.html">我的账户</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="personal.html">个人信息</a>
+                                    <a href="person-info.html">个人信息</a>
                                 </li>
                                 <li class="sub">
                                     <a href="level.html">会员等级</a>
@@ -245,100 +148,165 @@
                                     <a href="my-sales.html">我的销售</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="payment.html">我要提现</a>
+                                    <a href="alipay-binding.html">我要提现</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="extend.html">我要推广</a>
+                                    <a href="my-code.html">我要推广</a>
                                 </li>
                                 <li class="bold">
-                                    <a href="order.html">订单中心</a>
+                                    <a href="javascript:;">订单中心</a>
                                 </li>
                                 <li class="sub">
                                     <a href="my-order.html">我的订单</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="group-order.html">团购订单</a>
+                                    <a href="javascript:;">团购订单</a>
                                 </li>
                                 <li liclass="sub">
-                                    <a href="bargain-order.html" >砍价订单</a>
+                                    <a href="javascript:;" >砍价订单</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="once-order.html">一元购订单</a>
+                                    <a href="javascript:;">一元购订单</a>
                                 </li>
                                 <li class="bold">
-                                    <a href="activity.html">参与活动</a>
+                                    <a href="advertise.html">参与活动</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="my-management.html">我的团购</a>
+                                    <a href="javascript:;">我的团购</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="my-once.html">我的一元购</a>
+                                    <a href="javascript:;">我的一元购</a>
                                 </li>
                                 <li class="bold">
-                                    <a href="wealth.html">我的财富</a>
+                                    <a href="wealth.html" class="active">我的财富</a>
                                 </li>
                                 <li class="bold">
                                     <a href="my-team.html">我的团队</a>
                                 </li>
-                                 <li class="bold">
-                                    <a href="my-store.html" class="active">我的收藏</a>
+                                <li class="bold">
+                                    <a href="collection.html">我的收藏</a>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="col-md-10">
-                        <div class="content">
-                            <p class="store">
-                                <label><input type="checkbox" />全选</label> <span>|</span>
-                                <a href="javascript:batchAddCart();">加入购物车</a> <span>|</span>
-                                <a href="javascript:batchRemoveCollect();">取消收藏</a>
-                            </p>
-                            #foreach($item in $productCollects)
-                            <div class="item" id="$item.productId">
-                                <a href="javascript:;">
-                                    <img style="width:246px;height:280px;" src="$item.imgPath">
-                                </a>
-                                <p class="name" style="width: 246px;">
-                                    <input type="checkbox" style="display:block;" productid="$item.productId"/>
-                                    <a href="javascript:;" style="line-height:20px;overflow:hidden;display:inline-block;height:40px;">$item.productName</a>
-                                </p>
-                                <p class="price">¥$number.format("#0.00",$math.div($item.price,100))
-                                    <span class="fr">$item.sellCount人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:addCart($item.productId);" class="fl">加入购物车</a>
-                                    <a href="javascript:removeCollect($item.productId);" class="fr">取消</a>
-                                </p>
+                        <div class="content alipay-content">
+                            <div class="wealth">
+                                <div class="col-sm-3">
+                                    <p>可用余额：¥100.00</p>
+                                    <p>
+                                        <a href="online-refill.html">充值</a>
+                                        <a href="alipay-binding.html">提现</a>
+                                    </p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>累计收入</p>
+                                    <p>¥200.00</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>已提现</p>
+                                    <p>¥200.00</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>冻结余额</p>
+                                    <p>¥200.00</p>
+                                </div>
                             </div>
-                            #end
-                        </div>
-                            <div class="button-group">
-                            #if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
-                            #if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
-                            #if($page - 3>1)
-                            	<span>...</span>
-                            #end
-                            #foreach($item in [2,1])
-                        	#set($p=$page - $item)
-                        		#if($p>1)
-                        			<a href="javascript:toPage($p);" class="num">$p</a>
-                        		#end
-                        	#end
-                            <a href="javascript:toPage($page);" class="num active">$page</a>
-                            #foreach($item in [1,2])
-                            	#set($p=$page + $item)
-                            	#if($p<$total)
-                            	<a href="javascript:toPage($p);" class="num">$p</a>
-                            	#else
-                            		#break
-                            	#end
-                            #end
-                            #if($page+3<$total)
-                            	<span>...</span>
-                            #end
-                            #if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
-                            #if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
-                        </div>     
+                            <p class="record">
+                                <span>近一个月的收支明细</span>| 充值记录
+                            </p>
+                            <table class="table wealth-order table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>时间</th>
+                                        <th>收入</th>
+                                        <th>支出</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>¥12.00</td>
+                                        <td>-</td>
+                                        <td>佣金</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>-</td>
+                                        <td>¥12.00</td>
+                                        <td>提现</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>¥12.00</td>
+                                        <td>-</td>
+                                        <td>佣金</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>-</td>
+                                        <td>¥12.00</td>
+                                        <td>提现</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <!-- category-bar -->
+    <section class="category-bar">
+        <div class="category list">
+            <div class="container">
+                <div class="row">
+                    <h1 class="title">
+                        <span>浏览记录</span>
+                    </h1>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
+                    </div>
+                    <div class="col-md-3">
+                        <a href="javascript:;">
+                            <img src="/images/product/product-01.png">
+                        </a>
+                        <p class="price">￥25.00</p>
+                        <p class="name">
+                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
+                        </p>
+                        <p>1524人购买</p>
                     </div>
                 </div>
             </div>

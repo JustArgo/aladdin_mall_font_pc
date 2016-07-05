@@ -1,6 +1,8 @@
 package com.mi360.aladdin.mall.controller.auth;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.mi360.aladdin.account.service.PcAccountService;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
+import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.product.service.IProductCollectService;
 import com.mi360.aladdin.user.service.PcUserService;
@@ -204,26 +207,36 @@ public class UserController {
 		if (pageSize == null || pageSize < 1) {
 			pageSize = 15;
 		}
+		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "d9afefcc54ec4a2ca6ca099e8cbd2413";
-		modelMap.addAttribute("productCollects",
-				productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15, page * 15, requestId));
+		List<Map<String, Object>> data = productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15, page * 15, requestId);
+		logger.info("========"+data);
+		for (Map<String, Object> map : data) {
+			map.put("imgPath", QiNiuUtil.getDownloadUrl((String) map.get("imgPath")));
+		}
+		modelMap.addAttribute("productCollects",data);
+		modelMap.addAttribute("total", (int) Math
+				.ceil(((double) productCollectService.getProductCollectCountByMqID(mqId, requestId)) / pageSize));
+		modelMap.addAttribute("page", page);
 		return "user/collects";
 	}
 
 	@RequestMapping("/team")
 	public String team(String requestId, ModelMap modelMap) {
 		String mqId = "6313b50f20754261846c10fb23c6d33b";
-		modelMap.addAttribute("mqId",mqId);
-		MapData serviceData=MapUtil.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
+		modelMap.addAttribute("mqId", mqId);
+		MapData serviceData = MapUtil
+				.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("directlyMembers", serviceData.getObject("result"));
 		return "user/team";
 	}
-	
+
 	@RequestMapping("/team/query")
 	@ResponseBody
-	public Object teamQuery(String requestId,String mqId) {
-		MapData serviceData=MapUtil.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
+	public Object teamQuery(String requestId, String mqId) {
+		MapData serviceData = MapUtil
+				.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
 		return serviceData.getObject("result");
 	}
 
@@ -232,5 +245,10 @@ public class UserController {
 	public String logout(String requestId) {
 		WebUtil.login(null);
 		return "success";
+	}
+	
+	@RequestMapping("/wealth")
+	public String wealth(String requestId){
+		return "user/wealth";
 	}
 }
