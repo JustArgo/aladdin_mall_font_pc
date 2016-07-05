@@ -11,12 +11,14 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.mi360.aladdin.account.service.AccountService;
 import com.mi360.aladdin.account.service.PcAccountService;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.QiNiuUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.product.service.IProductCollectService;
 import com.mi360.aladdin.user.service.PcUserService;
+import com.mi360.aladdin.user.service.UserService;
 import com.mi360.aladdin.util.MapUtil;
 import com.mi360.aladdin.util.MapUtil.MapData;
 import com.mi360.aladdin.vertical.distribution.service.PcVerticalDistributionService;
@@ -33,9 +35,11 @@ import com.mi360.aladdin.vertical.settlement.service.PcVerticalSettlementService
 public class UserController {
 	private Logger logger = Logger.getLogger(this.getClass());
 	@Autowired
-	private PcUserService userService;
+	private PcUserService pcUserService;
 	@Autowired
-	private PcAccountService accountService;
+	private AccountService accountService;
+	@Autowired
+	private PcAccountService pcAccountService;
 	@Autowired
 	private PcVerticalDistributionService verticalDistributionService;
 	@Autowired
@@ -47,10 +51,10 @@ public class UserController {
 	public String index(String requestId, ModelMap modelMap) {
 		// String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
-		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
+		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("userInfo", serviceData.getObject("result"));
-		MapData serviceData2 = MapUtil.newInstance(accountService.getRemainingSum(requestId, mqId));
+		MapData serviceData2 = MapUtil.newInstance(pcAccountService.getRemainingSum(requestId, mqId));
 		logger.info(serviceData2.dataString());
 		modelMap.addAttribute("remainingSum", serviceData2.getObject("result"));
 		MapData serviceData3 = MapUtil.newInstance(verticalDistributionService.countMemberAll(requestId, mqId));
@@ -74,7 +78,7 @@ public class UserController {
 	public String info(String requestId, ModelMap modelMap) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
-		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
+		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("userInfo", serviceData.getObject("result"));
 		return "user/info";
@@ -85,7 +89,7 @@ public class UserController {
 	public Integer saveInfo(String requestId, String headImage, Integer sex, String nickname) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
-		MapData serviceData = MapUtil.newInstance(userService.savePc(requestId, mqId, headImage, nickname, sex));
+		MapData serviceData = MapUtil.newInstance(pcUserService.savePc(requestId, mqId, headImage, nickname, sex));
 		return serviceData.getErrcode();
 	}
 
@@ -103,7 +107,7 @@ public class UserController {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
-				.newInstance(userService.modifyLoginPassword(requestId, mqId, prePassword, password));
+				.newInstance(pcUserService.modifyLoginPassword(requestId, mqId, prePassword, password));
 		return serviceData.getErrcode();
 	}
 
@@ -121,7 +125,7 @@ public class UserController {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
-				.newInstance(userService.modifyPaymentPassword(requestId, mqId, prePaymentPassword, paymentPassword));
+				.newInstance(pcUserService.modifyPaymentPassword(requestId, mqId, prePaymentPassword, paymentPassword));
 		return serviceData.getErrcode();
 	}
 
@@ -138,7 +142,7 @@ public class UserController {
 			String location, ModelMap modelMap) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
-		MapData serviceData = MapUtil.newInstance(userService.existPaymentPassword(requestId, mqId));
+		MapData serviceData = MapUtil.newInstance(pcUserService.existPaymentPassword(requestId, mqId));
 		logger.info(serviceData.dataString());
 		if (serviceData.getBoolean("result")) {
 			return "redirect:/user";
@@ -158,7 +162,7 @@ public class UserController {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
-				.newInstance(userService.firstSetPaymentPassword(requestId, mqId, loginPassword, paymentPassword));
+				.newInstance(pcUserService.firstSetPaymentPassword(requestId, mqId, loginPassword, paymentPassword));
 		logger.info(serviceData.dataString());
 		return serviceData.getErrcode();
 	}
@@ -167,7 +171,7 @@ public class UserController {
 	public String level(String requestId, ModelMap modelMap) {
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
-		MapData serviceData = MapUtil.newInstance(userService.findSimpleUserInfo(requestId, mqId));
+		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		MapData resultData = serviceData.getResult();
 		modelMap.addAttribute("userInfo", resultData.getData());
@@ -209,12 +213,13 @@ public class UserController {
 		}
 		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
 		String mqId = "d9afefcc54ec4a2ca6ca099e8cbd2413";
-		List<Map<String, Object>> data = productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15, page * 15, requestId);
-		logger.info("========"+data);
+		List<Map<String, Object>> data = productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15,
+				page * 15, requestId);
+		logger.info("========" + data);
 		for (Map<String, Object> map : data) {
 			map.put("imgPath", QiNiuUtil.getDownloadUrl((String) map.get("imgPath")));
 		}
-		modelMap.addAttribute("productCollects",data);
+		modelMap.addAttribute("productCollects", data);
 		modelMap.addAttribute("total", (int) Math
 				.ceil(((double) productCollectService.getProductCollectCountByMqID(mqId, requestId)) / pageSize));
 		modelMap.addAttribute("page", page);
@@ -246,9 +251,52 @@ public class UserController {
 		WebUtil.login(null);
 		return "success";
 	}
-	
+
 	@RequestMapping("/wealth")
-	public String wealth(String requestId){
+	public String wealth(String requestId, ModelMap modelMap, Integer page, Integer pageSize) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (pageSize == null || pageSize < 1) {
+			pageSize = 15;
+		}
+		// String mqId = (String) WebUtil.getCurrentUserInfo().get("mqId");
+		String mqId = "4e84478d0ef74da08c0794a5d176a84e";
+		MapData serviceData = MapUtil.newInstance(pcAccountService.getAccountInfo(requestId, mqId));
+		logger.info(serviceData.dataString());
+		modelMap.addAttribute("accountInfo", serviceData.getObject("result"));
+		MapData serviceData2 = MapUtil
+				.newInstance(accountService.getAccountDetail(requestId, mqId, "KYY", page, pageSize));
+		logger.info(serviceData2.dataString());
+		modelMap.addAttribute("accountDetails", serviceData2.getObject("result"));
+		MapData serviceData3 = MapUtil.newInstance(pcAccountService.countAccountDetails(requestId, mqId, "KYY"));
+		logger.info(serviceData3.dataString());
+		modelMap.addAttribute("total", (int) Math.ceil(serviceData3.getDouble("result") / pageSize));
+		modelMap.addAttribute("page", page);
 		return "user/wealth";
+	}
+	
+	@RequestMapping("/wealth-recharge")
+	public String wealthRecharge(String requestId, ModelMap modelMap, Integer page, Integer pageSize) {
+		if (page == null || page < 1) {
+			page = 1;
+		}
+		if (pageSize == null || pageSize < 1) {
+			pageSize = 15;
+		}
+		// String mqId = (String) WebUtil.getCurrentUserInfo().get("mqId");
+		String mqId = "4e84478d0ef74da08c0794a5d176a84e";
+		MapData serviceData = MapUtil.newInstance(pcAccountService.getAccountInfo(requestId, mqId));
+		logger.info(serviceData.dataString());
+		modelMap.addAttribute("accountInfo", serviceData.getObject("result"));
+		MapData serviceData2 = MapUtil
+				.newInstance(accountService.getRechargeHist(requestId, mqId, page, pageSize));
+		logger.info(serviceData2.dataString());
+		modelMap.addAttribute("rechargeHists", serviceData2.getObject("result"));
+		MapData serviceData3 = MapUtil.newInstance(pcAccountService.countRechargeHists(requestId, mqId));
+		logger.info(serviceData3.dataString());
+		modelMap.addAttribute("total", (int) Math.ceil(serviceData3.getDouble("result") / pageSize));
+		modelMap.addAttribute("page", page);
+		return "user/wealth-recharge";
 	}
 }
