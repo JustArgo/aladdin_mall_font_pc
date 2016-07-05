@@ -22,8 +22,8 @@
                                 <div class="col-sm-3">
                                     <p>可用余额：$number.format("#0.00",$math.div($remainingSum,100))</p>
                                     <p>
-                                        <a href="online-refill.html">充值</a>
-                                        <a href="alipay-binding.html">提现</a>
+                                        <a href="/wealth/off-recharge-index">充值</a>
+                                        <a href="/wealth/withdraw">提现</a>
                                     </p>
                                 </div>
                                 <div class="col-sm-3">
