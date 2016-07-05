@@ -34,12 +34,16 @@ public class WebUtil extends HttpServlet {
 //		Principal principal=new Principal(332,"1621f314a9574a4e8918a3e38a33f85f", ""); //john
 //		Principal principal=new Principal(320,"e5a3ccc5fd814c06b0bb8adcf9000923", ""); //yongzhong
 		//Principal principal = new Principal(206, "6313b50f20754261846c10fb23c6d33b", "ojXXot253-tB5TY0Tk_mjipUKDBI", 100000206);
-		Map<String, Object> map=new HashMap<>();
-		map.put("userId", "342");
-		map.put("mqId", "d9afefcc54ec4a2ca6ca099e8cbd2413");
-		map.put("luckNum", 100000342);
-		return map;
-//		return (Map<String, Object>) getSession().getAttribute("loginUser");
+		//Map<String, Object> map=new HashMap<>();
+		//map.put("userId", "342");
+		//map.put("mqId", "d9afefcc54ec4a2ca6ca099e8cbd2413");
+		//map.put("luckNum", 100000342);
+		//return map;
+		
+		Map<String,Object> sessionUserInfo = (Map<String, Object>) getSession().getAttribute("loginUser");
+		System.out.println("sessionUserInfo:"+sessionUserInfo);
+		
+		return sessionUserInfo;
 	}
 
 	/**

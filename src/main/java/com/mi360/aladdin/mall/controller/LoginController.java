@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -30,6 +32,9 @@ public class LoginController {
 	@Autowired
 	private PcUserService userService;
 
+	@Value("${host_name}")
+	private String hostName;
+	
 	@Autowired
 	private WxInteractionService wxInteractionService;
 	
@@ -138,7 +143,8 @@ public class LoginController {
 	 * 页面
 	 */
 	@RequestMapping()
-	public String index(String requestId) {
+	public String index(String requestId, Model model) {
+		model.addAttribute("hostName",hostName);
 		return "login";
 	}
 }

@@ -15,6 +15,8 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script src="/js/jquery.qrcode.min.js"></script>
+	
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -135,7 +137,7 @@
                             
                         </form>
                         <div class="weichat">
-                            <a href="javascript:;">
+                            <a href="javascript:;" class="wxLogin">
                                 <i class="icon-weichat"></i>微信登录
                             </a>
                         </div>
@@ -145,6 +147,21 @@
         </div>
     </section>
 
+	
+	<!-- 模态框（Modal） -->
+	<div class="modal fade" id="wxLoginQrCode" tabindex="-1" role="dialog" 
+	   aria-labelledby="myModalLabel" aria-hidden="true">
+		
+		
+		<div class="modal-dialog" style="width:360px;">
+		  <div class="modal-content">
+			<div id="qrcode">
+			</div>
+		 </div>
+		</div>
+		
+	</div><!-- /.modal -->
+	
     <!-- footer -->
     <footer class="footer">
         <div class="footer-service">
@@ -226,5 +243,47 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		
+		function uuid() {
+			var s = [];
+			var hexDigits = "0123456789abcdef";
+			for (var i = 0; i < 36; i++) {
+				s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+			}
+			s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+			s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+			s[8] = s[13] = s[18] = s[23] = "-";
+			var uuid = s.join("");
+			return uuid;
+		}
+		
+		$(".wxLogin").click(function(){
+			
+			var _uuid = uuid().replace(/-/g,"");
+			console.log("_uuid:"+_uuid);
+			jQuery('#qrcode').qrcode({width: 360,height: 360,text: "$!{hostName}/wx/pcWxLogin?uuid="+_uuid});
+		
+			$("#wxLoginQrCode").modal("toggle");
+			
+			setInterval(function(){
+				$.ajax({
+					url:"/login/iswxlogin",
+					data:{"uuid":_uuid},
+					dataType:"json",
+					success:function(ret){
+						console.log(ret);
+						if(ret.errcode==0){
+							location.href="/login/wxlogin?uuid="+_uuid;
+						};
+					}
+				});
+			},5000);
+			
+		});
+		
+		
+		
+	</script>
 </body>
 </html>
