@@ -99,8 +99,35 @@ public class ProductController {
 	public String productDetail(String requestId, Integer productID, Integer storeId, Model model) {
 
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
-		String mqID = (String)principal.get("mqId");
-
+		System.out.println("principal:"+principal);
+		
+		if(principal!=null){
+			
+			String mqID = (String)principal.get("mqId");
+			
+			// 查看用户是否已关注
+			Map<String, Object> userInfo = userService.findWxUserByMqId(requestId, mqID);
+			MapData data = MapUtil.newInstance(userInfo);
+			Map<String, Object> user = (Map<String, Object>) data.getObject("result");
+			if(user!=null){
+				model.addAttribute("subscribe", user.get("subscribe"));
+			}
+			
+			// 查看用户是否已收藏该商品
+			int isCollect = productCollectService.isCollect(mqID, productID, requestId);
+			if (isCollect == 1) {
+				model.addAttribute("isCollect", 1);
+			}
+			
+			//查询购物车 商品数量
+			Integer productCount = shopCarService.getShopCarProductsCount(mqID, requestId);
+			model.addAttribute("productCount", productCount);
+			
+			//添加商品浏览历史记录
+			productService.addBrowseHistory(requestId, mqID, productID, "NOR");
+			
+		}
+		
 		// 参数判断
 		if (productID == null) {
 			return "404";
@@ -134,20 +161,6 @@ public class ProductController {
 		model.addAttribute("productImgList", productVo.getProductImgList());
 		model.addAttribute("productVo", productVo);
 
-		// 查看用户是否已关注
-		Map<String, Object> userInfo = userService.findWxUserByMqId(requestId, mqID);
-		MapData data = MapUtil.newInstance(userInfo);
-		Map<String, Object> user = (Map<String, Object>) data.getObject("result");
-		if(user!=null){
-			model.addAttribute("subscribe", user.get("subscribe"));
-		}
-		
-		// 查看用户是否已收藏该商品
-		int isCollect = productCollectService.isCollect(mqID, productID, requestId);
-		if (isCollect == 1) {
-			model.addAttribute("isCollect", 1);
-		}
-
 		// 封装该产品的属性
 		List<ProductAttr> productAttrs = productService.getProductAttrByProductID(productID, requestId);
 		for (int i = 0; i < productAttrs.size(); i++) {
@@ -171,27 +184,6 @@ public class ProductController {
 
 			attrItems.add(attrMap);
 		}
-		
-		/*
-		 * 
-		 * 
-		 * for()  红绿蓝
-		 * 
-		 * 	
-		 
-		
-		for(int i=0;i<attrItems.size();i++){
-			for(int j=0;j<attrItems.size();j++){
-				if(i!=j){
-					(List<String[]>)attrItems.get(i).get("attrValues")[1];  //得到attrMap 
-				}
-			}
-		}*/
-		
-
-		//查询购物车 商品数量
-		Integer productCount = shopCarService.getShopCarProductsCount(mqID, requestId);
-		model.addAttribute("productCount", productCount);
 		
 		model.addAttribute("attrItems", attrItems);
 		model.addAttribute("productID", productID);
@@ -231,9 +223,6 @@ public class ProductController {
 		//查询最新的商品
 		List<Map> recommendList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, 3, "createTime", DEFAULT_PLATFORM, requestId);
 		model.addAttribute("recommendList",recommendList);
-		
-		//添加商品浏览历史记录
-		productService.addBrowseHistory(requestId, mqID, productID, "NOR");
 		
 		return "product/product_detail";
 	}

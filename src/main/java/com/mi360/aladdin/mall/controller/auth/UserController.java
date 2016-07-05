@@ -300,4 +300,13 @@ public class UserController {
 		modelMap.addAttribute("page", page);
 		return "user/wealth-recharge";
 	}
+	
+	@RequestMapping("/paymentPassword/check")
+	@ResponseBody
+	public Map<String,Object> checkPaymentPassword(String requestId, String paymentPassword){
+		
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		return pcUserService.checkPaymentPassword(requestId, mqId, paymentPassword);
+		
+	}
 }

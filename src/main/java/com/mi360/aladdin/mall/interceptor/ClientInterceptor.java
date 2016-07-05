@@ -37,6 +37,8 @@ public class ClientInterceptor extends HandlerInterceptorAdapter {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
+		System.out.println("requestUrl--->" + request.getRequestURL().toString() + (request.getQueryString() == null ? "" : ("?" + request.getQueryString())));
+		
 		Map<String,Object> userInfo = WebUtil.getCurrentUserInfo();
 		
 		System.out.println("userInfo:"+userInfo);

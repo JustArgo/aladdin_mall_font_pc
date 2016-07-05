@@ -46,17 +46,6 @@ $(document).ready(function(){
       pause: 'hover'
     });
 
-    $('.jq-prodSub').on('click', function(){
-        var value = parseInt($('.jq-prodNum').val());
-        if(value == 0) return false;
-        $('.jq-prodNum').val(value - 1);
-    });
-
-    $('.jq-prodAdd').on('click', function(){
-        var value = parseInt($('.jq-prodNum').val());
-        $('.jq-prodNum').val(value + 1);
-    });
-
     initModalWrap.init();
 
     /* popup */

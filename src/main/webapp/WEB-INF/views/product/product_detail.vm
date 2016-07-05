@@ -94,7 +94,7 @@
                         </div>
                         <div class="prod-operate">
                             <a href="javascript:;" class="prod-love">
-                                <i class="icon-love"></i>收藏
+                                <img class="unlove" src="/images/icon/unlove.png"/><span class="collectStr">收藏</span>
                             </a>
                             <a href="javascript:;" class="prod-addToCart">加入购物车</a>
                             <a href="javascript:;" class="prod-buyNow">立即购买</a>
@@ -473,6 +473,11 @@
 			//加入购物车
 			$(".prod-addToCart").click(function(){
 				
+				if($("input[name=isLogin]").val()==0){
+					alert("您还没有登录，无法添加商品到购物车");
+					return;
+				}
+				
 				if($(".status").val()!='UP#'){
 					alert("该商品已下架");
 					return;
@@ -509,6 +514,11 @@
 				
 				if($(".status").val()!='UP#'){
 					alert("该商品已下架无法进行购买");
+					return;
+				}
+				
+				if($("input[name=isLogin]").val()==0){
+					alert("您还没有登录，无法进行购买");
 					return;
 				}
 				
@@ -570,6 +580,46 @@
 					$(this).addClass("active");
 				}
 				
+			});
+			
+			//点击收藏
+			$(".prod-love").click(function(){
+				
+				if($("input[name=isLogin]").val()==0){
+					alert("您还没有登录,不能进行收藏商品");
+				}
+				
+				if($(this).find("img").hasClass("love")){
+					$.ajax({
+						url:'${link.contextPath}/product/collect',
+						type:'POST',
+						dataType:'JSON',
+						data:{"productID":$(".productID").val(),"collect":0},
+						success:function(ret){
+							$(".collectStr").text("收藏");
+							$(this).find("img").removeClass("love").addClass("unlove");
+							$(this).find("img").attr("src","/images/icon/unlove.png");
+							alert("取消收藏成功");
+						}
+					});
+					
+					
+				}else{
+					$.ajax({
+						url:'${link.contextPath}/product/collect',
+						type:'POST',
+						dataType:'JSON',
+						data:{"productID":$(".productID").val(),"collect":1},
+						success:function(ret){
+							$(".collectStr").text("取消收藏");
+							$(this).find("img").removeClass("unlove").addClass("love");
+							$(this).find("img").attr("src","/images/icon/love.png");
+							alert("收藏成功");
+						}
+					});
+					
+					
+				}		
 			});
 			
 		});

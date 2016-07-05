@@ -5,10 +5,10 @@
             <div class="container">
                 <div class="row">
                     <ul class="nav navbar-nav navbar-left"> 
-                        <li>
+                        <li class="login_or_nickname">
                             <a href="/login">登录</a>
                         </li>
-                        <li>    
+                        <li class="register_or_logout">    
                             <a href="/register">免费注册</a>
                         </li>
                         <li>    
@@ -80,3 +80,19 @@
             </div>
         </div>
     </header>
+	<script type="text/javascript">
+		$.ajax({
+			url:"/login/islogin",
+			type:"post",
+			dataType:"json",
+			success:function(ret){
+				if(ret.errcode==0){
+					$(".login_or_nickname").find("a").attr("href","/user").text(ret.nickname);
+					$(".register_or_logout").find("a").attr("href","/logout").text("退出");
+					$("body").prepend("<input type='hidden' name='isLogin' value='1'/>");
+				}else{
+					$("body").prepend("<input type='hidden' name='isLogin' value='0'/>");
+				}
+			}
+		});
+	</script>

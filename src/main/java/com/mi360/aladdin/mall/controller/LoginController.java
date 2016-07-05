@@ -150,4 +150,29 @@ public class LoginController {
 		model.addAttribute("wxHostName",wxHostName);
 		return "login";
 	}
+	
+	/**
+	 * 查询用户是否已经登录
+	 */
+	@RequestMapping("/islogin")
+	@ResponseBody
+	public Map<String,Object> isLogin(String requestId){
+		
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		Map<String,Object> userInfo = WebUtil.getCurrentUserInfo();
+		if(userInfo!=null){
+			retMap.put("errcode",0);
+			Map<String,Object> simpleUserInfo = userService.findSimpleUserInfo(requestId, (String)userInfo.get("mqId"));
+			if((Integer)simpleUserInfo.get("errcode")==0){
+				retMap.put("nickname", ((Map<String,Object>)simpleUserInfo.get("result")).get("nickname"));
+			}
+			
+		}else{
+			retMap.put("errcode", 10000);
+		}
+		
+		return retMap;
+		
+	}
+	
 }
