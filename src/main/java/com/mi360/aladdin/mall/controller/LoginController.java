@@ -35,6 +35,9 @@ public class LoginController {
 	@Value("${host_name}")
 	private String hostName;
 	
+	@Value("${wx_host_name}")
+	private String wxHostName;
+	
 	@Autowired
 	private WxInteractionService wxInteractionService;
 	
@@ -144,7 +147,7 @@ public class LoginController {
 	 */
 	@RequestMapping()
 	public String index(String requestId, Model model) {
-		model.addAttribute("hostName",hostName);
+		model.addAttribute("wxHostName",wxHostName);
 		return "login";
 	}
 }

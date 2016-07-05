@@ -29,73 +29,7 @@
     <title>阿拉丁--货源推荐</title>
 </head>
 <body>
-    <!-- header -->
-    <header class="header">
-        <!-- navbar -->
-        <div class="navbar navbar-static-top">
-            <div class="container">
-                <div class="row">
-                    <ul class="nav navbar-nav navbar-left"> 
-                        <li>
-                            <a href="login.html">登录</a>
-                        </li>
-                        <li>    
-                            <a href="register.html">免费注册</a>
-                        </li>
-                        <li>    
-                            <a href="store.html">我的店铺</a>
-                        </li>   
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right"> 
-                        <li>
-                            <a href="person.html">个人中心</a>
-                        </li>
-                        <li>
-                            <a href="cart.html">购物车</a>
-                        </li> 
-                        <li>
-                            <a href="order.html">我的订单</a>
-                        </li> 
-                        <li>
-                            <a href="collection.html">我的收藏</a>
-                        </li> 
-                        <li>
-                            <a href="javascript:;">联系客服</a>
-                        </li>   
-                    </ul>
-                </div>
-            </div>
-        </div>
-        <!-- searchbar -->
-        <div class="searchbar">
-            <div class="search">
-                <div class="container">
-                    <div class="row">
-                        <div class="pull-left">
-                            <a href="index.html" class="logo">
-                                <img src="/images/logo/logo.png">
-                            </a>
-                        </div>
-                        <div class="pull-right">
-                            <div class="search-box">
-                                <form class="search-form">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="">
-                                        <span class="input-group-addon">
-                                            <i class="icon icon-search"></i>
-                                        </span>
-                                    </div>
-                                </form>
-                            </div>
-                            <a href="javascript:;">
-                                <img src="/images/code.png" />
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+   #parse("./common/header.vm") 
 
     <!-- category-bar -->
     <section class="category-bar">

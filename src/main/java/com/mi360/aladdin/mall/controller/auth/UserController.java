@@ -49,8 +49,8 @@ public class UserController {
 
 	@RequestMapping()
 	public String index(String requestId, ModelMap modelMap) {
-		// String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+//		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("userInfo", serviceData.getObject("result"));
@@ -76,8 +76,8 @@ public class UserController {
 
 	@RequestMapping("/info")
 	public String info(String requestId, ModelMap modelMap) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("userInfo", serviceData.getObject("result"));
@@ -87,8 +87,8 @@ public class UserController {
 	@RequestMapping("/save/info")
 	@ResponseBody
 	public Integer saveInfo(String requestId, String headImage, Integer sex, String nickname) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcUserService.savePc(requestId, mqId, headImage, nickname, sex));
 		return serviceData.getErrcode();
 	}
@@ -104,8 +104,8 @@ public class UserController {
 	@RequestMapping("/save/loginPassword")
 	@ResponseBody
 	public Integer saveLoginPassword(String requestId, String prePassword, String password) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
 				.newInstance(pcUserService.modifyLoginPassword(requestId, mqId, prePassword, password));
 		return serviceData.getErrcode();
@@ -122,8 +122,8 @@ public class UserController {
 	@RequestMapping("/save/paymentPassword")
 	@ResponseBody
 	public Integer savePaymentPassword(String requestId, String prePaymentPassword, String paymentPassword) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
 				.newInstance(pcUserService.modifyPaymentPassword(requestId, mqId, prePaymentPassword, paymentPassword));
 		return serviceData.getErrcode();
@@ -140,8 +140,8 @@ public class UserController {
 	@RequestMapping("/paymentPassword")
 	public String paymentPassword(String requestId, String loginPassword, String paymentPassword, Integer fromPay,
 			String location, ModelMap modelMap) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcUserService.existPaymentPassword(requestId, mqId));
 		logger.info(serviceData.dataString());
 		if (serviceData.getBoolean("result")) {
@@ -159,8 +159,8 @@ public class UserController {
 		if (!CaptchaUtil.validate(captcha)) {
 			return -1;
 		}
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil
 				.newInstance(pcUserService.firstSetPaymentPassword(requestId, mqId, loginPassword, paymentPassword));
 		logger.info(serviceData.dataString());
@@ -169,8 +169,8 @@ public class UserController {
 
 	@RequestMapping("/level")
 	public String level(String requestId, ModelMap modelMap) {
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcUserService.findSimpleUserInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		MapData resultData = serviceData.getResult();
@@ -191,8 +191,8 @@ public class UserController {
 		if (pageSize == null || pageSize < 1) {
 			pageSize = 15;
 		}
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "ee9de73cf5a24e1597d916e61bd89365";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(verticalSettlementService.findSales(requestId, mqId, page, pageSize));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("sales", serviceData.getObject("result"));
@@ -211,8 +211,8 @@ public class UserController {
 		if (pageSize == null || pageSize < 1) {
 			pageSize = 15;
 		}
-		// String mqId=WebUtil.getCurrentSessionUserAuthInfo().getMqId();
-		String mqId = "d9afefcc54ec4a2ca6ca099e8cbd2413";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		List<Map<String, Object>> data = productCollectService.getProductCollectListByMqID(mqId, (page - 1) * 15,
 				page * 15, requestId);
 		logger.info("========" + data);
@@ -228,7 +228,8 @@ public class UserController {
 
 	@RequestMapping("/team")
 	public String team(String requestId, ModelMap modelMap) {
-		String mqId = "6313b50f20754261846c10fb23c6d33b";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		modelMap.addAttribute("mqId", mqId);
 		MapData serviceData = MapUtil
 				.newInstance(verticalDistributionService.findDirectlyMember(requestId, mqId, false, null, null));
@@ -260,8 +261,8 @@ public class UserController {
 		if (pageSize == null || pageSize < 1) {
 			pageSize = 15;
 		}
-		// String mqId = (String) WebUtil.getCurrentUserInfo().get("mqId");
-		String mqId = "4e84478d0ef74da08c0794a5d176a84e";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcAccountService.getAccountInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("accountInfo", serviceData.getObject("result"));
@@ -284,8 +285,8 @@ public class UserController {
 		if (pageSize == null || pageSize < 1) {
 			pageSize = 15;
 		}
-		// String mqId = (String) WebUtil.getCurrentUserInfo().get("mqId");
-		String mqId = "4e84478d0ef74da08c0794a5d176a84e";
+		String mqId=(String)WebUtil.getCurrentUserInfo().get("mqId");
+		//String mqId = "790b664ff0b946a5adf6488a1ae8e6cb";
 		MapData serviceData = MapUtil.newInstance(pcAccountService.getAccountInfo(requestId, mqId));
 		logger.info(serviceData.dataString());
 		modelMap.addAttribute("accountInfo", serviceData.getObject("result"));
