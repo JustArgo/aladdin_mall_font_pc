@@ -1,5 +1,6 @@
 package com.mi360.aladdin.mall.controller;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -9,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.hummingbird.common.ext.SessionUserAuthInfo;
+import com.mi360.aladdin.interaction.wx.service.WxInteractionService;
 import com.mi360.aladdin.mall.util.CaptchaUtil;
 import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.user.service.PcUserService;
@@ -28,6 +30,9 @@ public class LoginController {
 	@Autowired
 	private PcUserService userService;
 
+	@Autowired
+	private WxInteractionService wxInteractionService;
+	
 	/**
 	 * 提交
 	 * 
@@ -76,20 +81,32 @@ public class LoginController {
 	 * @param uuid
 	 *        随机字符串，用来管理用户微信登录
 	 */
-	@RequestMapping(value = "/submit")
-	@ResponseBody
+	@RequestMapping(value = "/wxlogin")
 	public String wxAuthentication(String requestId, String uuid) {
-		
-		// 根据uuid查询用户服务redis缓存信息
-		
-		// 如果读取到赋值给以下变量，读取不到，
-		
-		// return "logintimeout",提示用户已经操作超时，请重新刷新二维码；
 		
 		// 从用户服务读取
 		String mqId = "";
-		String userId = "";
-		String luckNum = "";
+		Integer userId = null;
+		Integer luckNum = null;
+		
+		// 根据uuid查询用户服务redis缓存信息
+		Map<String,Object> userInfoMap = wxInteractionService.getSanUserInfo(requestId, uuid);
+		
+		
+		// 如果读取到赋值给以下变量，读取不到，
+		if(userInfoMap!=null){
+			
+			mqId = (String) userInfoMap.get("mqId");
+			userId = (Integer) userInfoMap.get("userId");
+			luckNum = (Integer) userInfoMap.get("luckNum");
+			
+		}else{
+			return "fail";
+		}
+		// return "logintimeout",提示用户已经操作超时，请重新刷新二维码；
+		
+		// 从用户服务读取
+		
 		
 		Map<String, Object> loginUserInfo = new SessionUserAuthInfo().toMap();
 		loginUserInfo.put("userId", String.valueOf(userId));
@@ -97,9 +114,26 @@ public class LoginController {
 		loginUserInfo.put("luckNum", luckNum);
 		logger.info("登录用户信息："+loginUserInfo);
 		WebUtil.login(loginUserInfo);
-		return "success";
+		return "redirect:/user";
 	}
 
+	@RequestMapping("/iswxlogin")
+	@ResponseBody
+	public Map<String,Object> isWxScanLogin(String requestId, String uuid){
+		
+		Map<String,Object> retMap = new HashMap<String,Object>();
+		
+		Map<String,Object> userInfoMap = wxInteractionService.getSanUserInfo(requestId, uuid);
+		if(userInfoMap!=null){
+			retMap.put("errcode", 0);
+		}else{
+			retMap.put("errcode", 10000);
+		}
+		
+		return retMap;
+		
+	}
+	
 	/**
 	 * 页面
 	 */
