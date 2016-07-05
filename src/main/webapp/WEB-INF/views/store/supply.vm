@@ -18,6 +18,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -29,7 +30,73 @@
     <title>阿拉丁--货源推荐</title>
 </head>
 <body>
-   #parse("./common/header.vm") 
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="">
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <!-- category-bar -->
     <section class="category-bar">
@@ -37,210 +104,120 @@
             <div class="container">
                 <div class="row">
                     <div class="order">
-                        <a href="javascript:;" class="active">新品优先</a>
-                        <a href="javascript:;">价格排序</a>
+                        <a href="javascript:;" class="active newest">新品优先</a>
+                        <a href="javascript:;" class="price">价格排序</a>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-md-3">
+                <div class="row newest-row">
+					#foreach($product in $newestProductList)
+                    <div class="col-md-3 product" data-id="$!{product.ID}">
                         <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
+							<div class="imgLiquidNotFill" style="width:285px;height:238px;display:inline-block;">
+								<img src="$!qiniu.getDownloadUrl($!product.imgPath)" />
+							</div>
+						</a>
+                        <p class="price">￥$number.format("#0.00",$!math.div($!{product.price}))</p>
                         <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
+                            <a href="javascript:;" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">$!{product.productName}</a>
                         </p>
-                        <p>三只小猪供应商</p>
+                        <p>$!{product.supName}</p>
                         <p>
                             <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
+                            <a href="javascript:;" class="addToCart proxy">代理</a>
                         </p>
                     </div>
-                    <div class="col-md-3">
+					#end
+                </div>
+				<div class="row price-row">
+					#foreach($product in $priceProductList)
+                    <div class="col-md-3 product" data-id="$!{product.ID}">
                         <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
+							<div class="imgLiquidNotFill" style="width:285px;height:238px;display:inline-block;">
+								<img src="$!qiniu.getDownloadUrl($!product.imgPath)" />
+							</div>
+						</a>
+                        <p class="price">￥$number.format("#0.00",$!math.div($!{product.price}))</p>
                         <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
+                            <a href="javascript:;" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">$!{product.productName}</a>
                         </p>
-                        <p>三只小猪供应商</p>
+                        <p>$!{product.supName}</p>
                         <p>
                             <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
+                            <a href="javascript:;" class="addToCart proxy">代理</a>
                         </p>
                     </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-02.png" />
-                        </a>
-                        <p class="price">￥25.00<span>15698人评价</span></p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基告诉对方础...</a>
-                        </p>
-                        <p>三只小猪供应商</p>
-                        <p>
-                            <a href="javascript:;" class="collect">收藏</a>
-                            <a href="javascript:;" class="addToCart">加入购物车</a>
-                        </p>
-                    </div>
+					#end
                 </div>
                 <div class="row">
+							#set($newestPage=1)
+							#set($pricePage=1)
+							
                     				#if($total!=0)
-                                    <div class="button-group">
-										#if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
-										#if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
-										#if($page - 3>1)
+                                    <div class="button-group newest-group">
+										#if($tab=='newest')
+											#set($newestPage=$page)
+										#end
+										#if($newestPage>1)<a href="javascript:toPage(#set($prev=$newestPage - 1)$prev);" class="prev">上一页</a>#end
+										#if($newestPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($newestPage - 3>1)
 											<span>...</span>
 										#end
 										#foreach($item in [2,1])
-										#set($p=$page - $item)
+										#set($p=$newestPage - $item)
 											#if($p>1)
 												<a href="javascript:toPage($p);" class="num">$p</a>
 											#end
 										#end
-										<a href="javascript:toPage($page);" class="num active">$page</a>
+										<a href="javascript:toPage($newestPage);" class="num active">$newestPage</a>
 										#foreach($item in [1,2])
-											#set($p=$page + $item)
+											#set($p=$newestPage + $item)
 											#if($p<$total)
 											<a href="javascript:toPage($p);" class="num">$p</a>
 											#else
 												#break
 											#end
 										#end
-										#if($page+3<$total)
+										#if($newestPage+3<$total)
 											<span>...</span>
 										#end
-										#if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
-										#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
+										#if($newestPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($newestPage<$total)<a href="javascript:toPage(#set($next=$newestPage+1)$next);" class="prev">下一页</a>#end
 			                        </div>
 									#end
+									
+									#if($total!=0)
+                                    <div class="button-group price-group">
+										#if($tab=='price')
+											#set($pricePage=$page)
+										#end
+										#if($pricePage>1)<a href="javascript:toPage(#set($prev=$pricePage - 1)$prev);" class="prev">上一页</a>#end
+										#if($pricePage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($pricePage - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$pricePage - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($pricePage);" class="num active">$pricePage</a>
+										#foreach($item in [1,2])
+											#set($p=$pricePage + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($pricePage+3<$total)
+											<span>...</span>
+										#end
+										#if($pricePage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($pricePage<$total)<a href="javascript:toPage(#set($next=$pricePage+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
+									
                 </div>
             </div>
         </div>
@@ -327,5 +304,119 @@
             </div>
         </div>
     </footer>
+	<script type="text/javascript">
+		$(".imgLiquidNotFill").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+		#if($tab=='newest')
+			$(".price-group").hide();
+			$(".price-row").hide();
+		#else
+			$(".newest-group").hide();
+			$(".newest-row").hide();
+			$(".newest").removeClass("active");
+			$(".price").addClass("active");
+		#end
+		
+		$(".newest").click(function(){
+			if($(this).hasClass("active")){
+				return;
+			}else{
+				$(".price").removeClass("active");
+				$(this).addClass("active");
+				$(".newest-group").show();
+				$(".price-group").hide();
+				
+				$(".newest-row").show();
+				$(".price-row").hide();
+				
+			}
+		});
+		
+		$(".price").click(function(){
+			if($(this).hasClass("active")){
+				return;
+			}else{
+				$(".newest").removeClass("active");
+				$(this).addClass("active");
+				$(".newest-group").hide();
+				$(".price-group").show();
+				
+				$(".newest-row").hide();
+				$(".price-row").show();
+				
+			}
+		});
+		
+		$(".collect").click(function(){
+			var productId = $(this).closest(".product").data("id");
+			console.log(productId);
+			$.ajax({
+				url:'/product/collect',
+				type:'POST',
+				dataType:'JSON',
+				data:{"productID":productId,"collect":1},
+				success:function(ret){
+					console.log(ret);
+					if(ret.errcode==0){
+						alert("收藏成功");
+					}
+				}
+			});
+		});
+		
+		$(".proxy").click(function(){
+			var productIds = [];
+			productIds.push($(this).closest(".product").data("id"));
+			var _this = $(this);
+			if(_this.text()=='代理'){
+				$.ajax({
+					url:'/store/proxy',
+					type:'POST',
+					dataType:'JSON',
+					traditional:true,
+					data:{"productIds":productIds},
+					success:function(ret){
+						console.log(ret);
+						if(ret.errcode==0){
+							_this.text("取消代理");
+							alert("代理成功");
+						}
+					}
+				});
+			}else{
+				$.ajax({
+					url:'/store/cancel-proxy',
+					type:'POST',
+					dataType:'JSON',
+					traditional:true,
+					data:{"productIds":productIds},
+					success:function(ret){
+						console.log(ret);
+						if(ret.errcode==0){
+							_this.text("代理");
+							alert("取消代理成功");
+						}
+					}
+				});
+			}
+			
+		});
+		
+		function toPage(i){
+			var tab = "";
+			if($(".newest").hasClass("active")){
+				tab = "newest";
+			}else{
+				tab = "price";
+			}
+			location.href="/store/supply?page="+i+"&tab="+tab;
+		}
+		
+		
+	</script>
 </body>
 </html>

@@ -116,18 +116,35 @@
 								</div>
 							#end
                         </div>
-						
-						
-						
                         <div class="button-group">
-                            <a href="javascript:;" class="prev">上一页</a>
-                            <a href="javascript:;" class="num active">1</a>
-                            <a href="javascript:;" class="num">2</a>
-                            <a href="javascript:;" class="num">3</a>
-                            <span>...</span>
-                            <a href="javascript:;" class="num">18</a>
-                            <a href="javascript:;" class="prev">下一页</a>
-                        </div>
+							#set($total = $pageCount)
+							#set($page=1)
+							#if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+							#if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+							#if($page - 3>1)
+								<span>...</span>
+							#end
+							#foreach($item in [2,1])
+							#set($p=$page - $item)
+								#if($p>1)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+								#end
+							#end
+							<a href="javascript:toPage($page);" class="num active">$page</a>
+							#foreach($item in [1,2])
+								#set($p=$page + $item)
+								#if($p<$total)
+								<a href="javascript:toPage($p);" class="num">$p</a>
+								#else
+									#break
+								#end
+							#end
+							#if($page+3<$total)
+								<span>...</span>
+							#end
+							#if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+							#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
+						</div>
                     </div>
                 </div>
             </div>
@@ -230,69 +247,19 @@
 		
 		$(".hotsell").click(function(){
 			
-			var keyWord = $("input[name=keyWord]").val();
-			
 			if($(this).hasClass("red")){
 				return;
-			}else{
-				
-				$.ajax({
-				  	url:"/product/ajaxSearch",
-				  	type:"POST",
-				  	data:"startIndex=0&pageSize=12&orderBy=sellCount&keyWord="+keyWord,
-				  	dataType:"json",
-				  	success:function(ret){
-				  		$("input[name=orderBy]").val("sellCount");
-						$(".share-product").empty();
-						for(var i=0;i<ret.length;i++){
-							  
-							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
-							  
-						}	
-						$(".imgLiquidNotFill").imgLiquid({
-					        fill: false,
-					        horizontalAlign: "center",
-					        verticalAlign: "center"
-					    });
-				  	}
-				});
-				
-				$(".red").removeClass("red");
-				$(this).addClass("red");
-				
 			}
+			changeContent("hotsell",$(".num.active").text());
+			
 		});
 		$(".newest").click(function(){
 			
-			var keyWord = $("input[name=keyWord]").val();
-		
 			if($(this).hasClass("red")){
 				return;
-			}else{
-				$.ajax({
-				  	url:"/product/ajaxSearch",
-				  	type:"POST",
-				  	data:"startIndex=0&pageSize=12&orderBy=createTime&keyWord="+keyWord,
-				  	dataType:"json",
-				  	success:function(ret){
-				  		$("input[name=orderBy]").val("createTime");
-						$(".share-product").empty();
-						for(var i=0;i<ret.length;i++){
-							  
-							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
-							  
-						}	
-						$(".imgLiquidNotFill").imgLiquid({
-					        fill: false,
-					        horizontalAlign: "center",
-					        verticalAlign: "center"
-					    });
-				  	}
-				});
-				
-				$(".red").removeClass("red");
-				$(this).addClass("red");
 			}
+			changeContent("newest",$(".num.active").text());
+			
 		});
 		$(".price").click(function(){
 			
@@ -302,78 +269,186 @@
 					
 				var orderBy = $("input[name=orderBy]").val();
 				if(orderBy=='asc'){
-					$.ajax({
-						url:"/product/ajaxSearch",
-						type:"POST",
-						data:"startIndex=0&pageSize=12&orderBy=desc&keyWord="+keyWord,
-						dataType:"json",
-						success:function(ret){
-							$("input[name=orderBy]").val("desc");
-							$(".share-product").empty();
-							for(var i=0;i<ret.length;i++){
-								  
-								  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
-								  
-							}	
-							$(".imgLiquidNotFill").imgLiquid({
-								fill: false,
-								horizontalAlign: "center",
-								verticalAlign: "center"
-							});
-						}
-					});
+					changeContent("price_down",$(".num.active").text());
 					
 				}else{
-					$.ajax({
-						url:"/product/ajaxSearch",
-						type:"POST",
-						data:"startIndex=0&pageSize=12&orderBy=asc&keyWord="+keyWord,
-						dataType:"json",
-						success:function(ret){
-							$("input[name=orderBy]").val("asc");
-							$(".share-product").empty();
-							for(var i=0;i<ret.length;i++){
-								  
-								  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
-								  
-							}	
-							$(".imgLiquidNotFill").imgLiquid({
-								fill: false,
-								horizontalAlign: "center",
-								verticalAlign: "center"
-							});
-						}
-					});
+					changeContent("price_up",$(".num.active").text());
 				}		
 					
 					
 				
 			}else{
-				$.ajax({
-				  	url:"/product/ajaxSearch",
-				  	type:"POST",
-				  	data:"startIndex=0&pageSize=12&orderBy=asc&keyWord="+keyWord,
-				  	dataType:"json",
-				  	success:function(ret){
-				  		$("input[name=orderBy]").val("asc");
-						$(".share-product").empty();
-						for(var i=0;i<ret.length;i++){
-							  
-							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+ret[i].sellCount+'人购买</p></div>');
-							  
-						}	
-						$(".imgLiquidNotFill").imgLiquid({
-					        fill: false,
-					        horizontalAlign: "center",
-					        verticalAlign: "center"
-					    });
-				  	}
-				});
+				
+				changeContent("price_up",$(".num.active").text());
 				
 				$(".red").removeClass("red");
 				$(this).addClass("red");
+				
 			}
 		});
+		
+		function toPage(page){
+			var total = ${pageCount};
+			var groupStr = "";
+			if(page>1){
+				groupStr += '<a href="javascript:toPage('+(page-1)+');" class="prev">上一页</a>';
+				groupStr += '<a href="javascript:toPage(1);" class="num">1</a>';
+			}
+			if(page-3>1){
+				groupStr += '<span></span>';
+			}
+			for(var i=2;i>=1;i--){
+				var p = page-i;
+				if(p>1){
+					groupStr += '<a href="javascript:toPage('+p+');" class="num">'+p+'</a>';
+				}
+			}
+			groupStr += '<a href="javascript:toPage('+page+');" class="num active">'+page+'</a>';
+			for(var i=1;i<=2;i++){
+				var p = page+i;
+				if(p<total){
+					groupStr += '<a href="javascript:toPage('+p+');" class="num">'+p+'</a>';
+				}else{
+					break;
+				}
+			}
+			
+			if(page+3<total){
+				groupStr += '<span>...</span>';
+			}
+			if(page<total){
+				groupStr += '<a href="javascript:toPage('+total+');" class="num">'+total+'</a>';
+				groupStr += '<a href="javascript:toPage('+(page+1)+');" class="prev">下一页</a>';
+			}
+			
+			$(".button-group").empty().append(groupStr);
+			
+			if($(".red").hasClass("hotsell")){
+				changeContent("hotsell",$(".num.active").text());
+			}else if($(".red").hasClass("newest")){
+				changeContent("newest",$(".num.active").text());
+			}else{
+				var orderBy = $("input[name=orderBy]").val();
+				if(orderBy=='asc'){
+					changeContent("price_up",$(".num.active").text());
+				}else{
+					changeContent("price_down",$(".num.active").text());
+				}
+			}
+			
+		}
+		
+		function changeContent(tab,page){
+			
+			var keyWord = $("input[name=keyWord]").val();
+			
+			if(tab=='hotsell'){
+				
+				var _this = $(".hotsell").get(0);
+				
+				$.ajax({
+					url:"/product/ajaxSearch",
+					type:"POST",
+					data:"startIndex="+((page-1)*12)+"&pageSize=12&orderBy=createTime&keyWord="+keyWord,
+					dataType:"json",
+					success:function(ret){
+						$("input[name=orderBy]").val("createTime");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+(ret[i].sellCount==undefined?0:ret[i].sellCount)+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+							fill: false,
+							horizontalAlign: "center",
+							verticalAlign: "center"
+						});
+					}
+				});
+				
+				$(".red").removeClass("red");
+				$(_this).addClass("red");
+				
+			}else if(tab=='newest'){
+				
+				var _this = $(".newest").get(0);
+				
+				$.ajax({
+					url:"/product/ajaxSearch",
+					type:"POST",
+					data:"startIndex="+(page-1)*12+"&pageSize=12&orderBy=createTime&keyWord="+keyWord,
+					dataType:"json",
+					success:function(ret){
+						$("input[name=orderBy]").val("createTime");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+(ret[i].sellCount==undefined?0:ret[i].sellCount)+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+							fill: false,
+							horizontalAlign: "center",
+							verticalAlign: "center"
+						});
+					}
+				});
+				
+				$(".red").removeClass("red");
+				$(_this).addClass("red");
+			
+			}else if(tab=='price_up'){
+				
+				$.ajax({
+					url:"/product/ajaxSearch",
+					type:"POST",
+					data:"startIndex="+(page-1)*12+"&pageSize=12&orderBy=asc&keyWord="+keyWord,
+					dataType:"json",
+					success:function(ret){
+						$("input[name=orderBy]").val("asc");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+(ret[i].sellCount==undefined?0:ret[i].sellCount)+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+							fill: false,
+							horizontalAlign: "center",
+							verticalAlign: "center"
+						});
+					}
+				});
+				
+			}else if(tab=='price_down'){
+				
+				$.ajax({
+					url:"/product/ajaxSearch",
+					type:"POST",
+					data:"startIndex="+(page-1)*12+"&pageSize=12&orderBy=desc&keyWord="+keyWord,
+					dataType:"json",
+					success:function(ret){
+						$("input[name=orderBy]").val("desc");
+						$(".share-product").empty();
+						for(var i=0;i<ret.length;i++){
+							  
+							  $(".share-product").append('<div class="item"><div class="imgLiquidNotFill" style="height:280px;"><a href="/product/product_detail?productID='+ret[i].ID+'"><img src="'+ret[i].imgPath+'" /></a></div><p class="price">¥'+((ret[i].price/100).toFixed(2))+'</p><p class="name"><a href="/product/product_detail?productID='+ret[i].ID+'">'+ret[i].productName+'</a></p><p>'+(ret[i].sellCount==undefined?0:ret[i].sellCount)+'人购买</p></div>');
+							  
+						}	
+						$(".imgLiquidNotFill").imgLiquid({
+							fill: false,
+							horizontalAlign: "center",
+							verticalAlign: "center"
+						});
+					}
+				});
+			
+			}
+			
+		}
+		
 	</script>
+	
 </body>
 </html>

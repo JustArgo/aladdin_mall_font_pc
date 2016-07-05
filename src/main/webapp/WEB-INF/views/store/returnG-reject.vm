@@ -29,7 +29,7 @@
     <title>拒绝退货申请</title>
 </head>
 <body>
-    #parse("./common/header.vm") 
+    #parse("./common/order-header.vm") 
     
     <!--  refund-bar -->   
     <section class="refund-bar">
