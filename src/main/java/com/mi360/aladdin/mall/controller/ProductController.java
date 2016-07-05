@@ -390,7 +390,7 @@ public class ProductController {
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqID = (String)principal.get("mqId");
 
-		Integer pageSize = 8;
+		Integer pageSize = 12;
 
 		logger.info("keyWord: " + keyWord);
 		List<Map> productList = new ArrayList<Map>();
