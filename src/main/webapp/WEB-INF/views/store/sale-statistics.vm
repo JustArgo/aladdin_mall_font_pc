@@ -1,178 +1,439 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
+
+<!DOCTYPE html>
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>销售统计</title>
- <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-<script src="/js/jquery-2.1.3.min.js"></script>
-<link rel="stylesheet" href="/css/sales-statistics.css" type="text/css" />
+    <!-- meta -->
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <!-- css -->
+    <link rel="stylesheet" href="/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="/css/reset.css" />
+    <link rel="stylesheet" href="/css/theme.css" />
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <link rel="stylesheet" href="/css/ie-8.css" />
+    <![endif]-->
+    <!-- js -->
+    <script src="/js/jquery.min.js"></script>
+    <script src="/js/bootstrap.min.js"></script>
+    <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
+    <!--[if lt IE 9]>
+    <script src="/js/html5shiv-printshiv.js"></script>
+    <script src="/js/respond.min.js"></script>
+    <![endif]-->
+    <!--[if (gte IE 6)&(lte IE 8)]>
+    <script type="text/javascript" src="/js/selectivizr.js"></script>
+    <![endif]-->
+    <!-- title -->
+    <title>统计管理</title>
 </head>
 <body>
-<div id="container">
-    <div class="header">
-        <a href="my-shop.html" class="header-back btn">
-			<img class="img1" src="/images/back_n.png">
-			<img class="img2" src="/images/back_p.png">
-		</a>
-        <span>销售统计</span>
-	</div>
-	<div class="header-menu">
-		<a href="javascript:" style="border-right:1px solid #cecece;color:#E81959" id="statistics">收入统计</a>
-		<a href="javascript:" id="orderNum" >订单量</a>
-	</div>
-	<div class="statistics-1">
-		<div class="sales-area">
-			<div class="sales-1">
-				<span>2016-02</span>
-				<span class="sales-price">￥16.00</span>
-			</div>
-			
-			#foreach($distribution in $distributionList)
-			
-			<div class="sales-2">
-				<div class="sales-img">
-					<img src="$qiniu.getDownloadUrl($distribution.skuImg)" />
-				</div>
-				<p>通过代销$!{distribution.productName}商品获得佣金</p>
-				<p><span class="time">$!date.format("yyyy-MM-dd",$!{distribution.completeTime})</span><span class="price">￥$number.format("#0.00",$!math.div(${distribution.distributionUserReward},100))</span></p>
-			</div>
-			
-			#end
-			
-			<div class="sales-2" style="border-bottom:none;">
-				<div class="sales-img">
-					<img src="/images/thumbnail3.png" />
-				</div>
-				<p>通过代销玫琳凯护肤品商品获得佣金</p>
-				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
-			</div>		
-		</div></a>
-		<div class="sales-area">
-			<div class="sales-1">
-				<span>2016-01</span>
-				<span class="sales-price">￥16.00</span>
-			</div>
-			<div class="sales-2">
-				<div class="sales-img">
-					<img src="/images/thumbnail3.png" />
-				</div>
-				<p>通过代销玫琳凯护肤品商品获得佣金</p>
-				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
-			</div>
-			<div class="sales-2" style="border-bottom:none;">
-				<div class="sales-img">
-					<img src="/images/thumbnail3.png" />
-				</div>
-				<p>通过代销玫琳凯护肤品商品获得佣金</p>
-				<p><span class="time">2016-01-10</span><span class="price">￥8.00</span></p>
-			</div>		
-		</div>
-	</div>
-	<div class="orderNum-1" style="display:none;">
-		<div class="orderNum-area">
-			<div class="area-title">2016-02(共2单)</div>
-			<div class="order-info">
-				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
-					<div class="info-bottom">
-						<div class="titleb">供应商：阿里巴巴天猫商城</div>
-							<div class="info-bottom">
-								<div class="info-bottom-img">
-									<img src="/images/thumbnail2.png" />
-								</div>
-								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
-								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
-								<div class="bottom-4">
-									<div class="bottom-number">数量x100</div>
-									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
-										查看订单详情
-									</div></a>
-								</div>
-							</div>
-					</div>
-				</div></a>
-			</div>
-			<div class="order-info">
-				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
-					<div class="info-bottom">
-						<div class="titleb">供应商：阿里巴巴天猫商城</div>
-							<div class="info-bottom">
-								<div class="info-bottom-img">
-									<img src="/images/thumbnail2.png" />
-								</div>
-								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
-								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
-								<div class="bottom-4">
-									<div class="bottom-number">数量x100</div>
-									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
-										查看订单详情
-									</div></a>
-								</div>
-							</div>
-					</div>
-				</div></a>
-			</div>
-		</div>
+    <!-- header -->
+    <header class="header">
+        <!-- navbar -->
+        <div class="navbar navbar-static-top">
+            <div class="container">
+                <div class="row">
+                    <ul class="nav navbar-nav navbar-left"> 
+                        <li>
+                            <a href="login.html">登录</a>
+                        </li>
+                        <li>    
+                            <a href="register.html">免费注册</a>
+                        </li>
+                        <li>    
+                            <a href="store.html">我的店铺</a>
+                        </li>   
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right"> 
+                        <li>
+                            <a href="person.html">个人中心</a>
+                        </li>
+                        <li>
+                            <a href="cart.html">购物车</a>
+                        </li> 
+                        <li>
+                            <a href="order.html">我的订单</a>
+                        </li> 
+                        <li>
+                            <a href="collection.html">我的收藏</a>
+                        </li> 
+                        <li>
+                            <a href="javascript:;">联系客服</a>
+                        </li>   
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- searchbar -->
+        <div class="searchbar">
+            <div class="search">
+                <div class="container">
+                    <div class="row">
+                        <div class="pull-left">
+                            <a href="index.html" class="logo">
+                                <img src="/images/logo/logo.png">
+                            </a>
+                        </div>
+                        <div class="pull-right">
+                            <div class="search-box">
+                                <form class="search-form">
+                                    <div class="input-group">
+                                        <input type="text" class="form-control" placeholder="" />
+                                        <span class="input-group-addon">
+                                            <i class="icon icon-search"></i>
+                                        </span>
+                                    </div>
+                                </form>
+                            </div>
+                            <a href="javascript:;">
+                                <img src="/images/code.png" />
+                            </a>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-2">
+                            <a href="javascript:;" class="category">分类导航</a>
+                        </div>
+                        <div class="col-md-10">
+                            <ul class="menu-list">
+                                <li>
+                                    <a href="index.html">首页</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">团购</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">砍价</a>
+                                </li>
+                                <li>
+                                    <a href="javascript:;">一元购</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- main -->
+    <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-2">
+                        <div class="content">
+                            <ul class="nav-category">
+                                <li class="bold">
+                                    <a href="javascript:;">店铺中心</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="store-search.html">店铺浏览</a>
+                                </li>
+                                <li class="sub">
+                                    <a href="store-setting.html">店铺设置</a>
+                                </li>
+                                <li>
+                                    <a href="product-sales.html">商品管理</a>
+                                </li>
+                                <li>
+                                    <a href="order-manage.html">订单管理</a>
+                                </li>
+                                <li>
+                                    <a href="statistical-income.html" class="active">统计管理</a>
+                                </li>
+                                <li>
+                                    <a href="magic.html">魔法页面</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-md-10">
+                        <div class="content">
+                            <div class="title nav-tabs">
+                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont income">收入统计</a>
+                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont order">订单量</a>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="page-1">
+									#foreach($listPage in $listPageList)
+										<div class="list-page">
+											<h3>
+												<span>$!date.format("yyyy-MM-dd",$!{listPage.completeTime})</span>
+												<span class="price">¥$!number.format("#0.00",$!math.div($!{listPage.money},100))</span>
+											</h3>
+											<ul class="order-list">
+												#foreach($orderProduct in $listPage.data)
+												<li>
+													<div class="detail">
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																	<img src="$!qiniu.getDownloadUrl($orderProduct.skuImg)" />
+																</div>
+															</a>
+															<div class="prod">
+																<p>通过代销 $!{orderProduct.productName}获得佣金</p>
+																<p class="date">$!date.format("yyyy-MM-dd",$!{listPage.completeTime})</p>
+															</div>
+														</div>
+														<div class="pull-right">
+															<span>¥$!number.format("#0.00",$!math.div($!{orderProduct.distributionUserReward},100))</span>
+														</div>
+													</div>
+												</li>
+												#end
+											</ul>
+										</div>
+									#end
+                                    
+									#set($inPage=1)
+									#set($ordPage=1)
+									
+                                    #if($incomePage!=0)
+                                    <div class="button-group">
+										#set($total = $incomePage)
+										#if($tab=='income')
+											#set($inPage=$page)
+										#end
+										#if($inPage>1)<a href="javascript:toPage(#set($prev=$inPage - 1)$prev);" class="prev">上一页</a>#end
+										#if($inPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($inPage - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$inPage - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($inPage);" class="num active">$inPage</a>
+										#foreach($item in [1,2])
+											#set($p=$inPage + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($inPage+3<$total)
+											<span>...</span>
+										#end
+										#if($inPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($inPage<$total)<a href="javascript:toPage(#set($next=$inPage+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
+                                </div>
+                                <div class="tab-pane fade" id="page-2">
+									#foreach($orderPage in $orderPageList)
+                                    <div class="list-page">
+                                        <h3>
+                                            <span>$date.format("yyyy-MM-dd",$!{orderPage.createTime})</span>
+                                            <span>(共$!{orderPage.data.size()}单)</span>
+                                        </h3>
+                                        <ul class="order-list">
+											#foreach($childOrder in $orderPage.data)
+												<li>
+													<div class="detail">
+														#foreach($orderProduct in $childOrder.orderProductList)
+															<div class="pull-left">
+																<a href="javascript:;" class="img">
+																	<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																		<img src="$!qiniu.getDownloadUrl($!{orderProduct.skuImg})" />
+																	</div>
+																</a>
+																<div class="prod">
+																	<p>$!{orderProduct.productName}</p>
+																	<p>
+																		<span>价格 ¥$!number.format("#0.00",$!math.div($!{orderProduct.skuPrice},100))</span>
+																		<span>数量 x$!{orderProduct.buyNum}</span>
+																	</p>
+																	#foreach($skuStr in $orderProduct.skuStrs)
+																		<p>$skuStr</p>
+																	#end
+																</div>
+															</div>
+														#end
+														<div class="pull-right">
+															#if($!{childOrder.status}=='COM')
+																<a href="/store/order-detail-com?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='CAN')
+																<a href="/store/order-detail-can?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='DFK')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='YFH')
+																<a href="/store/order-detail-yfh?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='DFH')
+																<a href="/store/order-detail-dfh?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='STK' or $!{childOrder.status}=='TKZ' or $!{childOrder.status}=='TKB' or $!{childOrder.status}=='TKS' or $!{childOrder.status}=='TKC')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#elseif($!{childOrder.status}=='TH')
+																<a href="/store/order-detail?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
+															#end
+														</div>
+													</div>
+												</li>
+											#end
+                                        </ul>
+                                    </div>
+									#end
+                                    #if($orderPage!=0)
+                                    <div class="button-group">
+										#set($total = $orderPage)
+										#if($tab=='order')
+											#set($ordPage=$page)
+										#end
+										#if($ordPage>1)<a href="javascript:toPage(#set($prev=$ordPage - 1)$prev);" class="prev">上一页</a>#end
+										#if($ordPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+										#if($ordPage - 3>1)
+											<span>...</span>
+										#end
+										#foreach($item in [2,1])
+										#set($p=$ordPage - $item)
+											#if($p>1)
+												<a href="javascript:toPage($p);" class="num">$p</a>
+											#end
+										#end
+										<a href="javascript:toPage($ordPage);" class="num active">$ordPage</a>
+										#foreach($item in [1,2])
+											#set($p=$ordPage + $item)
+											#if($p<$total)
+											<a href="javascript:toPage($p);" class="num">$p</a>
+											#else
+												#break
+											#end
+										#end
+										#if($ordPage+3<$total)
+											<span>...</span>
+										#end
+										#if($ordPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+										#if($ordPage<$total)<a href="javascript:toPage(#set($next=$ordPage+1)$next);" class="prev">下一页</a>#end
+			                        </div>
+									#end
+                                </div>
+                            </div> 
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- footer -->
+    <footer class="footer">
+        <div class="footer-service">
+            <div class="container">
+                <div class="row">
+                    <ul class="service">
+                        <li>
+                            <i class="icon icon-service-one"></i>
+                            <span>品类齐全$orderPageList</span>
+                            <span>轻松购物</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-two"></i>
+                            <span>多仓直发</span>
+                            <span>急速配送</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-three"></i>
+                            <span>正品行货</span>
+                            <span>精致服务</span>
+                        </li>
+                        <li>
+                            <i class="icon icon-service-four"></i>
+                            <span>天天低价</span>
+                            <span>畅选无忧</span>
+                        </li>
+                    </ul>
+                </div>
+                <div class="row">
+                    <div class="middle">
+                        <ul>
+                            <li>
+                                <span>北京市公安局朝阳分局备案编号110105014669</span>
+                            </li>
+                            <li>
+                                <span>京ICP证070359号</span>
+                            </li>
+                            <li>
+                                <span>互联网药品信息服务资格证编号(京)字150号</span>
+                            </li>
+                        </ul>
+                        <ul>
+                            <li>
+                                <span>音像制品经营许可证苏宿批005号</span>
+                            </li>
+                            <li>
+                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
+                            </li>
+                            <li>
+                                <span>互联网出版许可证编号新出网证(京)字150号</span>
+                            </li>
+                        </ul>
+                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
+                        <ul>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-01.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-02.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-03.png" />
+                                </a>
+                            </li>
+                            <li>
+                                <a href="javascript:;">
+                                    <img src="/images/footer/website-04.png" />
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+	<script type="text/javascript">
 		
-		<div class="orderNum-area">
-			<div class="area-title">2016-01(共1单)</div>
-			<div class="order-info">
-				<a href="/my-order/noPayorder-detail.html"><div class="info-content">
-					<div class="info-bottom">
-						<div class="titleb">供应商：阿里巴巴天猫商城</div>
-							<div class="info-bottom">
-								<div class="info-bottom-img">
-									<img src="/images/thumbnail2.png" />
-								</div>
-								<p class="bottom-1" style="font-size:16px;">送杯 名馨进口滤泡式咖啡礼...</p>
-								<p class="bottom-3"><span style="color:#F389AA;font-size:16px;">价格￥18.00</span><!-- <span style="position:relative;left:80px;top:-2px;color:#666;">套装包装</span> --></p>
-								<div class="bottom-4">
-									<div class="bottom-number">数量x100</div>
-									<a href="/my-order/noPayorder-detail.html" class="btn-select"><div class="bottom-number-right bg1">
-										查看订单详情
-									</div></a>
-								</div>
-							</div>
-					</div>
-				</div></a>
-			</div>
-		</div>
-	</div>
-</div>
-</body>
-</body>
-<script>
-    $(function(){
-		$(".btn").click(function(){
-			if($(this).find(".img1").is(":visible")){
-				$(this).find(".img1").hide();
-				$(this).find(".img2").show();
-			}else{
-				$(this).find(".img1").show();
-				$(this).find(".img2").hide();
-			}
+		var curTab="income";
+		
+		$(".income").click(function(){
+			curTab = "income";
 		});
-		$(".btn-select").click(function(){
-			if($(this).find(".bg1")){
-				$(".bottom-number-right").removeClass("bg2").addClass("bg1");
-				$(this).find(".bottom-number-right").removeClass("bg1").addClass("bg2");
-			}
-			setTimeout(function(){
-				$(".bottom-number-right").removeClass("bg2").addClass("bg1");
-			},1000)
+		
+		$(".order").click(function(){
+			curTab = "order";
 		});
-		$("#statistics").click(function(){
-			$("#orderNum").css({"color":"#666"});
-			$(this).css({"color":"#E81959"});
-			$(".orderNum-1").hide();
-			$(".statistics-1").show();
-		})
-		$("#orderNum").click(function(){
-			$("#statistics").css({"color":"#666"});
-			$(this).css({"color":"#E81959"});
-			$(".statistics-1").hide();
-			$(".orderNum-1").show();
-		})
-	});
-</script>
+		
+		#if(${tab}=='order')
+			$("#page-1").removeClass("in").removeClass("active");
+			$("#page-2").addClass("in").addClass("active");
+			$(".income").removeClass("active");
+			$(".order").addClass("active");
+			curTab = "order";
+		#end
+		
+		$(".imgLiquidNotFill").imgLiquid({
+			fill: false,
+			horizontalAlign: "center",
+			verticalAlign: "center"
+		});
+		
+		function toPage(i){
+			location.href="/store/sale-calc?page="+i+"&tab="+curTab;
+		}
+		
+	</script>
+</body>
 </html>
- 

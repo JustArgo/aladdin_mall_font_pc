@@ -69,6 +69,36 @@ public class LoginController {
 		}
 		return "username_password_error";
 	}
+	
+	/**
+	 * 提交
+	 * 
+	 * @param uuid
+	 *        随机字符串，用来管理用户微信登录
+	 */
+	@RequestMapping(value = "/submit")
+	@ResponseBody
+	public String wxAuthentication(String requestId, String uuid) {
+		
+		// 根据uuid查询用户服务redis缓存信息
+		
+		// 如果读取到赋值给以下变量，读取不到，
+		
+		// return "logintimeout",提示用户已经操作超时，请重新刷新二维码；
+		
+		// 从用户服务读取
+		String mqId = "";
+		String userId = "";
+		String luckNum = "";
+		
+		Map<String, Object> loginUserInfo = new SessionUserAuthInfo().toMap();
+		loginUserInfo.put("userId", String.valueOf(userId));
+		loginUserInfo.put("mqId", mqId);
+		loginUserInfo.put("luckNum", luckNum);
+		logger.info("登录用户信息："+loginUserInfo);
+		WebUtil.login(loginUserInfo);
+		return "success";
+	}
 
 	/**
 	 * 页面

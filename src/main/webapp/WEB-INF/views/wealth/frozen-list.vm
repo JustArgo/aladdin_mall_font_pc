@@ -14,68 +14,16 @@
         <div class="list">
             <div class="container">
                 <div class="row">
-                    <div class="col-md-2">
-                        <div class="content">
-                            <ul class="nav-category">
-                                <li class="bold">
-                                    <a href="javascript:;">账户中心</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="person.html">首页</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="person-info.html">个人信息</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="level.html">会员等级</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="address.html">收货地址</a>
-                                </li class="sub">
-                                <li class="sub">
-                                    <a href="my-card.html">我的银行卡</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="my-sales.html">我的销售</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="alipay-binding.html">我要提现</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="my-code.html">我要推广</a>
-                                </li>
-                                <li class="bold">
-                                    <a href="javascript:;">订单中心</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="my-order.html">我的订单</a>
-                                </li>
-                                <li class="bold">
-                                    <a href="advertise.html">参与活动</a>
-                                </li>
-                                <li class="sub">
-                                    <a href="javascript:;">我的一元购</a>
-                                </li>
-                                <li class="bold">
-                                    <a href="wealth.html" class="active">我的财富</a>
-                                </li>
-                                <li class="bold">
-                                    <a href="my-team.html">我的团队</a>
-                                </li>
-                                <li class="bold">
-                                    <a href="collection.html">我的收藏</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
+                    <!-- left menu -->
+                    #parse("./common/left-menu.vm")
                     <div class="col-md-10">
                         <div class="content alipay-content">
                             <div class="wealth">
                                 <div class="col-sm-3">
                                     <p>可用余额：$number.format("#0.00",$math.div($remainingSum,100))</p>
                                     <p>
-                                        <a href="online-refill.html">充值</a>
-                                        <a href="alipay-binding.html">提现</a>
+                                        <a href="/wealth/off-recharge-index">充值</a>
+                                        <a href="/wealth/withdraw">提现</a>
                                     </p>
                                 </div>
                                 <div class="col-sm-3">
@@ -104,22 +52,28 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                	#foreach($frozen in $frozenList)
-									#if($frozen.flowDirection=='IN#')                                	
-                                    <tr>
-                                        <td>$!{frozen.insertTime}</td>
-                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
-                                        <td>-</td>
-                                        <td>$!{frozen.remark}</td>
+                                	#if($null.isNull($frozenList)||$frozenList.size()==0) 
+                                	<tr>
+                                		<td colspan="4">暂无记录!</td>
                                     </tr>
                                     #else
-                                    <tr>
-                                        <td>$!{frozen.insertTime}</td>
-                                        <td>-</td>
-                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
-                                        <td>$!{frozen.remark}</td>
-                                    </tr>
-                                    #end
+	                                	#foreach($frozen in $frozenList)
+										#if($frozen.flowDirection=='IN#')                                	
+	                                    <tr>
+	                                        <td>$!{frozen.insertTime}</td>
+	                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
+	                                        <td>-</td>
+	                                        <td>$!{frozen.remark}</td>
+	                                    </tr>
+	                                    #else
+	                                    <tr>
+	                                        <td>$!{frozen.insertTime}</td>
+	                                        <td>-</td>
+	                                        <td>¥$number.format("#0.00",$math.div($frozen.sum,100))</td>
+	                                        <td>$!{frozen.remark}</td>
+	                                    </tr>
+	                                    #end
+	                                    #end
                                     #end
                                 </tbody>
                             </table>

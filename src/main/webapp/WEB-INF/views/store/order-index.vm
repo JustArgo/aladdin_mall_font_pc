@@ -15,6 +15,7 @@
     <script src="/js/jquery.min.js"></script>
     <script src="/js/bootstrap.min.js"></script>
     <script src="/js/theme.js"></script>
+	<script type="text/javascript" src="/js/imgLiquid-min.js"></script>
     <!--[if lt IE 9]>
     <script src="/js/html5shiv-printshiv.js"></script>
     <script src="/js/respond.min.js"></script>
@@ -292,118 +293,355 @@
 									
 									
 									<div class="order-info-dfh">
-										<li>
-											<div class="detail">
-												<div class="pull-left">
-													<a href="javascript:;" class="img">
-														<img src="/images/shoe/shoe.png" />
-													</a>
-													<div class="prod">
-														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-														<p>
-															<span>价格 ¥1</span>
-															<span>数量 x100</span>
-														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+										#foreach($childOrder in $noSendOrder)
+											<li>
+												<div class="detail">
+													#foreach($orderProduct in $childOrder.orderProductList)
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																	<img src="$!qiniu.getDownloadUrl($!{orderProduct.skuImg})" />
+																</div>
+															</a>
+															<div class="prod">
+																<p>$!{orderProduct.productName}</p>
+																<p>
+																	<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+																	<span>数量 x${orderProduct.buyNum}</span>
+																</p>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																	<p>$skuStr</p>
+																#end
+															</div>
+														</div>
+													#end
+													<div class="pull-right status">
+														<span>待发货</span>
+														<a href="/store/order-detail-dfh?orderCode=$!{childOrder.orderCode}" class="btn btn-search">查看订单详情</a>
 													</div>
 												</div>
-												<div class="pull-right status">
-													<span>待发货</span>
-													<button class="btn btn-search">查看订单详情</button>
-												</div>
-											</div>
-										</li>
+											</li>
+										#end
 									</div>
 									
 									
 									<div class="order-info-dpl">
-									
-										<li>
-											<div class="detail">
-												<div class="pull-left">
-													<a href="javascript:;" class="img">
-														<img src="/images/shoe/shoe.png" />
-													</a>
-													<div class="prod">
-														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-														<p>
-															<span>价格 ¥1</span>
-															<span>数量 x100</span>
-														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+										#foreach($waitForComment in $waitForCommentOrder)
+											<li>
+												<div class="detail">
+													<div class="pull-left">
+														<a href="javascript:;" class="img">
+															<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																<img src="$!qiniu.getDownloadUrl($!{waitForComment.skuImg})" />
+															</div>
+														</a>
+														<div class="prod">
+															<p>$!{waitForComment.productName}</p>
+															<p>
+																<span>价格 ¥$number.format("#0.00",$math.div($waitForComment.sellPrice,100))</span>
+																<span>数量 x${waitForComment.buyNum}</span>
+															</p>
+															#foreach($skuStr in $waitForComment.skuStrs)
+																	<p>$skuStr</p>
+															#end
+														</div>
+													</div>
+													<div class="pull-right status">
+														<span>待评价</span>
+														<a href="/store/order-detail-dpl?orderID=$!{waitForComment.childOrderID}&orderProductID=$!{waitForComment.orderProductID}" class="btn btn-search">查看订单详情</a>
 													</div>
 												</div>
-												<div class="pull-right status">
-													<span>待评价</span>
-													<button class="btn btn-search">查看订单详情</button>
-												</div>
-											</div>
-										</li>
+											</li>
+										#end
 										
 									</div>
 									
 									<div class="order-info-tk">
-										<li>
-											<div class="detail">
-												<div class="pull-left">
-													<a href="javascript:;" class="img">
-														<img src="/images/shoe/shoe.png" />
-													</a>
-													<div class="prod">
-														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-														<p>
-															<span>价格 ¥1</span>
-															<span>数量 x100</span>
-														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+										#foreach($returnMoney in $returnMoneyOrder)
+											<li data-id="$returnMoney">
+												<div class="detail">
+													#foreach($orderProduct in $returnMoney.orderProductList)
+														<div class="pull-left">
+															<a href="javascript:;" class="img">
+																<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																	<img src="$!qiniu.getDownloadUrl($!{orderProduct.skuImg})" />
+																</div>
+															</a>
+															<div class="prod">
+																<p>$!{orderProduct.productName}</p>
+																<p>
+																	<span>价格 ¥$number.format("#0.00",$math.div($orderProduct.skuPrice,100))</span>
+																	<span>数量 x$!{orderProduct.buyNum}</span>
+																</p>
+																#foreach($skuStr in $orderProduct.skuStrs)
+																	<p>$skuStr</p>
+																#end
+															</div>
+														</div>
+													#end
+													<div class="pull-right status">
+														#if(${returnMoney.status}=='STK')
+															<span>退款审核中</span>
+														#elseif(${returnMoney.status}=='TKB')
+															<span>退款审核不通过</span>
+														#elseif(${returnMoney.status}=='TKZ')
+															<span>退款中</span>
+														#elseif(${returnMoney.status}=='TKS')
+															<span>退款失败</span>
+														#elseif(${returnMoney.status}=='TKC')
+															<span>退款成功</span>
+														#end
+														<a href="/store/order-detail?orderCode=$!{returnMoney.orderCode}" class="btn btn-search">查看订单详情</a>
 													</div>
 												</div>
-												<div class="pull-right status">
-													<span>退款</span>
-													<button class="btn btn-search">查看订单详情</button>
-												</div>
-											</div>
-										</li>
+											</li>
+										#end
+										
 									</div>
 									<div class="order-info-th">
-										<li>
-											<div class="detail">
-												<div class="pull-left">
-													<a href="javascript:;" class="img">
-														<img src="/images/shoe/shoe.png" />
-													</a>
-													<div class="prod">
-														<p>AMII 0942纯色圆领长袖基础短款大码第三方公司的方式的任何地方</p>
-														<p>
-															<span>价格 ¥1</span>
-															<span>数量 x100</span>
-														</p>
-														<p class="color">颜色：墨蓝</p>
-														<p class="size">尺寸：XL</p>
+										#foreach($returnGoods in $returnGoodsOrder)
+											<li>
+												<div class="detail">
+													<div class="pull-left">
+														<a href="javascript:;" class="img">	
+															<div class="imgLiquidNotFill" style="width:121px;height:120px;display:inline-block;">
+																<img src="$!qiniu.getDownloadUrl($returnGoods.skuImg)" />
+															</div>
+														</a>
+														<div class="prod">
+															<p>$!{returnGoods.productName}</p>
+															<p>
+																<span>价格 ¥$number.format("#0.00",$math.div($returnGoods.sellPrice,100))</span>
+																<span>数量 x$!{returnGoods.buyNum}</span>
+															</p>
+															#foreach($skuStr in $returnGoods.skuStrs)
+																<p>$skuStr</p>
+															#end
+														</div>
+													</div>
+													<div class="pull-right status">
+														<span>$!{returnGoods.statuStr}</span>
+														<a href="/store/return-goods-detail-orderproductid?orderProductID=$!{returnGoods.orderProductID}" class="btn btn-search">查看订单详情</a>
 													</div>
 												</div>
-												<div class="pull-right status">
-													<span>退货中</span>
-													<button class="btn btn-search">查看订单详情</button>
-												</div>
-											</div>
-										</li>
+											</li>
+										#end
 									</div>
                                 </ul>
                             </div>
                         </div>
-                        <div class="button-group">
-                            <a href="javascript:;" class="prev">上一页</a>
-                            <a href="javascript:;" class="num active">1</a>
-                            <a href="javascript:;" class="num">2</a>
-                            <a href="javascript:;" class="num">3</a>
-                            <span>...</span>
-                            <a href="javascript:;" class="num">18</a>
-                            <a href="javascript:;" class="prev">下一页</a>
-                        </div>
+						#set($allPage=1)
+						#set($dfkPage=1)
+						#set($dfhPage=1)
+						#set($dplPage=1)
+						#set($tkPage=1)
+						#set($thPage=1)
+                        #if($allOrderCount!=0)
+							<div class="button-group all">
+								#set($total = $allOrderCount)
+								#if($tab=='all')
+									#set($allPage=$page)
+								#end
+								#if($allPage>1)<a href="javascript:toPage(#set($prev=$allPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($allPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($allPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$allPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($allPage);" class="num active">$allPage</a>
+								#foreach($item in [1,2])
+									#set($p=$allPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($allPage+3<$total)
+									<span>...</span>
+								#end
+								#if($allPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($allPage<$total)<a href="javascript:toPage(#set($next=$allPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
+							
+							
+						#if($noPayOrderCount!=0)
+							<div class="button-group dfk">
+								#set($total = $noPayOrderCount)
+								#if($tab=='dfk')
+									#set($dfkPage=$page)
+								#end
+								#if($dfkPage>1)<a href="javascript:toPage(#set($prev=$dfkPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($dfkPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($dfkPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$dfkPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($dfkPage);" class="num active">$dfkPage</a>
+								#foreach($item in [1,2])
+									#set($p=$dfkPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($dfkPage+3<$total)
+									<span>...</span>
+								#end
+								#if($dfkPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($dfkPage<$total)<a href="javascript:toPage(#set($next=$dfkPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
+						
+						#if($noSendOrderCount!=0)
+							<div class="button-group dfh">
+								#set($total = $noSendOrderCount)
+								#if($tab=='dfh')
+									#set($dfhPage=$page)
+								#end
+								#if($dfhPage>1)<a href="javascript:toPage(#set($prev=$dfhPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($dfhPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($dfhPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$dfhPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($dfhPage);" class="num active">$dfhPage</a>
+								#foreach($item in [1,2])
+									#set($p=$dfhPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($dfhPage+3<$total)
+									<span>...</span>
+								#end
+								#if($dfhPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($dfhPage<$total)<a href="javascript:toPage(#set($next=$dfhPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
+						
+						#if($waitForCommentCount!=0)
+							<div class="button-group dpl">
+								#set($total = $waitForCommentCount)
+								#if($tab=='dpl')
+									#set($dplPage=$page)
+								#end
+								#if($dplPage>1)<a href="javascript:toPage(#set($prev=$dplPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($dplPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($dplPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$dplPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($dplPage);" class="num active">$dplPage</a>
+								#foreach($item in [1,2])
+									#set($p=$dplPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($dplPage+3<$total)
+									<span>...</span>
+								#end
+								#if($dplPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($dplPage<$total)<a href="javascript:toPage(#set($next=$dplPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
+						
+						#if($returnMoneyCount!=0)
+							<div class="button-group tk">
+								#set($total = $returnMoneyCount)
+								#if($tab=='tk')
+									#set($tkPage=$page)
+								#end
+								#if($tkPage>1)<a href="javascript:toPage(#set($prev=$tkPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($tkPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($tkPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$tkPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($tkPage);" class="num active">$tkPage</a>
+								#foreach($item in [1,2])
+									#set($p=$tkPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($tkPage+3<$total)
+									<span>...</span>
+								#end
+								#if($tkPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($tkPage<$total)<a href="javascript:toPage(#set($next=$tkPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
+						
+						
+						
+						#if($returnGoodsCount!=0)
+							<div class="button-group th">
+								#set($total = $returnGoodsCount)
+								#if($tab=='th')
+									#set($thPage=$page)
+								#end
+								#if($thPage>1)<a href="javascript:toPage(#set($prev=$thPage - 1)$prev);" class="prev">上一页</a>#end
+								#if($thPage>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+								#if($thPage - 3>1)
+									<span>...</span>
+								#end
+								#foreach($item in [2,1])
+								#set($p=$thPage - $item)
+									#if($p>1)
+										<a href="javascript:toPage($p);" class="num">$p</a>
+									#end
+								#end
+								<a href="javascript:toPage($thPage);" class="num active">$thPage</a>
+								#foreach($item in [1,2])
+									#set($p=$thPage + $item)
+									#if($p<$total)
+									<a href="javascript:toPage($p);" class="num">$p</a>
+									#else
+										#break
+									#end
+								#end
+								#if($thPage+3<$total)
+									<span>...</span>
+								#end
+								#if($thPage<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+								#if($thPage<$total)<a href="javascript:toPage(#set($next=$thPage+1)$next);" class="prev">下一页</a>#end
+							</div>
+						#end
                     </div>
                 </div>
             </div>
@@ -418,7 +656,7 @@
                     <ul class="service">
                         <li>
                             <i class="icon icon-service-one"></i>
-                            <span>品类齐全</span>
+                            <span>品类齐全${page}</span>
                             <span>轻松购物</span>
                         </li>
                         <li>
@@ -463,7 +701,7 @@
                             </li>
                         </ul>
                         <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
-                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site${noPayOrder}</P>
+                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
                         <ul>
                             <li>
                                 <a href="javascript:;">
@@ -492,8 +730,21 @@
         </div>
     </footer>
 	<script type="text/javascript">
+		var curTab = "all";
 		$(function(){
-	
+			
+			
+			
+			$(".imgLiquidNotFill").imgLiquid({
+				fill: false,
+				horizontalAlign: "center",
+				verticalAlign: "center"
+			});
+			
+			$(".button-group").hide();
+			//console.log("$!{tab}");
+			$(".$!{tab}").show();
+		
 			
 		
 			$(".title a").click(function(){
@@ -502,48 +753,83 @@
 			});
 			
 			$("[class^='order-info']").hide();
-			$(".order-info-all").show();
-			var curTab = "all";
+			$(".order-info-$!{tab}").show();
+			
+			chooseTab("$!{tab}");
 			
 			$(".all").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-all").show();
 				curTab = "all";
+				
+				$(".button-group").hide();
+				$(".all").show();
+				
 			});
 			$(".dfk").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-dfk").show();
-				curTab = "menu-1";
+				curTab = "dfk";
+				
+				$(".button-group").hide();
+				$(".dfk").show();
+				
 			});
 			$(".dfh").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-dfh").show();
-				curTab = "menu-2";
+				curTab = "dfh";
+				
+				$(".button-group").hide();
+				$(".dfh").show();
+				
 			});
 			$(".dpl").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-dpl").show();
-				curTab = "menu-3";
+				curTab = "dpl";
+				
+				$(".button-group").hide();
+				$(".dpl").show();
+				
 			});
 			$(".tk").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-tk").show();
-				curTab = "menu-4";
+				curTab = "tk";
+				
+				$(".button-group").hide();
+				$(".tk").show();
+				
+				
 			});
 			$(".th").click(function(){
 				
 				$("[class^='order-info']").hide();
 				$(".order-info-th").show();
-				curTab = "menu-5";
+				curTab = "th";
+				
+				$(".button-group").hide();
+				$(".th").show();
+				
 			});
 			
 			
 		});
+		
+		function chooseTab(tab){
+			$("."+tab).trigger("click");
+		}
+		
+		function toPage(i){
+			location.href="/store/order?page="+i+"&tab="+curTab;
+		}
+		
 	</script>
 </body>
 </html>

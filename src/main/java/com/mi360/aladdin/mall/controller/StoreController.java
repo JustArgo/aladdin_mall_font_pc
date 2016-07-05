@@ -1,5 +1,6 @@
 package com.mi360.aladdin.mall.controller;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -32,6 +33,7 @@ import com.mi360.aladdin.mall.util.WebUtil;
 import com.mi360.aladdin.order.service.IOrderProductService;
 import com.mi360.aladdin.order.service.IOrderService;
 import com.mi360.aladdin.product.domain.ProductSku;
+import com.mi360.aladdin.product.service.IProductService;
 import com.mi360.aladdin.product.service.IProductSkuService;
 import com.mi360.aladdin.store.service.IStoreService;
 import com.mi360.aladdin.supplier.service.ISupplierService;
@@ -75,7 +77,10 @@ public class StoreController {
 	@Autowired
 	private ILogisticsService logisticsService;
 	
-	@RequestMapping("/")
+	@Autowired
+	private IProductService productService;
+	
+	@RequestMapping("")
 	public String index(String requestId, Model model){
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
@@ -104,7 +109,7 @@ public class StoreController {
 				model.addAttribute("monthSellCount",monthSellCountMap.get("result")==null?0:monthSellCountMap.get("result"));
 				model.addAttribute("todayVisit",0);
 				
-				return "store/index";
+				return "redirect:/store/browse";
 			}else{
 				return "store/no-store";
 			}
@@ -128,7 +133,7 @@ public class StoreController {
 		if((Integer)map.get("errcode")==0){
 			Map<String,Object> store = (Map<String,Object>)map.get("result");
 			if(store!=null){
-				return "store/index";
+				return "redirect:/store/browse";
 			}else{
 
 				return "store/open-store";
@@ -206,7 +211,7 @@ public class StoreController {
 			model.addAttribute("storeId",storeId);
 		}
 		
-		return "store/index";
+		return "redirect:/store/browse";
 		
 	}
 	
@@ -278,23 +283,170 @@ public class StoreController {
 	 * 销售统计
 	 */
 	@RequestMapping("/sale-calc")
-	public String saleCalc(String requestId, Model model){
+	public String saleCalc(String requestId, String tab, Integer page, Model model){
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
 		
-		Map<String,Object> map = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
-		logger.info("map:"+map);
-		if((Integer)map.get("errcode")==0){
-			List<Map<String,Object>> orderList = (List<Map<String, Object>>) map.get("result");
-			model.addAttribute("orderList");
+		if(tab==null||"".equals(tab.trim())){
+			tab = "income";
+		}
+		if(page==null){
+			page=1;
 		}
 		
-		Map<String,Object> saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		
+		int incomeCount = storeService.getIncomeCalcCount(requestId, mqId);
+		Map<String,Object> orderCountMap = storeService.getOrderCount(requestId, mqId, null, null);
+		model.addAttribute("incomePage",(incomeCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("orderPage",((Integer)orderCountMap.get("result")+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("page",page);
+		model.addAttribute("tab",tab);
+		
+		Map<String,Object> orderMap = null;
+		Map<String,Object> saleIncomeMap = null;
+		
+		if("income".equals(tab)){
+			saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			saleIncomeMap = storeService.getIncomeCalc(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		}
+		
+		if("order".equals(tab)){
+			orderMap = storeService.getOrder(requestId, mqId, null, null, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			orderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		}
+		
 		logger.info("saleIncomeMap:"+saleIncomeMap);
+		logger.info("orderMap:"+orderMap);
+		
+		List<Map<String,Object>> listPageList = new ArrayList<Map<String,Object>>();
+		List<Map<String,Object>> orderPageList = new ArrayList<Map<String,Object>>();
+		
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		
+		if((Integer)orderMap.get("errcode")==0){
+			List<Map<String,Object>> orderList = (List<Map<String, Object>>) orderMap.get("result");
+			
+			if(orderList!=null && orderList.size()>0){
+				Map<String,Object> orderPageMap = new HashMap<String,Object>();
+				orderPageMap.put("createTime",orderList.get(0).get("createTime"));
+				
+				List<Map<String,Object>> sameDateList = new ArrayList<Map<String,Object>>();
+				sameDateList.add(orderList.get(0));
+				orderPageMap.put("data", sameDateList);
+				
+				orderPageList.add(orderPageMap);
+				
+				for(int i=1;i<orderList.size();i++){
+					Map<String,Object> order = orderList.get(i);
+					Map<String,Object> lastMap = orderPageList.get(orderPageList.size()-1);
+					
+					try{
+						Date orderDate = (Date) order.get("createTime");;
+						Date lastMapDate = (Date) lastMap.get("createTime");
+						
+						//代表当前 记录 和 上一条记录是同 一天
+						if(orderDate.getYear()==lastMapDate.getYear()&&orderDate.getMonth()==lastMapDate.getMonth()&&orderDate.getDate()==lastMapDate.getDate()){
+								
+							((List<Map<String,Object>>)orderPageList.get(orderPageList.size()-1).get("data")).add(order);
+							
+							System.out.println("日期相等");
+							
+						}else{
+							Map<String,Object> newOrderMap = new HashMap<String,Object>();
+							newOrderMap.put("createTime", order.get("createTime"));
+							
+							List<Map<String,Object>> newSameDateList = new ArrayList<Map<String,Object>>();
+							newSameDateList.add(order);
+							
+							newOrderMap.put("data", newSameDateList);
+							orderPageList.add(newOrderMap);
+						}
+						
+					}catch(Exception e){
+						logger.error(e.getMessage(),e);
+					}
+					
+					
+					
+					
+				}
+				
+				logger.info("orderPageList:"+orderPageList);
+				model.addAttribute("orderPageList",orderPageList);
+				
+				
+			}
+			
+			
+			
+		}
+		
+		
+		
+		
+		
+		
 		if((Integer)saleIncomeMap.get("errcode")==0){
 			List<Map<String,Object>> distributionList = (List<Map<String, Object>>) saleIncomeMap.get("result");
-			model.addAttribute("distributionList",distributionList);
+			
+			if(distributionList!=null && distributionList.size()>0){
+				Map<String,Object> listPageMap = new HashMap<String,Object>();
+				listPageMap.put("completeTime", distributionList.get(0).get("completeTime"));
+				listPageMap.put("money",distributionList.get(0).get("distributionUserReward"));
+				
+				List<Map<String,Object>> sameDateList = new ArrayList<Map<String,Object>>();
+				sameDateList.add(distributionList.get(0));
+				listPageMap.put("data",sameDateList);
+				
+				listPageList.add(listPageMap);
+				
+				
+				for(int i=1;i<distributionList.size();i++){
+					Map<String,Object> distribution = distributionList.get(i);
+					Map<String,Object> lastMap = listPageList.get(listPageList.size()-1);
+					
+					System.out.println("completeTime:"+distribution.get("completeTime"));
+					
+					try{
+						Date distributionDate = sdf.parse((String)distribution.get("completeTime"));;
+						Date lastMapDate = sdf.parse((String)lastMap.get("completeTime"));
+						
+						//代表当前 记录 和 上一条记录是同 一天
+						if(distributionDate.getYear()==lastMapDate.getYear()&&distributionDate.getMonth()==lastMapDate.getMonth()&&distributionDate.getDate()==lastMapDate.getDate()){
+							listPageList.get(listPageList.size()-1).put("money", (Long)listPageList.get(listPageList.size()-1).get("money") + (Long)distribution.get("distributionUserReward"));
+								
+							((List<Map<String,Object>>)listPageList.get(listPageList.size()-1).get("data")).add(distribution);
+							
+							System.out.println("日期相等");
+							
+						}else{
+							Map<String,Object> newPageMap = new HashMap<String,Object>();
+							newPageMap.put("completeTime", distribution.get("completeTime"));
+							newPageMap.put("money", distribution.get("distributionUserReward"));
+							
+							List<Map<String,Object>> newSameDateList = new ArrayList<Map<String,Object>>();
+							newSameDateList.add(distribution);
+							
+							newPageMap.put("data", newSameDateList);
+							listPageList.add(newPageMap);
+						}
+						
+					}catch(Exception e){
+						logger.error(e.getMessage(),e);
+					}
+					
+					
+				}
+				
+				model.addAttribute("listPageList",listPageList);
+				
+			}
+			
+			
+			//model.addAttribute("distributionList",distributionList);
 		}
 		
 		return "store/sale-statistics";
@@ -305,27 +457,92 @@ public class StoreController {
 	 * 订单管理
 	 */
 	@RequestMapping("/order")
-	public String orderIndex(String requestId, Model model){
+	public String orderIndex(String requestId, String tab, Integer page, Model model){
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		String mqId = (String)principal.get("mqId");
 		
-		Map<String,Object> allOrderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		if(tab==null||"".equals(tab.trim())){
+			tab="all";
+		}
+		
+		System.out.println("page:"+page);
+		System.out.println("page==null:"+page==null);
+		
+		if(page==null){
+			page=1;
+		}
+		
+		Map<String,Object> allOrderMap = null;
+		Map<String,Object> noPayOrderMap = null;
+		Map<String,Object> noSendOrderMap = null;
+		Map<String,Object> waitForCommentMap = null;
+		Map<String,Object> returnMoneyMap = null;
+		Map<String,Object> returnGoodsMap = null;
+		
+		Map<String,Object> allOrderCountMap = storeService.getOrderCount(requestId, mqId, null, null);
+		int noPayOrderCount = storeService.getNoPayOrderCount(requestId, mqId);
+		int noSendOrderCount = storeService.getNoSendOrderCount(requestId, mqId);
+		int waitForCommentCount = storeService.getWaitForCommentCount(requestId, mqId);
+		int returnMoneyCount = storeService.getReturnMoneyCount(requestId, mqId);
+		int returnGoodsCount = storeService.getReturnGoodsCount(requestId, mqId);
+		
+		model.addAttribute("allOrderCount",((Integer)allOrderCountMap.get("result")+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noPayOrderCount",(noPayOrderCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("noSendOrderCount",(noSendOrderCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("waitForCommentCount",(waitForCommentCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnMoneyCount",(returnMoneyCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		model.addAttribute("returnGoodsCount",(returnGoodsCount+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
+		
+		model.addAttribute("page",page);
+		model.addAttribute("tab",tab);
+		
+		if("all".equals(tab)){
+			allOrderMap = storeService.getOrder(requestId, mqId, null, null, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			allOrderMap = storeService.getOrder(requestId, mqId, null, null, 0, DEFAULT_PAGE_SIZE);
+		}
+		
+		if("dfk".equals(tab)){
+			noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("dfh".equals(tab)){
+			noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("dpl".equals(tab)){
+			waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("tk".equals(tab)){
+			returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		} 
+		
+		if("th".equals(tab)){
+			returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, (page-1)*DEFAULT_PAGE_SIZE, DEFAULT_PAGE_SIZE);
+		}else{
+			returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
+		}
+		
 		logger.info("allOrderMap:"+allOrderMap);
 		
-		Map<String,Object> noPayOrderMap = storeService.selectNoPayedOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("noPayOrderMap:"+noPayOrderMap);
 		
-		Map<String,Object> noSendOrderMap = storeService.selectNoSendOrder(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("noSendOrderMap:"+noSendOrderMap);
 		
-		Map<String,Object> waitForCommentMap = storeService.selectWaitForCommentList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("waitForCommentMap:"+waitForCommentMap);
 		
-		Map<String,Object> returnMoneyMap = storeService.selectReturnMoneyList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("returnMoneyMap:"+returnMoneyMap);
 		
-		Map<String,Object> returnGoodsMap = storeService.selectReturnGoodsList(requestId, mqId, 0, DEFAULT_PAGE_SIZE);
 		logger.info("returnGoodsMap:"+returnGoodsMap);
 		
 		
@@ -368,6 +585,17 @@ public class StoreController {
 		String mqId = (String)principal.get("mqId");
 		
 		return storeService.recommendProducts(requestId, mqId, productIds);
+		
+	}
+	
+	@RequestMapping("/proxy")
+	@ResponseBody
+	public Map<String,Object> proxy(String requestId, Integer[] productIds){
+		
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqId = (String)principal.get("mqId");
+		
+		return storeService.addProductsIntoStore(requestId, mqId, productIds);
 		
 	}
 	
@@ -1145,6 +1373,54 @@ public class StoreController {
 		}
 
 		return retStr;
+	}
+	
+	/**
+	 * 店铺的货源推荐
+	 * @return
+	 * 2016年7月4日
+	 */
+	@RequestMapping("/supply")
+	public String supply(String requestId, String tab, String orderBy, Integer page, Model model){
+		
+		final int SUPPLY_PAGE_SIZE = 12;
+		
+		if(tab==null||"".equals(tab.trim())){
+			tab = "newest";
+		}
+		if(page==null){
+			page = 1;
+		}
+		
+		List<Map> newestProductList = new ArrayList<Map>();
+		List<Map> priceProductList = new ArrayList<Map>();
+		
+		int productCount = productService.getProductCountByKeyWordAndPlatform(requestId,"","PC#");
+		model.addAttribute("total",(productCount+SUPPLY_PAGE_SIZE-1)/SUPPLY_PAGE_SIZE);
+		
+		if("newest".equals(tab)){
+			newestProductList = productService.selectByKeyWordWithPaginationAddSupplier("", (page-1)*SUPPLY_PAGE_SIZE, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}else{
+			newestProductList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}
+		
+		if("price".equals(tab)){
+			priceProductList = productService.selectByKeyWordWithPaginationAddSupplier("", (page-1)*SUPPLY_PAGE_SIZE, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}else{
+			priceProductList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, SUPPLY_PAGE_SIZE, orderBy, "PC#", requestId);
+		}
+		
+		logger.info("newestProductList:"+newestProductList);
+		logger.info("priceProductList"+priceProductList);
+		
+		model.addAttribute("newestProductList",newestProductList);
+		model.addAttribute("priceProductList",priceProductList);
+		
+		model.addAttribute("tab",tab);
+		model.addAttribute("page",page);
+		
+		return "store/supply";
+		
 	}
 	
 }

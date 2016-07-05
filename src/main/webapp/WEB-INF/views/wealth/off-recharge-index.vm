@@ -21,28 +21,31 @@
                         </div>
                         <div class="center">
                            <div class="col-md-6">
-                               <form class="form" action="${link.contextPath}/wealth/off-recharge" method="post">
+                               <form class="form" action="${link.contextPath}/wealth/off-recharge" method="post" >
                                     <div class="form-group">
                                         <label class="control-label">幸运号：</label>
-                                        <input type="text" class="form-control" value="${luckNum}" readonly="readonly" />
+                                        <input type="text" class="form-control" placeholder="请填写幸运号" value="${luckNum}" readonly="readonly" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">交易单号：</label>
-                                        <input type="text" class="form-control" name="externalOrderId"/>
+                                        <input type="text" class="form-control" placeholder="请填写交易单号" name="externalOrderId" value="" />
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">充值金额：</label>
-                                        <input type="text" class="form-control" name="sum"/>
+                                        <input type="text" class="form-control" placeholder="请填写充值金额" name="sum" value=""/>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">手机号码：</label>
-                                        <input type="text" class="form-control" name="phone"/>
+                                        <input type="text" class="form-control" placeholder="请填写手机号码" name="phone" value=""/>
                                     </div>
                                     <div class="form-group">
                                         <label class="control-label">备注说明：</label>
-                                        <input type="text" class="form-control" name="remark"/>
+                                        <input type="text" class="form-control" placeholder="非必填" name="remark" value=""/>
                                     </div>
-                                    <button class="btn btn-refill">充值</button>
+                                    <button type="button" class="btn btn-refill" >充值</button>
+                                    <a href="javascript:;" class="tips" style="display:none;color:#7dbf58;">
+												<span id="tips"></span>
+											</a>
                                </form>
                            </div>
                            <div class="col-md-6">
@@ -69,46 +72,54 @@
     #parse("./common/footer.vm")
     <script>
     $(function(){
-		
 		$(".btn-refill").click(function(){
 			var sum = $("input[name=sum]").val();
 			var externalOrderId = $("input[name=externalOrderId]").val();
 			var phone = $("input[name=phone]").val();
 			var remark = $("input[name=remark]").val();
-			if(sum==''){
-				alert("请填写充值金额");
-				return;
+			if(externalOrderId.trim()==""){
+				fadeTips("请填写交易单号");
+				return ;
 			}
-			if(externalOrderId.trim()==''){
-				alert("请填写交易单号");
-				return;
+			if(!isUnsignedNumeric(sum)){
+				fadeTips("充值金额必须大于0并且不能超过2位小数！");
+				return ;
 			}
-			sum = parseFloat($("input[name=sum]").val());
-			if(isNaN(sum)){
-				alert("请填写正确的充值金额");
-				return;
+			sum1 = parseFloat(sum);
+			
+			if(sum1<=0){
+				fadeTips("充值金额必须大于0并且不能超过2位小数！");
+				return ;
 			}
-			//$("input[name=sum]").val(accMul(parseFloat($(".refundFee").val()).toFixed(2),100));
-			/* $.ajax({ 
+			$.ajax({ 
 				url: '/wealth/off-recharge',
 				data:{sum:sum,externalOrderId:externalOrderId,phone:phone,remark:remark},
 				type:"post",
 				success: function(data){
-					alert();
-					if('captcha_error'==data){
-					}else if('username_exists'==data){
-					}else if('success_phone'==data){
-					}else if('success_email'==data){
-					}else if('error'==data){
-					}
+					window.location.href = "/wealth/off-recharge-result";
 				},
 				error:function(){
-					alert('系统繁忙，请稍后再试');
+					fadeTips("系统繁忙，请稍后再试");
+					return ;
 				}
-			}); */
+			});
 			
 		});
     });
+    
+  	//检查是否为两位小数的正实数
+    function isUnsignedNumeric(a){
+        var  reg= /^[0-9]+(.[0-9]{2})?$/;
+        return reg.test(a);
+    }
+    
+    function fadeTips(val) {
+    	$("#tips").html(val);
+		$(".tips").fadeIn();
+		setTimeout(function(){
+			$(".tips").fadeOut();
+		},3000);
+	}
 	    
 	</script>
 </body>

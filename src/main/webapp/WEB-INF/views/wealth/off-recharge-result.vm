@@ -9,85 +9,23 @@
 
     <!-- main -->
     <!-- contentbar -->
-    <div class="content-bar">
-        <div class="content">
+    <!-- message-bar -->
+    <section class="message-bar">
+        <div class="message">
             <div class="container">
                 <div class="row">
-                    <div class="refill">
-                        <div class="head">
-                            <p class="fl">
-                                <i class="icon-refill"></i>填写充值金额
-                            </p>
-                        </div>
-                        <div class="center">
-                           <div class="col-md-6">
-                               <form class="form" action="${link.contextPath}/wealth/off-recharge" method="post">
-                                    <div class="form-group">
-                                        <label class="control-label">幸运号：</label>
-                                        <input type="text" class="form-control" value="${luckNum}" readonly="readonly" />
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">交易单号：</label>
-                                        <input type="text" class="form-control" name="externalOrderId"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">充值金额：</label>
-                                        <input type="text" class="form-control" name="sum"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">手机号码：</label>
-                                        <input type="text" class="form-control" name="phone"/>
-                                    </div>
-                                    <div class="form-group">
-                                        <label class="control-label">备注说明：</label>
-                                        <input type="text" class="form-control" name="remark"/>
-                                    </div>
-                                    <button class="btn btn-refill">充值</button>
-                               </form>
-                           </div>
-                           <div class="col-md-6">
-                               <div class="prompt">
-                                   <h3>温馨提示：</h3>
-                                   <p>第三方线下付款有以下两种方式：</p>
-                                   <p>注：以下两种方式都需要在备注栏准确填写本人的"幸运号"！</p>
-                                   <p class="example">如：100052345</p>
-                                   <p>1、支付宝账号</p>
-                                   <p>昵称：泛系科技</p>
-                                   <p>支付宝账号：xxxxxxx@qq.com</p>
-                                   <p>2、收款银行账户（此账户只接受电脑端网银支付）</p>
-                                   <p>开户银行：招商银行 广州市支行</p>
-                                   <p>账号：xxxxxxxxxxxxxx</p>
-                                   <p>户名：泛系科技</p>
-                               </div>
-                           </div>
+                    <div class="info">
+                        <i class="icon-info-check"></i>
+                        <div class="detail">
+                            <p>提交线下充值申请成功！</p>
+                            <p>点此<a href="/">首页</a>继续购物！</p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </section>
     
-    <script>
-    $(function(){
-		
-		$(".btn-refill").click(function(){
-			
-			if($("input[name=sum]").val().trim()==''){
-				alert("请填写退款金额");
-				return;
-			}
-			var sum = parseFloat($("input[name=sum]").val());
-			if(isNaN(sum)){
-				alert("请填写合法的退款金额");
-				return;
-			}
-
-			//$("input[name=sum]").val(accMul(parseFloat($(".refundFee").val()).toFixed(2),100));
-			$(".form").submit();
-			
-		});
-	    
-	</script>
     
     #parse("./common/footer.vm")
     

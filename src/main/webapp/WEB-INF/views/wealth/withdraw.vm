@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+<head>
+    #parse("./common/resources.vm")
+    <!-- title -->
+    <title>我的财富-我要提现</title>
+</head>
+<body>
+    <!-- header -->
+    #parse("./common/header.vm")
+	
+	
+	
+	 <section class="main">
+        <div class="list">
+            <div class="container">
+                <div class="row">
+                    #parse("./common/left-menu.vm")
+
+					<div class="col-md-10">
+                        <div class="content alipay-content">
+                            <div class="title nav-tabs">
+                                <a href="javascript:;" data-href="#page-1" class="active jq-tabCont">支付宝提现</a>
+                                <a href="javascript:;" data-href="#page-2" class="jq-tabCont">微信提现</a>
+                            </div>
+                            <div class="tab-content">
+                                <div class="tab-pane fade active in" id="page-1">
+                                    <div class="alipay">
+                                        <div class="explain"> 
+                                            <h4>支付宝提现说明:</h4>
+                                            <p>1.每个月提现1次</p>
+                                            <p>2.提现金额不超过2万</p>
+                                            <p>3.申请提现会在10个工作日内处理</p>
+                                        </div>
+                                        <div class="balance">
+                                            <form id="alipayForm" action="${link.contextPath}/wealth/off-recharge" method="post">
+                                                <div class="form-group">
+                                                    <label class="control-label">账户余额：</label>
+                                                    <span>￥$number.format("#0.00",$math.div($remainingSum,100))</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">提现金额：</label>
+                                                    <input type="text" class="form-control" name="alipaySum" value=""/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">支付宝账号：</label>
+                                                    <input type="text" class="form-control" name="alipayAccount" value=""/>
+                                                </div> 
+                                                <div class="form-group">
+                                                    <label class="control-label">真实姓名：</label>
+                                                    <input type="text" class="form-control" name="alipayName" value=""/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">支付密码：</label>
+                                                    <input type="password" class="form-control" name="payPwd1" value=""/>
+                                                </div>
+                                            </form>
+                                            <button class="btn btn-payment ali">确定提交</button>
+                                            <a href="javascript:;" class="tips1" style="display:none;color:#7dbf58;">
+												<span id="tips1"></span>
+											</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="page-2">
+                                    <div class="alipay">
+                                        <div class="explain"> 
+                                            <h4>微信提现说明:</h4>
+                                            <p>1.每个月提现1次</p>
+                                            <p>2.提现金额不超过2万</p>
+                                            <p>3.申请提现会在10个工作日内处理</p>
+                                        </div>
+                                        <div class="balance">
+                                            <form id="wxForm" action="${link.contextPath}/wealth/off-recharge" method="post">
+                                                <div class="form-group">
+                                                    <label class="control-label">账户余额：</label>
+                                                    <span>￥$number.format("#0.00",$math.div($remainingSum,100))</span>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">提现金额：</label>
+                                                    <input type="text" class="form-control" name="wxSum" value=""/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">微信账号：</label>
+                                                    <input type="text" class="form-control" name="wxAccount" readonly="readonly"/>
+                                                    <a href="javascript:;" class="binding">绑定微信账号</a>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">微信昵称：</label>
+                                                    <input type="text" class="form-control" readonly="readonly"/>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="control-label">支付密码：</label>
+                                                    <input type="password" class="form-control" name="payPwd2" value="" />
+                                                </div>
+                                            </form>
+                                            <button class="btn btn-payment wx">确定提交</button>
+                                            <a href="javascript:;" class="tips2" style="display:none;color:#7dbf58;">
+												<span id="tips2"></span>
+											</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>    
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+	
+	
+    <!-- main -->
+     
+                    
+    #parse("./common/footer.vm")
+     <script>
+    $(function(){
+		
+		$(".ali").click(function(){
+			var alipaySum = $("input[name=alipaySum]").val();
+			var alipayAccount = $("input[name=alipayAccount]").val();
+			var alipayName = $("input[name=alipayName]").val();
+			var payPwd1 = $("input[name=payPwd1]").val();
+			if(!isUnsignedNumeric(alipaySum)){
+				fadeTips("提现金额必须大于0并且不能超过2位小数！","tips1","tips1");
+				return ;
+			}
+			sum1 = parseFloat(alipaySum);
+			
+			if(sum1<=0){
+				fadeTips("提现金额必须大于0并且不能超过2位小数！","tips1","tips1");
+				return ;
+			}
+			if(alipayAccount.trim()==""){
+				fadeTips("请填写支付宝账号！","tips1","tips1");
+			}
+			if(alipayName.trim()==""){
+				return ;
+			}
+			if(payPwd1.trim()==""){
+				fadeTips("请填写支付密码！","tips1","tips1");
+				return ;
+			}
+			$.ajax({ 
+				url: '/wealth/withdraw-alipay',
+				data:{alipaySum:alipaySum,alipayAccount:alipayAccount,alipayName:alipayName,payPwd1:payPwd1},
+				type:"post",
+				success: function(data){
+					window.location.href = "/wealth/withdraw-result";
+				},
+				error:function(){
+					fadeTips("系统繁忙，请稍后再试","tips1","tips1");
+				}
+			});
+			
+		});
+		
+		
+		$(".wx").click(function(){
+			var wxSum = $("input[name=wxSum]").val();
+			var wxAccount = $("input[name=wxAccount]").val();
+			var payPwd2 = $("input[name=payPwd2]").val();
+			if(!isUnsignedNumeric(wxSum)){
+				fadeTips("提现金额必须大于0并且不能超过2位小数！","tips2","tips2");
+				return ;
+			}
+			sum1 = parseFloat(wxSum);
+			if(sum1<=0){
+				fadeTips("提现金额必须大于0并且不能超过2位小数！","tips2","tips2");
+				return ;
+			}
+			if(wxAccount.trim()==""){
+				fadeTips("请绑定微信账号！","tips2","tips2");
+				return ;
+			}
+			if(payPwd2.trim()==""){
+				fadeTips("请填写支付密码！","tips2","tips2");
+				return ;
+			}
+			$.ajax({ 
+				url: '/wealth/withdraw-wx',
+				data:{wxSum:wxSum,wxAccount:wxAccount,payPwd2:payPwd2},
+				type:"post",
+				success: function(data){
+					window.location.href = "/wealth/withdraw-result";
+				},
+				error:function(){
+					fadeTips("系统繁忙，请稍后再试","tips2","tips2");
+				}
+			});
+			
+		});
+		
+    });
+    
+  	//检查是否为两位小数的正实数
+    function isUnsignedNumeric(a){
+        var  reg= /^[0-9]+(.[0-9]{2})?$/;
+        return reg.test(a);
+    }
+    
+    function fadeTips(val,cla,id) {
+    	$("#"+id).html(val);
+		$("."+cla).fadeIn();
+		setTimeout(function(){
+			$("."+cla).fadeOut();
+		},3000);
+	}
+	    
+	</script>
+</body>
+</html>

@@ -194,35 +194,6 @@
 						#end
 					</form>
                 </div>
-                <div class="row bottom">
-                    <div class="pull-right">
-                        <p class="price-total">实付款（含运费）：¥$number.format("#0.00",$math.div($!{pSum},100))</p>
-                        <p>
-                            <span>选择付款方式：</span>
-                            <a href="javascript:;">
-                                <input type="radio" name="method" data-paytype="union"/>
-                                <img src="/images/way/way-01.png">
-                            </a>
-                            <a href="javascript:;">
-                                <input type="radio" name="method" data-paytype="ali" checked="true" />
-                                <img src="/images/way/way-02.png">
-                            </a>
-                            <a href="javascript:;">
-                                <input type="radio" name="method" data-paytype="wx"/>
-                                <img src="/images/way/way-03.png">
-                            </a>
-                            <a href="javascript:;">
-                                <input type="radio" name="method" data-paytype="paypal"/>
-                                <img src="/images/way/way-04.png">
-                            </a>
-                            <a href="javascript:;">
-                                <input type="radio" name="method" data-paytype="remain" #if($remainNotEnough)disabled="disabled"#end/>
-                                <span>账户余额（￥$number.format("#0.00",$math.div($!{remainingSum},100))）</span>
-                            </a>
-                        </p>
-                        <button type="button" class="btn btn-pay jq-orderError" >立即支付</button>
-                    </div>    
-                </div>
             </div>
         </div>
     </section>

@@ -78,9 +78,9 @@
                         </div>
                         <div class="pull-right">
                             <div class="search-box">
-                                <form class="search-form">
+                                <form class="search-form" action="/product/search" method="post">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="" />
+                                        <input type="text" class="form-control" placeholder="" name="keyWord"/>
                                         <span class="input-group-addon">
                                             <i class="icon icon-search"></i>
                                         </span>
@@ -1559,11 +1559,11 @@
             </div>
         </div>
     </footer>
-    <script type="text/javascript">
+	<script type="text/javascript">
     	$(function(){
     		
     		$(".icon-search").click(function(){
-    			
+					$(".search-form").submit();
     		});
     		
     	});

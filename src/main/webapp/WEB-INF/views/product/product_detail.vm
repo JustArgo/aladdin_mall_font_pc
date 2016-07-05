@@ -152,11 +152,11 @@
                         <div class="prod-number">
                             <p>数&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;量：</p>
                             <p class="change">
-                                <input type="type" class="form-control num jq-prodNum" value="1" />
+                                <input type="type" class="form-control num jq-prodNum" readonly="readonly" value="1" />
                                 <a href="javascritp:;" class="prod-add jq-prodAdd">+</a>
                                 <a href="javascritp:;" class="prod-sub jq-prodSub">-</a>
                             </p>
-                            <span class="store">（库存：$!{productStock}件）</span>
+                            <span class="store">（库存：<span class="stock">0</span>件）</span>
                         </div>
                         <div class="prod-operate">
                             <a href="javascript:;" class="prod-love">
@@ -179,36 +179,20 @@
                     <div class="col-md-2">
                         <div class="content">
                             <ul class="slide-area">
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
-                                <li>
-                                    <a href="javascript:;">
-                                        <img src="/images/product/prod-06.png">
-                                    </a>
-                                    <p class="name">
-                                        <a href="javascript:;">AMII 0942纯色圆领长袖基础短款和法方大码...</a>
-                                    </p>
-                                    <p class="price">¥25.00</p>
-                                    <p>三只小猪供货商</p>
-                                </li>
+								#foreach($product in $recommendList)
+									<li>
+										<a href="/product/product_detail?productID=$!{product.ID}">
+											<div class="imgLiquidNotFill" style="width:143px;height:143px;display:inline-block">
+												<img src="$!qiniu.getDownloadUrl($!{product.imgPath})">
+											</div>
+										</a>
+										<p class="name">
+											<a href="/product/product_detail?productID=$!{product.ID}">$!{product.productName}</a>
+										</p>
+										<p class="price">¥$number.format("#0.00",$!math.div(${product.price},100))</p>
+										<p>$!{product.supName}</p>
+									</li>
+								#end
                             </ul>
                         </div>
                     </div>
@@ -220,8 +204,8 @@
 						<div class="assessment" style="display:none;">
                             <div class="top">
                                 <div class="col-sm-4">
-                                    <p>97%</p>
-                                    <p>好评度</p>
+                                    <p>#if(!${averageScore}) 0.0 #else ${averageScore} #end</p>
+                                    <p>平均分</p>
                                 </div>
                                 <div class="col-sm-8">
                                     <p>
@@ -285,7 +269,7 @@
 												</div>
 												<div class="col-sm-6">
 													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
-													<p class="photo">
+													<p class="photo" style="height:90px;">
 														#foreach($img in ${commentVo.comment.imgs})
 														<span class="imgLiquidNotFill" style="width:90px;height:77px;display:inline-block;">
 															<a href="javascript:;">
@@ -326,8 +310,8 @@
 													<p>#foreach($skuStr in $commentVo.skuStrs) $skuStr &nbsp; #end</p>
 												</div>
 												<div class="col-sm-6">
-													<p>$!{commentVo.comment.commentDesc}</p>
-													<p class="photo">
+													<p class="commentDesc">$!{commentVo.comment.commentDesc}</p>
+													<p class="photo" style="height:90px;">
 														#foreach($img in ${commentVo.comment.imgs})
 														<div class="imgLiquidNotFill" style="width:100px;height:77px;display:inline-block;">
 															<a href="javascript:;">
@@ -339,9 +323,11 @@
 												</div>
 												<div class="col-sm-3">
 													<p>
-														<a href="javascript:;">
-															<img src="$!{commentVo.userHeadImg}">
-														</a>
+														<span class="imgLiquidNotFill" style="width:112px;height:112px;display:inline-block;">
+															<a href="javascript:;">
+																<img src="$!{commentVo.userHeadImg}">
+															</a>
+														</span>
 													</p>
 													<p class="name">$!{commentVo.userName}</p>
 												</div>
@@ -495,12 +481,12 @@
 						
 						if(ret.errcode==0){
 							
-							$(".store").text("（库存："+ret.skuStock+"件）");
+							$(".stock").text(ret.skuStock);
 							
 							$(".skuID").val(ret.skuID);
 							
 						}else{
-							$(".store").text("（库存：0件）");
+							$(".stock").text("0");
 						}
 					}
 					
@@ -511,7 +497,9 @@
 			
 			$(".prod-add").click(function(){
 				var num = parseInt($(".num").val());
-				$(".num").val(num+1);
+				if(num<parseInt($(".stock").text())){
+					$(".num").val(num+1);
+				}
 			});
 			
 			$(".prod-sub").click(function(){
@@ -537,12 +525,12 @@
 					if(ret.errcode==0){
 						var numPattern = new RegExp("[0-9]+");
 						
-						$(".store").text("（库存："+ret.skuStock+"件）");
+						$(".stock").text(ret.skuStock);
 						
 						$(".skuID").val(ret.skuID);
 						//curSkuStock = ret.skuStock;
 					}else{
-						$(".store").text("（库存：0件）");
+						$(".stock").text("0");
 					}
 				}
 				
@@ -640,6 +628,15 @@
 				}
 			});
 			
+			$(".jq-choosen span").click(function(){
+				if($(this).hasClass("active")){
+					return;
+				}else{
+					$(this).closest(".jq-choosen").find("span").removeClass("active");
+					$(this).addClass("active");
+				}
+				
+			});
 			
 		});
 	</script>

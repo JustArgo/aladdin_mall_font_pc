@@ -68,7 +68,7 @@
                     <div class="row">
                         <div class="pull-left">
                             <a href="index.html" class="logo">
-                                <img src="images/logo/logo.png">
+                                <img src="/images/logo/logo.png">
                             </a>
                         </div>
                         <div class="pull-right">
@@ -83,7 +83,7 @@
                                 </form>
                             </div>
                             <a href="javascript:;">
-                                <img src="images/code.png" />
+                                <img src="/images/code.png" />
                             </a>
                         </div>
                     </div>
@@ -151,7 +151,7 @@
                                 <div class="message">
                                     <p>
                                         <a href="javascript:;">
-                                            <img src="images/brand/brand.png" />
+                                            <img src="/images/brand/brand.png" />
                                         </a>
                                     </p>    
                                     <p>
@@ -226,22 +226,22 @@
                         <ul>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-01.png" />
+                                    <img src="/images/footer/website-01.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-02.png" />
+                                    <img src="/images/footer/website-02.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-03.png" />
+                                    <img src="/images/footer/website-03.png" />
                                 </a>
                             </li>
                             <li>
                                 <a href="javascript:;">
-                                    <img src="images/footer/website-04.png" />
+                                    <img src="/images/footer/website-04.png" />
                                 </a>
                             </li>
                         </ul>
