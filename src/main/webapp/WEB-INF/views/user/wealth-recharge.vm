@@ -213,7 +213,7 @@
                                 </div>
                             </div>
                             <p class="record">
-                                <span>收支明细</span>| <a href="/user/wealth-recharge" style="cursor: pointer;">充值记录</a>
+                                <span>收支明细</span>| <a style="cursor: pointer;">充值记录</a>
                             </p>
                             <table class="table wealth-order table-bordered table-hover table-responsive">
                                 <thead>
