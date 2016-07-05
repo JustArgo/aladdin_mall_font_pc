@@ -7,6 +7,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -170,12 +171,26 @@ public class WealthController {
 	 * @return
 	 */
 	@RequestMapping("/off-recharge-index")
-	public String offRechargeIndex(String requestId, Model model, HttpServletRequest request) {
+	public String offRechargeIndex(String requestId, Model model) {
 		
 		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
 		model.addAttribute("luckNum", principal.get("luckNum"));
 
 		return "/wealth/off-recharge-index";
+	}
+	
+	/**
+	 * 线下充值成功页面
+	 * 
+	 * @param requestID
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/off-recharge-result")
+	public String offRechargeResult(String requestId, Model model) {
+		
+
+		return "/wealth/off-recharge-result";
 	}
 	
 	/**
@@ -187,15 +202,79 @@ public class WealthController {
 	 */
 	@RequestMapping("/off-recharge")
 	@ResponseBody
-	public String offRecharge(String requestId, Model model, long sum, String externalOrderId, String phone,
+	public String offRecharge(String requestId, Model model, String sum, String externalOrderId, String phone,
 			String remark) {
-
 		String mqID = getAccountInfo(requestId, model);
-		Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, (Integer)WebUtil.getCurrentUserInfo().get("luckNum"), sum, externalOrderId, null, phone, remark);
+		long sumLong = NumberUtils.toLong(String.valueOf(NumberUtils.toDouble(sum)*100));
+		System.out.println(sumLong);
+		
+		Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, (Integer)WebUtil.getCurrentUserInfo().get("luckNum"), sumLong, externalOrderId, null, phone, remark);
 		
 		System.out.println("map" +map);
+
+		return "success";
+	}
+	
+	
+	/**
+	 * 提交线下充值申请
+	 * 
+	 * @param requestID
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/withdraw")
+	public String withdraw(String requestId, Model model, String sum, String externalOrderId, String phone,
+			String remark) {
 		
-		model.addAttribute("frozenList", mqID);
+		String mqID = (String)WebUtil.getCurrentUserInfo().get("mqId");
+		Map<String, Object> map = accountService.getRemainingSum(requestId, mqID);
+
+		model.addAttribute("remainingSum", map.get("result"));
+
+		return "/wealth/withdraw";
+	}
+	
+	/**
+	 * 提交微信提现申请
+	 * 
+	 * @param requestID
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/withdraw-alipay")
+	public String withdrawByAlipay(String requestId, Model model, String alipaySum, String alipayAccount, String alipayName,
+			String payPwd1) {
+		
+		String mqID = (String)WebUtil.getCurrentUserInfo().get("mqId");
+		
+		long sumLong = NumberUtils.toLong(String.valueOf(NumberUtils.toDouble(alipaySum)*100));
+		
+//		Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, (Integer)WebUtil.getCurrentUserInfo().get("luckNum"), sumLong, externalOrderId, null, phone, remark);
+		
+//		System.out.println("map" +map);
+
+		return "success";
+	}
+	
+	/**
+	 * 提交微信提现申请
+	 * 
+	 * @param requestID
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping("/withdraw-wx")
+	public String withdrawByWX(String requestId, Model model, String wxSum, String wxAccount,
+			String payPwd2) {
+		
+		String mqID = (String)WebUtil.getCurrentUserInfo().get("mqId");
+		
+		long sumLong = NumberUtils.toLong(String.valueOf(NumberUtils.toDouble(wxSum)*100));
+		
+		//Map<String, Object> map = accountService.applyOfflineRecharge(requestId, mqID, (Integer)WebUtil.getCurrentUserInfo().get("luckNum"), sumLong, externalOrderId, null, phone, remark);
+		
+//		System.out.println("map" +map);
 
 		return "success";
 	}

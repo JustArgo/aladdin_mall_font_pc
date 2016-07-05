@@ -26,66 +26,7 @@
     <script type="text/javascript" src="/js/selectivizr.js"></script>
     <![endif]-->
     <!-- title -->
-    <title>我的财富-充值记录</title>
-    <script>
-    function teamQuery(target,e){
-    	var nextLevel=$('#'+target).attr('nextLevel');
-    	if(nextLevel==undefined){
-        	var nextTier=parseInt($('#'+target).attr('tier'))+1;
-        	var mqId=$('#'+target).attr('mqId');
-       		$.ajax({ 
-    			url: '/user/team/query',
-    			data:{mqId:mqId},
-    			type:"post",
-    			success: function(data){
-    				var divId=target+"_n";
-    				var html='<div id="'+divId+'" style="display:none;">';
-    				for(var i=0;i<data.length;i++){
-    					var id='tier'+nextTier+''+i;
-						html+='<h3 style="text-indent:'+15*(nextTier-1)+'px;" onclick=\'teamQuery("'+id+'",event);\' id="'+id+'" tier="'+nextTier+'""'+i+'" mqid="'+data[i].mqId+'">\
-									<span class="glyphicon glyphicon-triangle-right"></span>\
-									<span>第'+nextTier+'级</span>\
-									<span>\
-										<a href="javascript:;">\
-											<img style="width:40px;height:40px;" src="'+data[i].headImage+'" />\
-										</a>'+data[i].nickname+'\
-									</span>\
-								</h3>';
-    				}
-
-    				html+='</div>';
-    				$('#'+target).after(html);
-    				$('#'+divId).slideToggle('slow');
-    	    		var arrow = $('#'+target).find('.glyphicon');
-    	    		if(arrow.hasClass('glyphicon-triangle-right')) {
-    	    			arrow.addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-right');
-    	    		} else {
-    	    			arrow.addClass('glyphicon-triangle-right').removeClass('glyphicon-triangle-bottom');
-    	    		}
-    				$('#'+target).attr('nextLevel',divId);
-    			},
-    			error:function(){
-    				alert('系统繁忙，请稍后再试');
-    				submitAble=true;
-    			}
-    		});
-    	}else{
-    		$('#'+nextLevel).slideToggle('slow');
-    		var arrow = $('#'+target).find('.glyphicon');
-    		if(arrow.hasClass('glyphicon-triangle-right')) {
-    			arrow.addClass('glyphicon-triangle-bottom').removeClass('glyphicon-triangle-right');
-    		} else {
-    			arrow.addClass('glyphicon-triangle-right').removeClass('glyphicon-triangle-bottom');
-    		}
-    	}
-   		if (e || e.stopPropagation) { 
-    		e.stopPropagation(); 
-    	} 
-    	else { 
-    		window.event.CancelBubble = true; 
-    	} 
-   	}
-    </script>
+    <title>我的财富-收支明细</title>
 </head>
 <body>
     <!-- header -->
@@ -207,7 +148,7 @@
                                     <a href="my-sales.html">我的销售</a>
                                 </li>
                                 <li class="sub">
-                                    <a href="alipay-binding.html" class="active">我要提现</a>
+                                    <a href="alipay-binding.html">我要提现</a>
                                 </li>
                                 <li class="sub">
                                     <a href="my-code.html">我要推广</a>
@@ -237,7 +178,7 @@
                                     <a href="javascript:;">我的一元购</a>
                                 </li>
                                 <li class="bold">
-                                    <a href="wealth.html">我的财富</a>
+                                    <a href="wealth.html" class="active">我的财富</a>
                                 </li>
                                 <li class="bold">
                                     <a href="my-team.html">我的团队</a>
@@ -250,34 +191,66 @@
                     </div>
                     <div class="col-md-10">
                         <div class="content alipay-content">
-                            <div class="search team">
-                                <form class="search-form">
-                                    <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="输入商品标题或者订单编号进行搜索">
-                                        <span class="input-group-addon">
-                                            <i class="icon icon-search"></i>
-                                        </span>
-                                    </div>
-                                </form>
+                            <div class="wealth">
+                                <div class="col-sm-3">
+                                    <p>可用余额：¥100.00</p>
+                                    <p>
+                                        <a href="online-refill.html">充值</a>
+                                        <a href="alipay-binding.html">提现</a>
+                                    </p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>累计收入</p>
+                                    <p>¥200.00</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>已提现</p>
+                                    <p>¥200.00</p>
+                                </div>
+                                <div class="col-sm-3">
+                                    <p>冻结余额</p>
+                                    <p>¥200.00</p>
+                                </div>
                             </div>
-                            <div class="team-list">
-                                <h3 class="first">
-                                    <span>折叠</span>
-                                    <span>级数</span>
-                                    <span>用户</span>
-                                </h3>
-                                #foreach($item in $directlyMembers)
-                                <h3 onclick='teamQuery("tier$velocityCount",event);' id="tier1" tier="1" mqid="$item.mqId">
-                            		<span class="glyphicon glyphicon-triangle-right"></span>
-                                    <span>第1级</span>
-                                    <span>
-                                        <a href="javascript:;">
-                                            <img style="width:40px;height:40px;" src="$!item.headImage" />
-                                        </a>$!item.nickname
-                                    </span>
-                                </h3>	
-                                #end
-                            </div>
+                            <p class="record">
+                                <span>近一个月的收支明细</span>| 充值记录
+                            </p>
+                            <table class="table wealth-order table-bordered table-hover table-responsive">
+                                <thead>
+                                    <tr>
+                                        <th>时间</th>
+                                        <th>收入</th>
+                                        <th>支出</th>
+                                        <th>备注</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>¥12.00</td>
+                                        <td>-</td>
+                                        <td>佣金</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>-</td>
+                                        <td>¥12.00</td>
+                                        <td>提现</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>¥12.00</td>
+                                        <td>-</td>
+                                        <td>佣金</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2016-03-30  17:00:16</td>
+                                        <td>-</td>
+                                        <td>¥12.00</td>
+                                        <td>提现</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>    
                     </div>
                 </div>

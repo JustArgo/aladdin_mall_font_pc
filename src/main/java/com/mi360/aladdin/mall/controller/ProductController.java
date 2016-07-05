@@ -285,6 +285,33 @@ public class ProductController {
 
 		return retMap;
 	}
+	
+	@RequestMapping("/batchRemoveCollect")
+	@ResponseBody
+	public Map<String, Object> batchRemoveCollect(String requestId, Integer[] productIds) {
+
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		// if(principal==null)principal = new Principal("2","");
+		String mqID = (String)principal.get("mqId");
+
+
+		Map<String, Object> ret = new HashMap<String, Object>();
+
+		if (mqID == null || productIds == null || productIds.length == 0) {
+			ret.put("errcode", 10042);
+			ret.put("errmsg", "invalid arguments");
+			return ret;
+		}
+		
+		for (Integer integer : productIds) {
+			productService.collectProduct(mqID, integer, requestId);
+		}
+		ret.put("errcode", 0);
+		ret.put("errmsg", "collect success");
+
+		return ret;
+
+	}
 
 	@RequestMapping("/collect")
 	@ResponseBody

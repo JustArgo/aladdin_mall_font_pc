@@ -104,6 +104,35 @@ public class ShopCarController {
 		return "{\"errcode\":\"0\",\"count\":"+count+"}";
 	}
 	
+	@RequestMapping("/batch_add_to_shopcar")
+	@ResponseBody
+	public String batch_add_to_shopcar(String requestId,Integer[] productIds){
+		
+		Map<String,Object> principal = WebUtil.getCurrentUserInfo();
+		String mqID = (String)principal.get("mqId");
+		int totalCount=0;
+		for (int i = 0; i < productIds.length; i++) {
+			Integer productID=productIds[i];
+			//查询 该商品的限购数量
+			Product product = productService.queryProduct(productID,requestId);
+			if(product==null || "DW#".equals(product.getStatus())){
+				return "{\"errcode\":10000,\"errmsg\":\"该商品不存在或已下架,无法进行购买\"}";
+			}
+			Integer limitCount = product.getLimitCount();
+			//查询该用户是否购买过该商品  购买了几件
+			Integer buyCount = orderService.getBuyCountByProductID(requestId, productID, mqID);
+			//查询购物车里有多少件该商品
+			Integer inShopCarCount = shopCarService.getProductCountInShopCarByProductID(requestId, productID, mqID);
+			if(limitCount!=null && limitCount!=0 && 1+buyCount+inShopCarCount>limitCount.intValue()){
+				return "{\"errcode\":10000,\"errmsg\":\"购买数量超过限购数量,无法加入到购物车\"}";
+			}
+			
+			totalCount+= shopCarService.addToShopCar(mqID, productID, null, 1, requestId);
+		}
+		
+		return "{\"errcode\":\"0\",\"count\":"+totalCount+"}";
+	}
+	
 	@RequestMapping("/shopcar_count")
 	@ResponseBody
 	public Map<String, Object> shopcarCount(String requestId){

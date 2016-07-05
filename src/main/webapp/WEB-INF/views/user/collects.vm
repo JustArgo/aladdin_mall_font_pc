@@ -21,6 +21,109 @@
     <![endif]-->
     <!-- title -->
     <title>我的收藏</title>
+    <script>
+    function toPage(i){
+    	location.href="/user/collects?page="+i;
+    }
+    
+    var addCartAble=true;
+    function addCart(productId){
+    	if(addCartAble){
+        	$.ajax({ 
+    			url: '/shop_car/add_to_shopcar',
+    			data:{productID:productId,collect:1},
+    			type:"post",
+    			success: function(data){
+    				if(data.errcode=0){
+    					alert('加入购物车成功');
+    				}
+    				addCartAble=true;
+    			},
+    			error:function(){
+    				alert('系统繁忙，请稍后再试');
+    				addCartAble=true;
+    			}
+    		});
+    	}
+    }
+    function removeCollect(productId){
+    	if(addCartAble){
+        	$.ajax({ 
+    			url: '/product/collect',
+    			data:{productID:productId,collect:0},
+    			type:"post",
+    			success: function(data){
+    				if(data.errcode=0){
+    					$('#'+productId).remove();
+    				}
+    				addCartAble=true;
+    			},
+    			error:function(){
+    				alert('系统繁忙，请稍后再试');
+    				addCartAble=true;
+    			}
+    		});
+    	}
+    }
+    
+    var batchAddCartAble=true;
+    function batchAddCart(){
+    	if(batchAddCartAble){
+    		var inputs=$('input[productid]');
+    		var productIds=[];
+    		for(var i=0;i<inputs.length;i++){
+    			if(inputs[i].checked==true){
+    				productIds.push(inputs.eq(i).attr("productid"));
+    			}
+    		}
+    		$.ajax({ 
+    			url: '/shop_car/batch_add_to_shopcar',
+    			data:{productIds:productIds},
+    			type:"post",
+    			success: function(data){
+    				if(data.errcode=0){
+    					alert('加入购物车成功');
+    				}
+    				addCartAble=true;
+    			},
+    			error:function(){
+    				alert('系统繁忙，请稍后再试');
+    				addCartAble=true;
+    			}
+    		});
+    	}
+    }
+    
+    var batchRemoveCollectAble=true;
+    function batchRemoveCollect(){
+    	if(batchRemoveCollectAble){
+    		var inputs=$('input[productid]');
+    		var productIds=[];
+    		var selectedInputs=[];
+    		for(var i=0;i<inputs.length;i++){
+    			if(inputs[i].checked==true){
+    				productIds.push(inputs.eq(i).attr("productid"));
+    				selectedInputs.push(inputs.eq(i));
+    			}
+    		}
+    		$.ajax({ 
+    			url: '/product/batchRemoveCollect',
+    			data:{productIds:productIds},
+    			type:"post",
+    			success: function(data){
+    				for(var i=0;i<selectedInputs.length;i++){
+    					selectedInputs[i].remove();
+    				}
+    	    		batchRemoveCollectAble=true;
+    			},
+    			error:function(){
+    				alert('系统繁忙，请稍后再试');
+    	    		batchRemoveCollectAble=true;
+    			}
+    		});
+    	}
+    }
+    </script>
 </head>
 <body>
     <!-- header -->
@@ -187,211 +290,55 @@
                         <div class="content">
                             <p class="store">
                                 <label><input type="checkbox" />全选</label> <span>|</span>
-                                <a href="javacript:;">加入购物车</a> <span>|</span>
-                                <a href="javacript:;">取消收藏</a>
+                                <a href="javascript:batchAddCart();">加入购物车</a> <span>|</span>
+                                <a href="javascript:batchRemoveCollect();">取消收藏</a>
                             </p>
-                            <div class="item">
+                            #foreach($item in $productCollects)
+                            <div class="item" id="$item.productId">
                                 <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
+                                    <img style="width:246px;height:280px;" src="$item.imgPath">
                                 </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
+                                <p class="name" style="width: 246px;">
+                                    <input type="checkbox" style="display:block;" productid="$item.productId"/>
+                                    <a href="javascript:;" style="line-height:20px;overflow:hidden;display:inline-block;height:40px;">$item.productName</a>
                                 </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
+                                <p class="price">¥$number.format("#0.00",$math.div($item.price,100))
+                                    <span class="fr">$item.sellCount人购买</span>
                                 </p>
                                 <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
+                                    <a href="javascript:addCart($item.productId);" class="fl">加入购物车</a>
+                                    <a href="javascript:removeCollect($item.productId);" class="fr">取消</a>
                                 </p>
                             </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
-                            <div class="item">
-                                <a href="javascript:;">
-                                    <img src="/images/list/list-05.png">
-                                </a>
-                                <p class="name">
-                                    <input type="checkbox" />
-                                    <a href="javascript:;">AMII 0942纯色圆领长袖基础短</a>
-                                </p>
-                                <p class="price">¥25.00
-                                    <span class="fr">1524人购买</span>
-                                </p>
-                                <p class="operate">
-                                    <a href="javascript:;" class="fl">加入购物车</a>
-                                    <a href="javascript:;" class="fr">取消</a>
-                                </p>
-                            </div>
+                            #end
                         </div>
-                        <div class="button-group">
-                            <a href="javascript:;" class="prev">上一页</a>
-                            <a href="javascript:;" class="num active">1</a>
-                            <a href="javascript:;" class="num">2</a>
-                            <a href="javascript:;" class="num">3</a>
-                            <span>...</span>
-                            <a href="javascript:;" class="num">18</a>
-                            <a href="javascript:;" class="prev">下一页</a>
-                        </div>    
+                            <div class="button-group">
+                            #if($page>1)<a href="javascript:toPage(#set($prev=$page - 1)$prev);" class="prev">上一页</a>#end
+                            #if($page>1)<a href="javascript:toPage(1);" class="num">1</a>#end
+                            #if($page - 3>1)
+                            	<span>...</span>
+                            #end
+                            #foreach($item in [2,1])
+                        	#set($p=$page - $item)
+                        		#if($p>1)
+                        			<a href="javascript:toPage($p);" class="num">$p</a>
+                        		#end
+                        	#end
+                            <a href="javascript:toPage($page);" class="num active">$page</a>
+                            #foreach($item in [1,2])
+                            	#set($p=$page + $item)
+                            	#if($p<$total)
+                            	<a href="javascript:toPage($p);" class="num">$p</a>
+                            	#else
+                            		#break
+                            	#end
+                            #end
+                            #if($page+3<$total)
+                            	<span>...</span>
+                            #end
+                            #if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
+                            #if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
+                        </div>     
                     </div>
                 </div>
             </div>
