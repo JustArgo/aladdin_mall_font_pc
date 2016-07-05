@@ -118,5 +118,7 @@
 	
 	<dubbo:reference id="pcOrderService" interface="com.mi360.aladdin.order.service.PcIOrderService"/>
 	
+	<dubbo:reference id="paypalService" interface="com.mi360.aladdin.paypal.service.IPaypalService"/>
+	
 </beans>	
 	

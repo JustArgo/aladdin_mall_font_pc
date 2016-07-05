@@ -301,7 +301,7 @@
 											<span>...</span>
 										#end
 										#if($page<$total)<a href="javascript:toPage($total);" class="num">$total</a>#end
-										#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页$histProductCount</a>#end
+										#if($page<$total)<a href="javascript:toPage(#set($next=$page+1)$next);" class="prev">下一页</a>#end
 			                        </div>
 									#end
                                 </div>

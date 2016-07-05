@@ -203,6 +203,19 @@ public class ProductController {
 		
 		if(commentVoListAll!=null && commentVoListAll.size()>0){
 			model.addAttribute("commentStatistics",commentVoListAll.get(0).getCommentStatistics());
+			
+			if(commentVoListAll.get(0).getCommentStatistics()!=null){
+				double descScore = commentVoListAll.get(0).getCommentStatistics().getDescConform().intValue()/100.0;
+				double speedScore = commentVoListAll.get(0).getCommentStatistics().getSpeed().intValue()/100.0;
+				double serviceScore = commentVoListAll.get(0).getCommentStatistics().getService().intValue()/100.0;
+				
+				model.addAttribute("averageScore",String.format("%.1f", Double.sum(serviceScore, Double.sum(descScore, speedScore))/3));
+			}else{
+				model.addAttribute("averageScore","0.0");
+			}
+			
+		}else{
+			model.addAttribute("averageScore","0.0");
 		}
 		
 		//评论vo列表  有图片
@@ -214,6 +227,10 @@ public class ProductController {
 		
 		model.addAttribute("commentVoListAll",commentVoListAll);
 		model.addAttribute("commentVoListHasImage",commentVoListHasImage);
+		
+		//查询最新的商品
+		List<Map> recommendList = productService.selectByKeyWordWithPaginationAddSupplier("", 0, 3, "createTime", DEFAULT_PLATFORM, requestId);
+		model.addAttribute("recommendList",recommendList);
 		
 		//添加商品浏览历史记录
 		productService.addBrowseHistory(requestId, mqID, productID, "NOR");
@@ -399,7 +416,7 @@ public class ProductController {
 		List<ProductSearchRecord> searchRecordList = productService.selectPopularSearchRecord(mqID, requestId);
 		model.addAttribute("searchRecordList", searchRecordList);
 		
-		int count = productService.getProductCount(requestId, DEFAULT_PLATFORM);
+		int count = productService.getProductCountByKeyWordAndPlatform(requestId, keyWord==null?"":keyWord, DEFAULT_PLATFORM);
 		model.addAttribute("pageCount",(count+DEFAULT_PAGE_SIZE-1)/DEFAULT_PAGE_SIZE);
 		
 		if (productList.size() == 0) {
@@ -599,6 +616,20 @@ public class ProductController {
 		}
 		
 		return retMap;
+		
+	}
+	
+	@RequestMapping("/recommend")
+	@ResponseBody
+	public List<Map> getRecommend(String requestId, Integer pageSize){
+		
+		List<Map> resultMap = productService.selectByKeyWordWithPaginationAddSupplier("", 0, pageSize, "sellCount", DEFAULT_PLATFORM, requestId);
+		
+		for(int i=0;i<resultMap.size();i++){
+			resultMap.get(i).put("imgPath",QiNiuUtil.getDownloadUrl((String)resultMap.get(i).get("imgPath")));
+		}
+		
+		return resultMap;
 		
 	}
 }
