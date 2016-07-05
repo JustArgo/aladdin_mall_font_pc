@@ -29,7 +29,7 @@
     <title>待付款订单</title>
 </head>
 <body>
-    #parse("./common/header.vm") 
+    #parse("./common/order-header.vm") 
     
     <!-- orderbar -->
     <section class="orderbar">

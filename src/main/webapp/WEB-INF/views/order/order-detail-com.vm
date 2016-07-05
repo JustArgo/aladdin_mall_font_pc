@@ -29,7 +29,7 @@
     <title>已完成订单</title>
 </head>
 <body>
-    #parse("./common/header.vm") 
+    #parse("./common/order-header.vm") 
     
     <!-- orderbar -->
     <section class="orderbar">

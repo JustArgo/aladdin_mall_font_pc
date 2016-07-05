@@ -30,7 +30,7 @@
 </head>
 <body>
     <!-- header -->
-    #parse("./common/header.vm") 
+    #parse("./common/order-header.vm") 
     
 	<form id="placeOrder" action="/order/placeOrder" method="post">
 		
