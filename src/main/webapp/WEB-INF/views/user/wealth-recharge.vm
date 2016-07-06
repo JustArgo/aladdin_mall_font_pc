@@ -217,15 +217,16 @@
                             </p>
                             <table class="table wealth-order table-bordered table-hover table-responsive">
                                 <thead>
-                                    <tr>
-                                        <th>时间</th>
-                                        <th>收入</th>
-                                        <th>支出</th>
-                                        <th>备注</th>
-                                    </tr>
+                                	<tr>
+                                		<th>时间</th>
+                                		<th>交易单号</th>
+                                		<th>充值金额</th>
+                                		<th>状态</th>
+                                		<th>备注</th>
+                                	</tr>
                                 </thead>
                                 <tbody>
-                                	#foreach($item in $accountDetails)
+                                	#foreach($item in $rechargeHists)
                                 		<tr>
                                 			<td>$item.insertTime</td>
                                 			#if($item.flowDirection=="IN#")
