@@ -84,7 +84,7 @@ public class PasswordController {
 			ExpireKey expireKey = new ExpireKey(600000);// 10分钟后过期
 			expireKey.setAttribution(username);
 			WebUtil.getSession().setAttribute(PASSWORD_FIND_USERNAME_KEY, expireKey);
-			return hostName + "/password/find/vertify";
+			return "/password/find/vertify";
 		}
 	}
 
