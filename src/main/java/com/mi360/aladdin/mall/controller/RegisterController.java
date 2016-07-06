@@ -44,7 +44,16 @@ public class RegisterController {
 	 * 页面
 	 */
 	@RequestMapping()
-	public String index(String requestId) {
+	public String index(String requestId, ModelMap modelMap) {
+		ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
+		long second = 0;
+		if (smsSecond != null && !smsSecond.hasExpired()) {
+			Date now = new Date();
+			Date expire = smsSecond.getExpire();
+			second = (expire.getTime() - now.getTime()) / 1000;
+			second = second <= 0 ? 0 : second;
+		}
+		modelMap.addAttribute("sms_wait_second", second);
 		return "register/register";
 	}
 
@@ -62,7 +71,8 @@ public class RegisterController {
 	 */
 	@RequestMapping("/submit")
 	@ResponseBody
-	public String submit(String requestId, String iv, String captcha, String password, String username) {
+	public String submit(String requestId, String iv, String smsCaptcha, String captcha, String password,
+			String username) {
 		boolean captchaPassed = CaptchaUtil.validate(captcha);
 		if (!captchaPassed) {
 			return "captcha_error";
@@ -73,6 +83,13 @@ public class RegisterController {
 			logger.info(serviceData.dataString());
 			if (serviceData.getBoolean("result")) {
 				return "username_exists";
+			}
+			String phone = (String) WebUtil.getSession().getAttribute(REGISTER_PHONE_KEY);
+			MapData serviceData3 = MapUtil
+					.newInstance(smsCodeVerifyService.verify(requestId, phone, smsCaptcha, "REG"));
+			Boolean passed = serviceData3.getBoolean("result");
+			if (!(passed != null && passed)) {
+				return "sms_captcha_error";
 			}
 			Integer ivInt = null;
 			if (iv != null) {
@@ -91,6 +108,7 @@ public class RegisterController {
 			Integer luckNum = serviceData2.getInteger("luckNum");
 			String mqId = serviceData2.getString("mqId");
 			Integer userId = serviceData2.getInteger("iv");
+			WebUtil.getSession().setAttribute(REGISTER_PHONE_KEY, username);
 			return "success_phone";
 		} else if (username.matches("^.*@.*\\..*")) {
 			serviceData = MapUtil.newInstance(userService.existEmail(requestId, username));
@@ -109,7 +127,7 @@ public class RegisterController {
 					.newInstance(userService.createPc(requestId, ivInt, password, null, username));
 			logger.info(serviceData2.dataString());
 			int errcode = serviceData2.getErrcode();
-			if (errcode != 0 ) {
+			if (errcode != 0) {
 				return "error";
 			}
 			Integer luckNum = serviceData2.getInteger("luckNum");
@@ -135,10 +153,11 @@ public class RegisterController {
 		if (serviceData.getErrcode() != 0) {
 			throw new Exception();
 		}
-		MapData serviceData2 = MapUtil.newInstance(userService.registerActivation(requestId, serviceData.getString("result")));
+		MapData serviceData2 = MapUtil
+				.newInstance(userService.registerActivation(requestId, serviceData.getString("result")));
 		if (serviceData2.getErrcode() == 0) {
 			return "register/success-email";
-		}else {
+		} else {
 			throw new Exception();
 		}
 	}
@@ -178,12 +197,16 @@ public class RegisterController {
 	 */
 	@RequestMapping("/sms")
 	@ResponseBody
-	public String sms(String requestId) {
+	public String sms(String requestId, String phone) {
+		MapData mapData = MapUtil.newInstance(userService.existPhone(requestId, phone));
+		logger.info(mapData.dataString());
+		if (mapData.getBoolean("result")) {
+			return "phone_exists";
+		}
 		ExpireKey smsSecond = (ExpireKey) WebUtil.getSession().getAttribute(PASSWORD_FIND_SMS_WAIT_SECOND_KEY);
 		if (smsSecond != null && !smsSecond.hasExpired()) {
 			return "error";
 		}
-		String phone = (String) WebUtil.getSession().getAttribute(REGISTER_PHONE_KEY);
 		MapData serviceData = MapUtil.newInstance(smsCodeVerifyService.send(requestId, phone, "REG"));
 		if (serviceData.getErrcode() == 0) {
 			smsSecond = new ExpireKey(60000);// 一分钟过期
@@ -206,7 +229,7 @@ public class RegisterController {
 				logger.info(serviceData2.dataString());
 				if (serviceData2.getErrcode() == 0) {
 					return "success";
-				}else {
+				} else {
 					return "error";
 				}
 			} else {
@@ -216,9 +239,9 @@ public class RegisterController {
 			throw new Exception();
 		}
 	}
-	
+
 	@RequestMapping("/success/phone")
-	public String successPhone(String requestId){
+	public String successPhone(String requestId) {
 		return "register/success-phone";
 	}
 }
