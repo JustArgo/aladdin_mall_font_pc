@@ -1,32 +1,9 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!-- meta -->
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="" />
-    <meta name="author" content="" />
-    <!-- css -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="/css/reset.css" />
-    <link rel="stylesheet" href="/css/theme.css" />
-    <!--[if (gte IE 6)&(lte IE 8)]>
-    <link rel="stylesheet" href="/css/ie-8.css" />
-    <![endif]-->
-    <!-- js -->
-    <script src="/js/jquery.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/theme.js"></script>
+#parse("./common/resources.vm")
 	<script type="text/javascript" src="/js/plupload/plupload.full.min.js"></script>
 	<script type="text/javascript" src="/js/qiniu.js"></script>
-    <!--[if lt IE 9]>
-    <script src="/js/html5shiv-printshiv.js"></script>
-    <script src="/js/respond.min.js"></script>
-    <![endif]-->
-    <!--[if (gte IE 6)&(lte IE 8)]>
-    <script src="/js/selectivizr.js"></script>
-    <![endif]-->
     <!-- title -->
     <title>个人信息</title>
     <script>
@@ -739,140 +716,9 @@
     </section>
     
     <!-- category-bar -->
-    <section class="category-bar">
-        <div class="category list">
-            <div class="container">
-                <div class="row">
-                    <h1 class="title">
-                        <span>浏览记录</span>
-                    </h1>
-                </div>
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="javascript:;">
-                            <img src="/images/product/product-01.png">
-                        </a>
-                        <p class="price">￥25.00</p>
-                        <p class="name">
-                            <a href="javascript:;">AMII 0942纯色圆领长袖基础短款</a>
-                        </p>
-                        <p>1524人购买</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
+    #parse("./common/viewed.vm")
 
     <!-- footer -->
-    <footer class="footer">
-        <div class="footer-service">
-            <div class="container">
-                <div class="row">
-                    <ul class="service">
-                        <li>
-                            <i class="icon icon-service-one"></i>
-                            <span>品类齐全</span>
-                            <span>轻松购物</span>
-                        </li>
-                        <li>
-                            <i class="icon icon-service-two"></i>
-                            <span>多仓直发</span>
-                            <span>急速配送</span>
-                        </li>
-                        <li>
-                            <i class="icon icon-service-three"></i>
-                            <span>正品行货</span>
-                            <span>精致服务</span>
-                        </li>
-                        <li>
-                            <i class="icon icon-service-four"></i>
-                            <span>天天低价</span>
-                            <span>畅选无忧</span>
-                        </li>
-                    </ul>
-                </div>
-                <div class="row">
-                    <div class="middle">
-                        <ul>
-                            <li>
-                                <span>北京市公安局朝阳分局备案编号110105014669</span>
-                            </li>
-                            <li>
-                                <span>京ICP证070359号</span>
-                            </li>
-                            <li>
-                                <span>互联网药品信息服务资格证编号(京)字150号</span>
-                            </li>
-                        </ul>
-                        <ul>
-                            <li>
-                                <span>音像制品经营许可证苏宿批005号</span>
-                            </li>
-                            <li>
-                                <span>出版物经营许可证编号新出发(苏)批字第N-012号</span>
-                            </li>
-                            <li>
-                                <span>互联网出版许可证编号新出网证(京)字150号</span>
-                            </li>
-                        </ul>
-                        <p>网络文化经营许可证京网文[2011]0168-061号&nbsp;&nbsp;Copyright&nbsp;&nbsp;2004-2016&nbsp;&nbsp;京东JD.com版权所有</p>
-                        <P>京东旗下网站：&nbsp;306TOP&nbsp;&nbsp;English Site</P>
-                        <ul>
-                            <li>
-                                <a href="javascript:;">
-                                    <img src="/images/footer/website-01.png" />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <img src="/images/footer/website-02.png" />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <img src="/images/footer/website-03.png" />
-                                </a>
-                            </li>
-                            <li>
-                                <a href="javascript:;">
-                                    <img src="/images/footer/website-04.png" />
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    #parse("./common/footer.vm")
 </body>
 </html>
